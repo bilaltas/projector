@@ -23,7 +23,7 @@ if [[ -z $SLUG ]]; then
 	if [[ -z $ACTION ]]; then
 
 
-		read -ep "Write the action type (starter | clone | install | import): " ACTION
+		read -ep "Write the action type (starter | clone | install | uninstall | import): " ACTION
 		if [[ -z $ACTION ]]; then
 
 			echo -e "${RED}No action entered.${RESET}"
@@ -36,7 +36,7 @@ if [[ -z $SLUG ]]; then
 
 
 	# If unknown answer
-	if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]]; then
+	if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != uninstall ]]; then
 
 		echo -e "${RED}Wrong action.${RESET}"
 		exit
@@ -51,7 +51,7 @@ else
 	if [[ -z $ACTION ]]; then
 
 
-		read -ep "Write the action type (install | start): " ACTION
+		read -ep "Write the action type (install | start | uninstall): " ACTION
 		if [[ -z $ACTION ]]; then
 
 			echo -e "${RED}No action entered.${RESET}"
@@ -64,7 +64,7 @@ else
 
 
 	# If unknown answer
-	if [[ $ACTION != install ]] && [[ $ACTION != start ]]; then
+	if [[ $ACTION != install ]] && [[ $ACTION != start ]] && [[ $ACTION != uninstall ]]; then
 
 		echo -e "${RED}Wrong action.${RESET}"
 		exit
@@ -93,5 +93,15 @@ fi
 if [[ $ACTION == install ]]; then
 
 	source "$BUILDERDIR/actions/install" "$2"
+
+fi
+
+
+
+
+# UNINSTALL
+if [[ $ACTION == uninstall ]]; then
+
+	source "$BUILDERDIR/actions/uninstall" "$2"
 
 fi

@@ -34,8 +34,6 @@ fi
 # CHECK DOCKER WHETHER OR NOT RUNNING
 rep=$(docker ps -q &>/dev/null)
 status=$?
-
-
 if [[ "$status" != "0" ]]; then
     
     echo 'Docker is opening...'
@@ -106,6 +104,53 @@ function sedreplace () {
 
 }
 
+function update_environment {
+
+
+	echo "Start updating environment files..."
+
+	SAMPLE_ENV="${BUILDERDIR}/sample.env"
+	PROJECT_ENV="${PROJECTDIR}/.env"
+	LOCAL_ENV="${PROJECTDIR}/local.env"
+
+	# Create the .env file from the template (local.env)
+	rm -f $LOCAL_ENV
+	cp $SAMPLE_ENV $LOCAL_ENV
+	echo -e "local.env file created ... ${GREEN}done${RESET}"
+
+
+	# Update the .env file
+	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" $LOCAL_ENV;
+	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" $LOCAL_ENV;
+	sedreplace "s#PROJECT_DIR=projectdir#PROJECT_DIR=$PROJECTDIR#g" $LOCAL_ENV;
+
+	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" $LOCAL_ENV;
+	sedreplace "s/Site Name/$NAME/g" $LOCAL_ENV;
+	sedreplace "s/Site tagline/$DESC/g" $LOCAL_ENV;
+	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" $LOCAL_ENV;
+	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" $LOCAL_ENV;
+	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" $LOCAL_ENV;
+
+	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" $LOCAL_ENV;
+	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" $LOCAL_ENV;
+	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" $LOCAL_ENV;
+	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" $LOCAL_ENV;
+	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" $LOCAL_ENV;
+
+	echo -e "local.env file updated with the new info ... ${GREEN}done${RESET}"
+
+
+	# Make the local.env live
+	rm -f $PROJECT_ENV
+	cp $LOCAL_ENV $PROJECT_ENV
+	echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
+
+
+	echo -e "Updating environment files ... ${GREEN}done${RESET}"
+
+
+}
+
 function self_update () {
 
 	# Builder updates
@@ -120,10 +165,10 @@ function self_update () {
 function server_permission_update () {
 
 	echo "Fixing the server file permissions in ($1)..."
-	docker-compose exec wp chown -R www-data:www-data "$1"
-	# docker-compose exec wp chmod -R a=rwx $1
-	docker-compose exec wp find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
-	docker-compose exec wp find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chown -R www-data:www-data "$1"
+	# docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chmod -R a=rwx $1
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
 	echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
 
 }
@@ -151,46 +196,7 @@ function git_permission_update () {
 }
 
 function wp {
-	command docker-compose run --no-deps --rm wpcli --allow-root "$@"
-}
-
-function update_environment {
-
-
-	echo "Start updating environment files..."
-
-	# Create the .env file from the template (local.env)
-	rm -f "${BASEDIR}/.env"
-	cp "${BASEDIR}/local.env" "${BASEDIR}/.env"
-	echo -e ".env file created ... ${GREEN}done${RESET}"
-
-
-	# Update the .env file
-	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" "${BASEDIR}/.env";
-	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" "${BASEDIR}/.env";
-
-	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" "${BASEDIR}/.env";
-	sedreplace "s/Site Name/$NAME/g" "${BASEDIR}/.env";
-	sedreplace "s/Site tagline/$DESC/g" "${BASEDIR}/.env";
-	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "${BASEDIR}/.env";
-	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" "${BASEDIR}/.env";
-	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" "${BASEDIR}/.env";
-
-	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" "${BASEDIR}/.env";
-	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" "${BASEDIR}/.env";
-	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" "${BASEDIR}/.env";
-	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "${BASEDIR}/.env";
-	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "${BASEDIR}/.env";
-
-	echo -e ".env file updated with the new info ... ${GREEN}done${RESET}"
-
-
-	# Save the new site/.env file
-	rm -f "${BASEDIR}/site/.env"
-	cp "${BASEDIR}/.env" "${BASEDIR}/site/.env"
-	echo -e ".env file copied to the 'site/' folder ... ${GREEN}done${RESET}"
-
-
+	command docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm wpcli --allow-root "$@"
 }
 
 function db_backup () {
@@ -227,7 +233,7 @@ function db_backup () {
 	# Save the DB backup
 	echo "Backing up the DB..."
 	DB_FILE="${BASEDIR}/site/database/dump/wordpress_data.sql"
-	docker-compose exec db /usr/bin/mysqldump -u root --password=password wordpress_data > "${DB_FILE}"
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec db /usr/bin/mysqldump -u root --password=password wordpress_data > "${DB_FILE}"
 	tail -n +2 "${DB_FILE}" > "${DB_FILE}.tmp" && mv "${DB_FILE}.tmp" "${DB_FILE}"
 	echo -e "DB Backup saved in '${DB_FILE}' ... ${GREEN}done${RESET}"
 
@@ -323,7 +329,7 @@ function wait_for_mysql () {
 
 
 	# Check MySQL to be ready
-	while ! docker-compose exec db mysqladmin --user=root --password=password --host "${IP}" ping --silent &> /dev/null ; do
+	while ! docker-compose -f "$BUILDERDIR/docker-compose.yml" exec db mysqladmin --user=root --password=password --host "${IP}" ping --silent &> /dev/null ; do
 		echo "Waiting for database connection..."
 		sleep 3
 	done
@@ -549,7 +555,7 @@ function install_npm () {
 
 			# RUN THE GULP
 			echo "NPM packages are installing..."
-			docker-compose run --no-deps --rm gulp npm run build
+			docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm gulp npm run build
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 
 
@@ -563,7 +569,7 @@ function install_npm () {
 
 			# RUN THE GULP
 			echo "GULP is running..."
-			docker-compose run --no-deps --rm gulp npm start
+			docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm gulp npm start
 
 
 		fi

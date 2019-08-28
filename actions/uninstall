@@ -1,0 +1,107 @@
+#!/bin/bash
+
+
+
+
+# If current folder is not a specific project folder
+if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
+
+
+	# Get project name from args
+	if [[ ! -z $1 ]]; then
+
+		SLUG=$1
+
+	else
+
+
+		# Ask for the project name
+		read -ep "Project name (site-name): " SLUG
+		while [[ -z $SLUG ]]; do
+			read -ep "Project name (site-name): " SLUG
+		done
+
+
+	fi
+
+
+	# Project directory
+	PROJECTDIR="${BASEDIR}/${SLUG}"
+
+
+	# Check if the folder not exists
+	if [[ ! -d $PROJECTDIR ]]; then
+
+		echo -e "${RED}Project folder doesn't exist.${RESET}"
+		exit
+
+	fi
+
+
+fi
+
+
+
+
+# Check if already installed
+if [[ -f "$PROJECTDIR/.env" ]]; then
+
+
+	# Get data from .env file
+	source "$PROJECTDIR/.env"
+
+
+fi
+
+
+
+
+# Check if already installed
+if [[ $IP == "127.0.0.1" ]]; then
+
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+
+fi
+
+
+
+
+## UNINSTALLATION:
+
+echo "Server is closing..."
+(
+	cd $PROJECTDIR
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" down
+)
+
+
+
+
+# Remove the host to the list
+sudo bash "$BUILDERDIR/config/etc-hosts.sh" -remove $DOMAIN
+killall -HUP mDNSResponder
+
+
+
+# Delete the DB files
+rm -rf "$PROJECTDIR/database/mysql"
+echo -e "MySQL files removed ... ${GREEN}done${RESET}"
+
+
+
+# Remove WP core files
+(
+	cd "$PROJECTDIR/wp"
+	find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
+)
+echo -e "WP core files removed ... ${GREEN}done${RESET}"
+
+
+
+
+
+
+echo -e "Uninstalling '${SLUG}' project ... ${GREEN}done${RESET}"

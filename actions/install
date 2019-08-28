@@ -43,10 +43,32 @@ fi
 
 
 
+# Get data from sample.env file
+source "$BUILDERDIR/sample.env"
+
+
+
+
+# Get local.env in project folder, if exists
+if [[ -f "$PROJECTDIR/local.env" ]]; then
+
+
+	# Get data from .env file
+	source "$PROJECTDIR/local.env"
+
+
+fi
+
+
+
+
 # Check if already installed
 if [[ -f "$PROJECTDIR/.env" ]]; then
 
+
+	# Get data from .env file
 	source "$PROJECTDIR/.env"
+
 
 	if [[ $IP != "127.0.0.1" ]]; then
 
@@ -61,12 +83,172 @@ fi
 
 
 
-# RUN THE SERVER
+# Confirm the information
+echo ""
+echo ""
+echo "== Site Info ============"
+echo ""
+echo "Local Development Domain: $DOMAIN"
+echo "Project Directory: $PROJECTDIR"
+echo ""
+echo "Project Name: $SLUG"
+echo "Short Name: $PREFIX"
+echo "WP Version: $WP_VERSION"
+
+if [[ $MODE == install-starter ]]; then
+	echo "Website Name: $NAME"
+	echo "Website Tagline: $DESC"
+	[[ ! -z "$plugins" ]] && echo "Plugins: $plugins" || echo "Plugins: $PLUGINS"
+	echo ""
+
+	if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
+		echo "Developer Email: $DEVELOPER_EMAIL"
+		echo "Developer Username: $DEVELOPER_USERNAME"
+		echo "Developer First Name: $DEVELOPER_NAME"
+		echo "Developer Last Name: $DEVELOPER_LAST_NAME"
+		echo "Developer URL: $DEVELOPER_URL"
+		echo ""
+	else
+		echo "Developer Email: $DEVELOPER_EMAIL"
+		echo ""
+	fi
+
+fi
+
+echo ""
+echo "==================================="
+echo ""
+echo ""
+read -ep "Are these correct? (type 'yes' to confirm): " confirm
+
+
+
+
+# CHANGE THE FILE IF YES
+if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
+
+
+	echo -e "${GREEN}Confirmed.${RESET}"
+
+	# # Move the 'wp-content' folder TEMPORARILY
+	# if [[ $MODE != install-starter ]]; then
+
+	# 	make_temporary
+
+	# fi
+
+
+	# Update environment files
+	update_environment
+
+
+	# Get data from the new .env file
+	source "$PROJECTDIR/.env"
+
+
+	# Update the permissions
+	permission_update ./
+
+
+else
+
+	# If not confirmed, close the installation
+	echo -e "${RED}Not confirmed.${RESET}"
+	exit
+
+fi
+
+
+
+
+## INSTALLATION:
+
+# CHECK THE LOCAL DOMAIN AVAILABILITY
+echo "Checking '${DOMAIN}' availability..."
+if grep -q "${DOMAIN}" /etc/hosts; then
+	echo -e "${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
+	exit
+fi
+echo -e "${GREEN}${DOMAIN}${RESET} - AVAILABLE"
+
+
+
+
+# CHECK IP AND CREATE HOST
+echo "Checking IP availability..."
+COUNTER=2
+while [[ $COUNTER -lt 120 ]]; do
+
+	IP="127.0.0.${COUNTER}"
+
+
+	echo "Checking '${IP}' availability..."
+	if grep -q "${IP}" /etc/hosts; then
+		echo "${IP} - NOT AVAILABLE"
+	else
+
+		if curl --max-time 3 --output /dev/null --silent --head --fail "${IP}"; then
+			echo -e "${RED}${IP}${RESET} - NOT AVAILABLE"
+		else
+			echo -e "${GREEN}${IP}${RESET} - AVAILABLE"
+			break
+		fi
+
+	fi
+
+
+	let COUNTER=COUNTER+1
+
+done
+
+# Update the environment file (.env) with the available IP
+sedreplace "s/IP=127.0.0.1/IP=${IP}/g" "${PROJECTDIR}/.env";
+echo -e "'${IP}' changed as '${IP}' on .env file ... ${GREEN}done${RESET}"
+
+
+# Open that IP slot
+ifconfig lo0 alias $IP up
+echo -e "'${IP}' is now available to build server ... ${GREEN}done${RESET}"
+
+
+
+
+# BUILD THE SERVER
+echo "Server is building..."
 (
 	cd $PROJECTDIR
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" up -d
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" down
+
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" rm &&
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" pull &&
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" build --no-cache &&
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" up -d --force-recreate
+
+	#docker-compose -f "$BUILDERDIR/docker-compose.yml" down
 )
+
+
+
+
+# Add the host to the /etc/hosts file
+sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
+killall -HUP mDNSResponder
+
+
+
+
+# Check MySQL to be ready
+wait_for_mysql
+
+
+
+
+# Ask the registered URL and do the replacements
+if [[ $MODE != install-starter ]]; then
+
+	db_url_update
+
+fi
+
 
 
 
