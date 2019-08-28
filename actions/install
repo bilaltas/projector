@@ -60,10 +60,14 @@ fi
 # fi
 
 
-# (
-# 	cd $PROJECTDIR
-# 	docker-compose -f "$BUILDERDIR/docker-compose.yml" up -d
-# )
+
+
+# RUN THE SERVER
+(
+	cd $PROJECTDIR
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" up -d
+	docker-compose -f "$BUILDERDIR/docker-compose.yml" down
+)
 
 
 
