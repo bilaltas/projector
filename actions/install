@@ -3,17 +3,8 @@
 
 
 
-# Check current folder if it's a project folder
-if [[ -z $1 ]] && [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
-
-
-	# Extract the project name from BASEDIR
-	SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
-	SLUG="${SLUG##*/}" 
-	PROJECTDIR=$BASEDIR
-
-
-else # If current directory is in 'Projects' folder
+# If current folder is not a project folder
+if [[ -z $SLUG ]]; then
 
 
 	# Get project name from args

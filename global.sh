@@ -14,6 +14,22 @@ BASEDIR="$(pwd)"
 
 
 
+# Check if current folder is a project folder
+if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
+
+
+	# Extract the project name from BASEDIR
+	SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
+	SLUG="${SLUG##*/}"
+	PROJECTDIR=$BASEDIR
+
+	#echo "Project name: $SLUG"
+
+
+fi
+
+
+
 
 # CHECK DOCKER WHETHER OR NOT RUNNING
 rep=$(docker ps -q &>/dev/null)
