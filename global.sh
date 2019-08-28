@@ -38,10 +38,6 @@ if [[ "$status" != "0" ]]; then
 
     echo -e "${GREEN}Docker connected${RESET}"
 
-else
-
-	echo -e "${GREEN}Docker is running${RESET}"
-
 fi
 
 
@@ -63,7 +59,7 @@ elif [[ "$OSTYPE" == "win32" ]]; then
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
         OS="FreeBSD"
 fi
-echo "Operating System: ${OS}"
+#echo "Operating System: ${OS}"
 
 
 

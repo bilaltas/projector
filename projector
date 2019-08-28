@@ -6,13 +6,35 @@ source "$BUILDERDIR/global.sh"
 
 
 
-read -ep "Write the action type (starter | clone | import): " ACTION
-[[ -z $ACTION ]] && exit || sleep 0
+
+if [[ ! -z $1 ]]; then
+
+	ACTION=$1
+
+else
+
+	# Ask for the action
+	read -ep "Write the action type (starter | clone | import): " ACTION
+	[[ -z $ACTION ]] && exit || sleep 0
+
+fi
+
+
 
 
 # If unknown answer
 if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != import ]]; then
 
 	exit
+
+fi
+
+
+
+
+# CLONE
+if [[ $ACTION == clone ]]; then
+
+	source "$BUILDERDIR/actions/clone" "$2"
 
 fi

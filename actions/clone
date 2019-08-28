@@ -1,1 +1,46 @@
 #!/bin/bash
+
+
+
+# Get repo name
+if [[ ! -z $1 ]]; then
+
+	GIT=$1
+
+else
+
+	read -ep "Remote project name (site-name): " GIT
+	while [[ -z $GIT ]]; do
+		read -ep "Remote project name (site-name): " GIT
+	done
+
+fi
+
+
+
+
+# Check if the folder already exists
+if [[ -d "${BASEDIR}/${GIT}" ]]; then
+
+	echo -e "${RED}Project folder already exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Test the git URL
+if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/${GIT}.git" HEAD &>/dev/null; then
+	echo -e "${GREEN}Repository found, clone starting for '$GIT' project.${RESET}"
+else
+	echo -e "${RED}Remote repository not found.${RESET}"
+	exit
+fi
+
+
+
+
+# Clone the repo
+git clone "https://twelve12com@bitbucket.org/twelve12com/${GIT}.git" "${BASEDIR}/${GIT}"
+echo -e "Cloning ... ${GREEN}done${RESET}"
