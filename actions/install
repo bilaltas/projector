@@ -1,0 +1,59 @@
+#!/bin/bash
+
+
+
+# Get project name
+if [[ ! -z $1 ]]; then
+
+	SLUG=$1
+
+else
+
+
+	# Check current folder if it's a project folder
+	if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
+
+
+		# Extract the project name from BASEDIR
+		SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
+		SLUG="${SLUG##*/}" 
+
+
+	else
+
+
+		# IN PROJECTS FOLDER
+
+		read -ep "Project name (site-name): " SLUG
+		while [[ -z $SLUG ]]; do
+			read -ep "Project name (site-name): " SLUG
+		done
+
+
+		# Check if the folder already exists
+		if [[ ! -d "${BASEDIR}/${SLUG}" ]]; then
+
+			echo -e "${RED}Project folder doesn't exist.${RESET}"
+			exit
+
+		fi
+
+
+	fi
+
+
+fi
+
+
+
+
+# Check if already installed
+# if [[  ]]; then
+
+
+
+# fi
+
+
+
+echo -e "Installing '${SLUG}' project ... ${GREEN}done${RESET}"

@@ -43,4 +43,4 @@ fi
 
 # Clone the repo
 git clone "https://twelve12com@bitbucket.org/twelve12com/${GIT}.git" "${BASEDIR}/${GIT}"
-echo -e "Cloning ... ${GREEN}done${RESET}"
+echo -e "Cloning '$GIT' project ... ${GREEN}done${RESET}"
