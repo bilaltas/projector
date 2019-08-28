@@ -3,7 +3,7 @@
 
 
 
-# If current folder is not a project folder
+# If current folder is not a specific project folder
 if [[ -z $SLUG ]]; then
 
 

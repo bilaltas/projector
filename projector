@@ -6,26 +6,61 @@ source "$BUILDERDIR/global.sh"
 
 
 
-
+# Get the action
 if [[ ! -z $1 ]]; then
 
 	ACTION=$1
-
-else
-
-	# Ask for the action
-	read -ep "Write the action type (starter | clone | install | import): " ACTION
-	[[ -z $ACTION ]] && exit || sleep 0
 
 fi
 
 
 
+# If current folder is not a specific project folder
+if [[ -z $SLUG ]]; then
 
-# If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]]; then
 
-	exit
+	# Ask for the action, if not specified
+	if [[ -z $ACTION ]]; then
+
+
+		read -ep "Write the action type (starter | clone | install | import): " ACTION
+		[[ -z $ACTION ]] && exit || sleep 0
+
+
+	fi
+
+
+	# If unknown answer
+	if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]]; then
+
+		echo -e "${RED}Wrong action.${RESET}"
+		exit
+
+	fi
+
+
+else
+
+
+	# Ask for the action, if not specified
+	if [[ -z $ACTION ]]; then
+
+
+		read -ep "Write the action type (install | start): " ACTION
+		[[ -z $ACTION ]] && exit || sleep 0
+
+
+	fi
+
+
+	# If unknown answer
+	if [[ $ACTION != install ]] && [[ $ACTION != start ]]; then
+
+		echo -e "${RED}Wrong action.${RESET}"
+		exit
+
+	fi
+
 
 fi
 
