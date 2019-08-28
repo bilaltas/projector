@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+read -ep "Write the action type (starter | clone | import): " ACTION
+[[ -z $ACTION ]] && exit || sleep 0
+
+
+# If unknown answer
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != import ]]; then
+
+	exit
+
+fi
