@@ -102,6 +102,11 @@ echo -e "WP core files removed ... ${GREEN}done${RESET}"
 
 
 
+# Delete the .env file
+rm -rf "$PROJECTDIR/.env"
+echo -e ".env file removed from the project ... ${GREEN}done${RESET}"
+
+
 
 
 echo -e "Uninstalling '${SLUG}' project ... ${GREEN}done${RESET}"
