@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Builder directory
+BUILDERDIR=~/Desktop/projector
+source "$BUILDERDIR/global.sh"
+
+
 
 read -ep "Write the action type (starter | clone | import): " ACTION
 [[ -z $ACTION ]] && exit || sleep 0
