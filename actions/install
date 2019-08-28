@@ -2,42 +2,47 @@
 
 
 
-# Get project name
-if [[ ! -z $1 ]]; then
 
-	SLUG=$1
-
-else
+# Check current folder if it's a project folder
+if [[ -z $1 ]] && [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
 
 
-	# Check current folder if it's a project folder
-	if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
+	# Extract the project name from BASEDIR
+	SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
+	SLUG="${SLUG##*/}" 
+	PROJECTDIR=$BASEDIR
 
 
-		# Extract the project name from BASEDIR
-		SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
-		SLUG="${SLUG##*/}" 
+else # If current directory is in 'Projects' folder
 
+
+	# Get project name from args
+	if [[ ! -z $1 ]]; then
+
+		SLUG=$1
 
 	else
 
 
-		# IN PROJECTS FOLDER
-
+		# Ask for the project name
 		read -ep "Project name (site-name): " SLUG
 		while [[ -z $SLUG ]]; do
 			read -ep "Project name (site-name): " SLUG
 		done
 
 
-		# Check if the folder already exists
-		if [[ ! -d "${BASEDIR}/${SLUG}" ]]; then
+	fi
 
-			echo -e "${RED}Project folder doesn't exist.${RESET}"
-			exit
 
-		fi
+	# Project directory
+	PROJECTDIR="${BASEDIR}/${SLUG}"
 
+
+	# Check if the folder not exists
+	if [[ ! -d $PROJECTDIR ]]; then
+
+		echo -e "${RED}Project folder doesn't exist.${RESET}"
+		exit
 
 	fi
 
@@ -53,6 +58,12 @@ fi
 
 
 # fi
+
+
+# (
+# 	cd $PROJECTDIR
+# 	docker-compose -f "$BUILDERDIR/docker-compose.yml" up -d
+# )
 
 
 
