@@ -4,7 +4,7 @@
 
 
 # If current folder is not a specific project folder
-if [[ -z $SLUG ]]; then
+if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
 
 
 	# Get project name from args
@@ -44,11 +44,19 @@ fi
 
 
 # Check if already installed
-# if [[  ]]; then
+if [[ -f "$PROJECTDIR/.env" ]]; then
+
+	source "$PROJECTDIR/.env"
+
+	if [[ $IP != "127.0.0.1" ]]; then
+
+		echo -e "${RED}Project is already installed.${RESET}"
+		exit
+
+	fi
 
 
-
-# fi
+fi
 
 
 
