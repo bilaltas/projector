@@ -1,9 +1,12 @@
 #!/bin/bash
 
-echo "Installing the WP-CLI..."
+if [[ ! -f /bin/wp-cli.phar ]]; then
 
-# curl -sS -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-# chmod +x /bin/wp-cli.phar
-# chmod +x /usr/local/bin/wp
+	apt-get update -qq
+	apt-get install -qq -y sudo less mariadb-client
+	rm -rf /var/lib/apt/lists/*
 
-echo "Installing the WP-CLI done."
+	curl -sS -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+	chmod +x /bin/wp-cli.phar
+
+fi

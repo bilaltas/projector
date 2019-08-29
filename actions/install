@@ -224,6 +224,14 @@ docker_compose up -d --force-recreate
 
 
 
+# Install WP-CLI
+echo -e "Installing WP-CLI..."
+docker_compose exec wpcli wp-cli-install.sh
+echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
+
+
+
+
 # Add the host to the /etc/hosts file
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
 killall -HUP mDNSResponder

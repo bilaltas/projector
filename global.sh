@@ -253,7 +253,7 @@ function db_backup () {
 	DB_FILE_NAME=wordpress_data.sql
 	wp db export $DB_FILE_NAME
 	mv "${PROJECTDIR}/wp/${DB_FILE_NAME}" "${PROJECTDIR}/database/dump/${DB_FILE_NAME}"
-	echo -e "DB Backup saved in '${PROJECTDIR}/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
+	#echo -e "DB Backup saved in '${PROJECTDIR}/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
 
 }
 

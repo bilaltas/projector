@@ -21,8 +21,6 @@ services:
       WORDPRESS_DB_PASSWORD: password
     depends_on:
       - db
-    command:
-      - wp-cli-install.sh
 
   db:
     image: mysql:8
@@ -46,3 +44,16 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 5s
       retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "${PREFIX}_phpmyadmin"
+    restart: "no"
+    depends_on:
+        - db
+    ports:
+        - ${IP}:8000:80
+    environment:
+        MYSQL_USER: root
+        MYSQL_PASSWORD: password
+        MYSQL_ROOT_PASSWORD: password
