@@ -167,18 +167,25 @@ function self_update () {
 
 }
 
-function server_permission_update () {
+function docker_compose {
 	
 	(
 		cd $PROJECTDIR
-
-		echo "Fixing the server file permissions in ($1)..."
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli chown -R www-data:www-data "$1"
-		# docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli chmod -R a=rwx $1
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
-		echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
+		command docker-compose -f "${BUILDERDIR}/docker-compose.yml" "$@"
 	)
+
+}
+
+function server_permission_update () {
+
+
+	echo "Fixing the server file permissions in ($1)..."
+	docker_compose exec wpcli chown -R www-data:www-data "$1"
+	# docker_compose exec wpcli chmod -R a=rwx $1
+	docker_compose exec wpcli find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
+	docker_compose exec wpcli find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+	echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
+
 
 }
 
@@ -205,11 +212,8 @@ function git_permission_update () {
 }
 
 function wp {
-	
-	(
-		cd $PROJECTDIR
-		command docker-compose -f "${BUILDERDIR}/docker-compose.yml" exec wpcli wp "$@"
-	)
+
+	docker_compose exec wpcli wp "$@"
 
 }
 
@@ -342,16 +346,12 @@ function db_url_update () {
 function wait_for_mysql () {
 
 
-	(
-		cd $PROJECTDIR
-
-		# Check MySQL to be ready
-		while ! docker-compose -f "${BUILDERDIR}/docker-compose.yml" exec db mysqladmin --user=root --password=password --host "$IP" ping --silent &> /dev/null ; do
-			echo "Waiting for database connection ..."
-			sleep 3
-		done
-		echo -e "MySQL is ready! ... ${GREEN}done${RESET}"
-	)
+	# Check MySQL to be ready
+	while ! docker_compose exec db mysqladmin --user=root --password=password --host "$IP" ping --silent &> /dev/null ; do
+		echo "Waiting for database connection ..."
+		sleep 3
+	done
+	echo -e "MySQL is ready! ... ${GREEN}done${RESET}"
 
 
 }
@@ -573,7 +573,7 @@ function install_npm () {
 
 			# RUN THE GULP
 			echo "NPM packages are installing..."
-			docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm gulp npm run build
+			docker_compose run --no-deps --rm gulp npm run build
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 
 
@@ -587,7 +587,7 @@ function install_npm () {
 
 			# RUN THE GULP
 			echo "GULP is running..."
-			docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm gulp npm start
+			docker_compose run --no-deps --rm gulp npm start
 
 
 		fi

@@ -78,10 +78,7 @@ db_backup
 
 
 echo "Server is closing..."
-(
-	cd $PROJECTDIR
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" down
-)
+docker_compose down
 
 
 
