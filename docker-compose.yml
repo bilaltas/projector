@@ -2,7 +2,7 @@ version: '3'
 
 services:
   wpcli:
-    build: .
+    image: wordpress:${WP_VERSION}
     container_name: "${PREFIX}_wpcli"
     restart: "always"
     user: root
@@ -10,6 +10,8 @@ services:
       - ${IP}:80:80
     volumes:
       - ${BUILDER_DIR}/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ${BUILDER_DIR}/config/wp-su.sh:/usr/local/bin/wp
+      - ${BUILDER_DIR}/config/wp-cli-install.sh:/usr/local/bin/wp-cli-install.sh
       - ${PROJECT_DIR}/wp:/var/www/html
       - ${PROJECT_DIR}/logs:/var/log/apache2
     environment:
@@ -19,6 +21,8 @@ services:
       WORDPRESS_DB_PASSWORD: password
     depends_on:
       - db
+    command:
+      - wp-cli-install.sh
 
   db:
     image: mysql:8
