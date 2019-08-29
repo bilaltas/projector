@@ -224,6 +224,12 @@ docker_compose up -d --force-recreate
 
 
 
+# Close the PHPMyadmin
+docker_compose stop phpmyadmin
+
+
+
+
 # Install WP-CLI
 echo -e "Installing WP-CLI..."
 docker_compose exec wpcli wp-cli-install.sh
