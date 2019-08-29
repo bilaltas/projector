@@ -43,7 +43,7 @@ fi
 
 
 
-# Check if already installed
+# Get data from .env file
 if [[ -f "$PROJECTDIR/.env" ]]; then
 
 
@@ -56,7 +56,7 @@ fi
 
 
 
-# Check if already installed
+# Check if installed
 if [[ -z $IP ]] || [[ $IP == "127.0.0.1" ]]; then
 
 

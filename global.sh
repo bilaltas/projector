@@ -173,10 +173,10 @@ function server_permission_update () {
 		cd $PROJECTDIR
 
 		echo "Fixing the server file permissions in ($1)..."
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chown -R www-data:www-data "$1"
-		# docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chmod -R a=rwx $1
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli chown -R www-data:www-data "$1"
+		# docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli chmod -R a=rwx $1
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wpcli find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
 		echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
 	)
 
@@ -208,7 +208,7 @@ function wp {
 	
 	(
 		cd $PROJECTDIR
-		command docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm wpcli --allow-root "$@"
+		command docker-compose -f "${BUILDERDIR}/docker-compose.yml" exec wpcli wp "$@"
 	)
 
 }
@@ -365,13 +365,13 @@ function move_import_files () {
 
 
 	# If no "import/" folder added yet
-	if [[ ! -d "${BASEDIR}/site/import/" ]]; then
+	if [[ ! -d "${PROJECTDIR}/import/" ]]; then
 		
-		echo -e "${BLUE}Please move your 'import/' folder to the '${BASEDIR}/site/' folder and hit enter${RESET}"
+		echo -e "${BLUE}Please move your 'import/' folder to the '${PROJECTDIR}/' folder and hit enter${RESET}"
 		read IMPORT
-		while [[ ! -d "${BASEDIR}/site/import" ]]; do 
+		while [[ ! -d "${PROJECTDIR}/import" ]]; do 
 
-			echo -e "${BLUE}Please move your 'import/' folder to the '${BASEDIR}/site/' folder and hit enter${RESET}"
+			echo -e "${BLUE}Please move your 'import/' folder to the '${PROJECTDIR}/' folder and hit enter${RESET}"
 			read IMPORT
 
 		done
@@ -383,7 +383,7 @@ function move_import_files () {
 
 
 	# Prepare the backup folder
-	if [[ -f "${BASEDIR}/site/import/wp-config.php" ]]; then
+	if [[ -f "${PROJECTDIR}/import/wp-config.php" ]]; then
 
 
 		echo -e "${BLUE}FULL SITE BACKUP DETECTED${RESET}"
@@ -391,59 +391,59 @@ function move_import_files () {
 
 		echo -e "WP core files are being removed..."
 		(
-			cd "${BASEDIR}/site/import/"
+			cd "${PROJECTDIR}/import/"
 			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
 		)
 		echo -e "WP core files removed ... ${GREEN}done${RESET}"
 
 
-		if [[ -f "${BASEDIR}/site/import/wp-content/mysql.sql" ]]; then
+		if [[ -f "${PROJECTDIR}/import/wp-content/mysql.sql" ]]; then
 
 			echo -e "Moving the DB file..."
-			mv "${BASEDIR}/site/import/wp-content/mysql.sql" "${BASEDIR}/site/import/mysql.sql"
+			mv "${PROJECTDIR}/import/wp-content/mysql.sql" "${PROJECTDIR}/import/mysql.sql"
 			echo -e "DB file moved ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -f "${BASEDIR}/site/import/wp-content/advanced-cache.php" ]]; then
+		if [[ -f "${PROJECTDIR}/import/wp-content/advanced-cache.php" ]]; then
 
-			rm -rf "${BASEDIR}/site/import/wp-content/advanced-cache.php"
+			rm -rf "${PROJECTDIR}/import/wp-content/advanced-cache.php"
 			echo -e "'wp-content/advanced-cache.php' file removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${BASEDIR}/site/import/wp-content/cache/" ]] || [[ -d "${BASEDIR}/site/import/wp-content/uploads/cache/" ]]; then
+		if [[ -d "${PROJECTDIR}/import/wp-content/cache/" ]] || [[ -d "${PROJECTDIR}/import/wp-content/uploads/cache/" ]]; then
 
-			rm -rf "${BASEDIR}/site/import/wp-content/cache/"
-			rm -rf "${BASEDIR}/site/import/wp-content/uploads/cache/"
+			rm -rf "${PROJECTDIR}/import/wp-content/cache/"
+			rm -rf "${PROJECTDIR}/import/wp-content/uploads/cache/"
 			echo -e "'cache' folders removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${BASEDIR}/site/import/wp-content/mu-plugins/" ]]; then
+		if [[ -d "${PROJECTDIR}/import/wp-content/mu-plugins/" ]]; then
 
-			rm -rf "${BASEDIR}/site/import/wp-content/mu-plugins/"
+			rm -rf "${PROJECTDIR}/import/wp-content/mu-plugins/"
 			echo -e "'mu-plugins' folder removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${BASEDIR}/site/import/wp-content/plugins/hyperdb" ]]; then
+		if [[ -d "${PROJECTDIR}/import/wp-content/plugins/hyperdb" ]]; then
 
-			rm -rf "${BASEDIR}/site/import/wp-content/plugins/hyperdb"
-			rm -rf "${BASEDIR}/site/import/wp-content/plugins/hyperdb-1"
-			rm -rf "${BASEDIR}/site/import/wp-content/plugins/hyperdb-1-1"
+			rm -rf "${PROJECTDIR}/import/wp-content/plugins/hyperdb"
+			rm -rf "${PROJECTDIR}/import/wp-content/plugins/hyperdb-1"
+			rm -rf "${PROJECTDIR}/import/wp-content/plugins/hyperdb-1-1"
 			echo -e "'hyperdb' plugin removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${BASEDIR}/site/import/wp-content/plugins/really-simple-ssl" ]]; then
+		if [[ -d "${PROJECTDIR}/import/wp-content/plugins/really-simple-ssl" ]]; then
 
-			rm -rf "${BASEDIR}/site/import/wp-content/plugins/really-simple-ssl"
+			rm -rf "${PROJECTDIR}/import/wp-content/plugins/really-simple-ssl"
 			echo -e "'really-simple-ssl' plugin removed ... ${GREEN}done${RESET}"
 
 		fi
@@ -456,30 +456,30 @@ function move_import_files () {
 
 
 	# Create target folders if not exist
-	if [[ ! -d "${BASEDIR}/site/database/dump/" ]]; then
+	if [[ ! -d "${PROJECTDIR}/database/dump/" ]]; then
 
-		mkdir -p "${BASEDIR}/site/database/dump/"
+		mkdir -p "${PROJECTDIR}/database/dump/"
 
 	fi
 
-	if [[ ! -d "${BASEDIR}/site/wp/wp-content/" ]]; then
+	if [[ ! -d "${PROJECTDIR}/wp/wp-content/" ]]; then
 
-		mkdir -p "${BASEDIR}/site/wp/wp-content/"
+		mkdir -p "${PROJECTDIR}/wp/wp-content/"
 
 	fi
 
 
 	# Move the SQL file
-	if [[ -f "${BASEDIR}/site/import/db.sql" ]]; then
+	if [[ -f "${PROJECTDIR}/import/db.sql" ]]; then
 
-		rm -rf "${BASEDIR}/site/database/dump/wordpress_data.sql"
-		mv "${BASEDIR}/site/import/db.sql" "${BASEDIR}/site/database/dump/wordpress_data.sql"
+		rm -rf "${PROJECTDIR}/database/dump/wordpress_data.sql"
+		mv "${PROJECTDIR}/import/db.sql" "${PROJECTDIR}/database/dump/wordpress_data.sql"
 		echo -e "SQL file moved ... ${GREEN}done${RESET}"
 
-	elif [[ -f "${BASEDIR}/site/import/mysql.sql" ]]; then
+	elif [[ -f "${PROJECTDIR}/import/mysql.sql" ]]; then
 
-		rm -rf "${BASEDIR}/site/database/dump/wordpress_data.sql"
-		mv "${BASEDIR}/site/import/mysql.sql" "${BASEDIR}/site/database/dump/wordpress_data.sql"
+		rm -rf "${PROJECTDIR}/database/dump/wordpress_data.sql"
+		mv "${PROJECTDIR}/import/mysql.sql" "${PROJECTDIR}/database/dump/wordpress_data.sql"
 		echo -e "SQL file moved ... ${GREEN}done${RESET}"
 
 	else
@@ -491,28 +491,28 @@ function move_import_files () {
 
 
 	# Remove existing MySQL files if exists
-	if [[ -d "${BASEDIR}/site/database/mysql/" ]]; then
+	if [[ -d "${PROJECTDIR}/database/mysql/" ]]; then
 	
-		rm -rf "${BASEDIR}/site/database/mysql/"
+		rm -rf "${PROJECTDIR}/database/mysql/"
 
 	fi
 
 
 	# Move the wp-content folder
-	if [[ -d "${BASEDIR}/site/import/wp-content/" ]]; then
+	if [[ -d "${PROJECTDIR}/import/wp-content/" ]]; then
 
-		rm -rf "${BASEDIR}/site/wp/tmp_wp-content/"
-		rm -rf "${BASEDIR}/site/wp/wp-content/"
-		mv "${BASEDIR}/site/import/wp-content" "${BASEDIR}/site/wp/wp-content"
+		rm -rf "${PROJECTDIR}/wp/tmp_wp-content/"
+		rm -rf "${PROJECTDIR}/wp/wp-content/"
+		mv "${PROJECTDIR}/import/wp-content" "${PROJECTDIR}/wp/wp-content"
 		echo -e "'wp-content' folder moved in place ... ${GREEN}done${RESET}"
 
 	fi
 
 
 	# Remove the import folder if successful
-	if [[ ! -d "${BASEDIR}/site/import/wp-content/" ]] && [[ ! -f "${BASEDIR}/site/import/db.sql" ]] && [[ ! -f "${BASEDIR}/site/import/mysql.sql" ]]; then
+	if [[ ! -d "${PROJECTDIR}/import/wp-content/" ]] && [[ ! -f "${PROJECTDIR}/import/db.sql" ]] && [[ ! -f "${PROJECTDIR}/import/mysql.sql" ]]; then
 	
-		rm -rf "${BASEDIR}/site/import/"
+		rm -rf "${PROJECTDIR}/import/"
 		echo -e "'import' folder removed ... ${GREEN}done${RESET}"
 
 
@@ -532,11 +532,11 @@ function make_temporary () {
 	echo -e "'wp-content' folder is being temporary..."
 
 	# Make the wp-content folder temporary
-	if [[ -d "${BASEDIR}/site/wp/wp-content" ]]; then
+	if [[ -d "${PROJECTDIR}/wp/wp-content" ]]; then
 		
 		# Delete the old tmp_wp-content folder if exists
-		rm -rf "${BASEDIR}/site/wp/tmp_wp-content"
-		mv "${BASEDIR}/site/wp/wp-content" "${BASEDIR}/site/wp/tmp_wp-content"
+		rm -rf "${PROJECTDIR}/wp/tmp_wp-content"
+		mv "${PROJECTDIR}/wp/wp-content" "${PROJECTDIR}/wp/tmp_wp-content"
 
 		echo -e "'wp-content' folder has been made temporary ... ${GREEN}done${RESET}"
 
@@ -551,11 +551,11 @@ function make_permanent () {
 	echo -e "'wp-content' folder is being permenant..."
 
 	# Make the wp-content folder temporary
-	if [[ -d "${BASEDIR}/site/wp/tmp_wp-content" ]]; then
+	if [[ -d "${PROJECTDIR}/wp/tmp_wp-content" ]]; then
 		
 		# Delete the old wp-content folder
-		rm -rf "${BASEDIR}/site/wp/wp-content"
-		mv "${BASEDIR}/site/wp/tmp_wp-content" "${BASEDIR}/site/wp/wp-content"
+		rm -rf "${PROJECTDIR}/wp/wp-content"
+		mv "${PROJECTDIR}/wp/tmp_wp-content" "${PROJECTDIR}/wp/wp-content"
 
 		echo -e "'wp-content' folder has been made permenant ... ${GREEN}done${RESET}"
 
@@ -573,7 +573,7 @@ function install_npm () {
 
 
 		# If Gulp not installed, build the gulp
-		if [[ ! -d "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "${BASEDIR}/site/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
+		if [[ ! -d "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
 
 
 			# RUN THE GULP
@@ -587,7 +587,7 @@ function install_npm () {
 
 
 		# If Gulp file exist in theme folder
-		if [[ -f "${BASEDIR}/site/wp/wp-content/themes/${SLUG}/gulpfile.js" ]]; then
+		if [[ -f "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/gulpfile.js" ]]; then
 
 
 			# RUN THE GULP

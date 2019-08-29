@@ -130,12 +130,13 @@ if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
 
 	echo -e "${GREEN}Confirmed.${RESET}"
 
-	# # Move the 'wp-content' folder TEMPORARILY
-	# if [[ $MODE != install-starter ]]; then
 
-	# 	make_temporary
+	# Move the 'wp-content' folder TEMPORARILY
+	if [[ $MODE != install-starter ]]; then
 
-	# fi
+		make_temporary
+
+	fi
 
 
 	# Update environment files
@@ -147,7 +148,7 @@ if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
 
 
 	# Update the permissions
-	permission_update ./
+	permission_update $PROJECTDIR
 
 
 else
@@ -247,6 +248,180 @@ if [[ $MODE != install-starter ]]; then
 	db_url_update
 
 fi
+
+
+
+
+# PREPARE THE STARTER TEMPLATE
+if [[ $MODE == install-starter ]]; then
+
+
+	# Download the template
+	git clone https://github.com/Twelve12com/wp-flexible-starter-template.git site/wp/wp-content/themes/${SLUG}/
+	rm -rf site/wp/wp-content/themes/${SLUG}/.git
+	echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
+
+
+	# Theme function prefix changes
+	sedreplace "s/sitename/${PREFIX}/g" site/wp/wp-content/themes/${SLUG}/functions.php;
+	sedreplace "s/sitename/${PREFIX}/g" site/wp/wp-content/themes/${SLUG}/header.php;
+	echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
+
+
+	# Theme info changes
+	sedreplace "s/Site Name/${NAME}/g" site/wp/wp-content/themes/${SLUG}/style.scss;
+	sedreplace "s/Site tagline/${DESC}/g" site/wp/wp-content/themes/${SLUG}/style.scss;
+	echo -e "Theme information updated as '${NAME}' ... ${GREEN}done${RESET}"
+
+
+	# Install NPM packages
+	echo "NPM packages installing..."
+	docker-compose run --no-deps --rm gulp npm run-script build
+	echo -e "SCSS file built ... ${GREEN}done${RESET}"
+
+
+
+	# DO THE WP WORKS
+	source wp.sh
+
+
+fi
+
+
+
+
+# Update the temporary files
+if [[ $MODE != install-starter ]]; then
+
+	make_permanent
+
+fi
+
+
+
+
+# Save the initial DB backup
+db_backup
+
+
+
+
+# Ask for the git initialization
+if [[ ! -d "${PROJECTDIR}/.git" ]]; then
+
+
+	read -ep "Would you like to create new this project to Git? (Press 'enter' or type 'no'): " gitconfirm
+	if [[ $gitconfirm != no ]]; then
+
+
+		# Initiate git
+		(
+
+			# Open the site directory
+			cd $PROJECTDIR
+			echo -e "Open the site directory ... ${GREEN}done${RESET}"
+
+
+			# Initiate Git
+			git init
+			echo -e "Initiate Git ... ${GREEN}done${RESET}"
+
+
+			# Stage all the changes
+			git add -A .
+			echo -e "Stage all the changes ... ${GREEN}done${RESET}"
+
+
+			# Show the git status
+			git status
+			echo -e "Show the git status ... ${GREEN}done${RESET}"
+
+
+			# Commit the changes
+			git commit -m "Initial commit"
+			echo -e "Commit the changes ... ${GREEN}done${RESET}"
+
+
+			echo 'Twelve12 Bitbucket Password:'
+			read -s password  # -s flag hides password text
+
+			read -ep "Would you like to retype the password? (Press 'enter' or type 'yes'): " retypepass
+			if [[ $retypepass == "yes" ]]; then
+
+				echo 'Twelve12 Bitbucket Password:'
+				read -s password  # -s flag hides password text
+
+			fi
+
+
+			# Create a private repo
+			curl POST -v -u twelve12com:$password  -H "Content-Type: application/json" \
+		https://api.bitbucket.org/2.0/repositories/twelve12com/$SLUG \
+		-d '{"scm": "git", "is_private": "true", "fork_policy": "no_public_forks" }'
+			echo ""
+			echo -e "Create a private repo ... ${GREEN}done${RESET}"
+
+
+			# Add the origin
+			git remote add origin https://twelve12com@bitbucket.org/twelve12com/$SLUG.git
+			echo -e "Add the origin ... ${GREEN}done${RESET}"
+
+
+			# Push the changes
+			git push -u origin --all
+			echo -e "Push the files ... ${GREEN}done${RESET}"
+
+
+			# Update .git permissions
+			permission_update .git
+
+		)
+
+
+	fi
+
+fi
+
+
+
+
+# Fix the site git permissions
+if [[ -d "${PROJECTDIR}/.git" ]]; then
+	
+	git_permission_update "${PROJECTDIR}/.git"
+
+fi
+
+
+
+
+# Fix the builder git permissions finally
+git_permission_update "${BUILDERDIR}/.git"
+
+
+
+
+# PRINT THE SITE INFO
+echo -e "${GREEN}Project Installed${RESET}"
+echo ""
+echo ""
+echo "== Site Info ===================="
+echo ""
+echo "Site URL: http://${DOMAIN}"
+echo "Admin Page: http://${DOMAIN}/wp-admin"
+
+if [[ $MODE == install-starter ]]; then
+
+	echo "Username: ${ADMIN_USERNAME}"
+	echo "${ADMIN_ONLY_PASSWORD}"
+
+fi
+
+echo "IP: ${IP}"
+echo ""
+echo "================================="
+echo ""
+echo ""
 
 
 

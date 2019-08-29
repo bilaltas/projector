@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  wp:
+  wpcli:
     build: .
-    container_name: "${PREFIX}_wp"
+    container_name: "${PREFIX}_wpcli"
     restart: "always"
     user: root
     ports:
