@@ -71,6 +71,12 @@ fi
 
 ## UNINSTALLATION:
 
+# Save a DB backup first
+db_backup
+
+exit
+
+
 echo "Server is closing..."
 (
 	cd $PROJECTDIR

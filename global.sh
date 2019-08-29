@@ -221,7 +221,7 @@ function db_backup () {
 
 
 	# Get data
-	source "${PROJECTDIR}/local.env"
+	source "${BUILDERDIR}/sample.env"
 	source "${PROJECTDIR}/.env"
 
 
@@ -246,15 +246,10 @@ function db_backup () {
 
 	# Save the DB backup
 	echo "Backing up the DB..."
-	DB_FILE="${PROJECTDIR}/database/dump/wordpress_data.sql"
-
-	(
-		cd $PROJECTDIR
-		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec db /usr/bin/mysqldump -u root --password=password wordpress_data > "${DB_FILE}"
-	)
-
-	tail -n +2 "${DB_FILE}" > "${DB_FILE}.tmp" && mv "${DB_FILE}.tmp" "${DB_FILE}"
-	echo -e "DB Backup saved in '${DB_FILE}' ... ${GREEN}done${RESET}"
+	DB_FILE_NAME=wordpress_data.sql
+	wp db export $DB_FILE_NAME
+	mv "${PROJECTDIR}/wp/${DB_FILE_NAME}" "${PROJECTDIR}/database/dump/${DB_FILE_NAME}"
+	echo -e "DB Backup saved in '${PROJECTDIR}/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
 
 }
 
