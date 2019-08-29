@@ -57,7 +57,7 @@ fi
 
 
 # Check if already installed
-if [[ $IP == "127.0.0.1" ]]; then
+if [[ -z $IP ]] || [[ $IP == "127.0.0.1" ]]; then
 
 
 	echo -e "${RED}Project is not installed.${RESET}"

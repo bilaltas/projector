@@ -6,6 +6,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # Add WP-CLI 
-RUN curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN curl -sS -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 COPY wp-su.sh /bin/wp
 RUN chmod +x /bin/wp-cli.phar

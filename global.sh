@@ -153,23 +153,32 @@ function update_environment {
 
 function self_update () {
 
-	# Builder updates
-	echo "Updating the builder..."
-	git pull
-	git reset --hard
-	git pull
-	echo -e "Builder update complete ... ${GREEN}done${RESET}"
+	(
+		cd $BUILDERDIR
+
+		# Builder updates
+		echo "Updating the builder..."
+		git pull
+		git reset --hard
+		git pull
+		echo -e "Builder update complete ... ${GREEN}done${RESET}"
+
+	)
 
 }
 
 function server_permission_update () {
+	
+	(
+		cd $PROJECTDIR
 
-	echo "Fixing the server file permissions in ($1)..."
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chown -R www-data:www-data "$1"
-	# docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chmod -R a=rwx $1
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
-	echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
+		echo "Fixing the server file permissions in ($1)..."
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chown -R www-data:www-data "$1"
+		# docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp chmod -R a=rwx $1
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec wp find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+		echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
+	)
 
 }
 
@@ -196,7 +205,12 @@ function git_permission_update () {
 }
 
 function wp {
-	command docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm wpcli --allow-root "$@"
+	
+	(
+		cd $PROJECTDIR
+		command docker-compose -f "$BUILDERDIR/docker-compose.yml" run --no-deps --rm wpcli --allow-root "$@"
+	)
+
 }
 
 function db_backup () {
@@ -207,8 +221,8 @@ function db_backup () {
 
 
 	# Get data
-	source "${BASEDIR}/local.env"
-	source "${BASEDIR}/site/.env"
+	source "${PROJECTDIR}/local.env"
+	source "${PROJECTDIR}/.env"
 
 
 	# Re-assign the real IP
@@ -227,13 +241,18 @@ function db_backup () {
 
 
 	# Update the current local IP on builder
-	sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "${BASEDIR}/.env";
+	sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "${PROJECTDIR}/.env";
 
 
 	# Save the DB backup
 	echo "Backing up the DB..."
-	DB_FILE="${BASEDIR}/site/database/dump/wordpress_data.sql"
-	docker-compose -f "$BUILDERDIR/docker-compose.yml" exec db /usr/bin/mysqldump -u root --password=password wordpress_data > "${DB_FILE}"
+	DB_FILE="${PROJECTDIR}/database/dump/wordpress_data.sql"
+
+	(
+		cd $PROJECTDIR
+		docker-compose -f "$BUILDERDIR/docker-compose.yml" exec db /usr/bin/mysqldump -u root --password=password wordpress_data > "${DB_FILE}"
+	)
+
 	tail -n +2 "${DB_FILE}" > "${DB_FILE}.tmp" && mv "${DB_FILE}.tmp" "${DB_FILE}"
 	echo -e "DB Backup saved in '${DB_FILE}' ... ${GREEN}done${RESET}"
 
@@ -328,12 +347,16 @@ function db_url_update () {
 function wait_for_mysql () {
 
 
-	# Check MySQL to be ready
-	while ! docker-compose -f "$BUILDERDIR/docker-compose.yml" exec db mysqladmin --user=root --password=password --host "${IP}" ping --silent &> /dev/null ; do
-		echo "Waiting for database connection..."
-		sleep 3
-	done
-	echo -e "MySQL is ready! ... ${GREEN}done${RESET}"
+	(
+		cd $PROJECTDIR
+
+		# Check MySQL to be ready
+		while ! docker-compose -f "${BUILDERDIR}/docker-compose.yml" exec db mysqladmin --user=root --password=password --host "$IP" ping --silent &> /dev/null ; do
+			echo "Waiting for database connection for ${BUILDERDIR} - ${IP} ..."
+			sleep 3
+		done
+		echo -e "MySQL is ready! ... ${GREEN}done${RESET}"
+	)
 
 
 }
@@ -545,12 +568,12 @@ function install_npm () {
 
 
 	# If package.json exist in theme folder
-	if [[ -f "${BASEDIR}/site/wp/wp-content/themes/${SLUG}/package.json" ]]; then
+	if [[ -f "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/package.json" ]]; then
 
 
 
 		# If Gulp not installed, build the gulp
-		if [[ ! -d "${BASEDIR}/site/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "${BASEDIR}/site/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
+		if [[ ! -d "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "${BASEDIR}/site/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
 
 
 			# RUN THE GULP
