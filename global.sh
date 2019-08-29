@@ -352,7 +352,7 @@ function wait_for_mysql () {
 
 		# Check MySQL to be ready
 		while ! docker-compose -f "${BUILDERDIR}/docker-compose.yml" exec db mysqladmin --user=root --password=password --host "$IP" ping --silent &> /dev/null ; do
-			echo "Waiting for database connection for ${BUILDERDIR} - ${IP} ..."
+			echo "Waiting for database connection ..."
 			sleep 3
 		done
 		echo -e "MySQL is ready! ... ${GREEN}done${RESET}"
