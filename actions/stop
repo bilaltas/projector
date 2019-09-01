@@ -1,6 +1,32 @@
 #!/bin/bash
 
 
+
+
+# Check if the folder not exists
+if [[ ! -d $PROJECTDIR ]]; then
+
+	echo -e "${RED}Project folder doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if installed
+if [[ $INSTALLED != "yes" ]]; then
+
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+
+fi
+
+
+
+
 # Stop the server
 echo "Server is stopping..."
 docker_compose stop
