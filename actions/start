@@ -23,3 +23,51 @@ if [[ $INSTALLED != "yes" ]]; then
 
 
 fi
+
+
+
+
+# Open that IP slot
+ifconfig lo0 alias $IP up
+echo -e "'${IP}' is now available ... ${GREEN}done${RESET}"
+
+
+
+
+echo "Site is building again..."
+docker_compose up -d
+echo -e "Build server again ... ${GREEN}done${RESET}"
+
+
+
+
+# Check MySQL to be ready
+wait_for_mysql
+
+
+
+
+# Pull the changes and start
+source "$BUILDERDIR/actions/pull"
+
+
+
+
+# PRINT THE SITE INFO
+echo -e "${GREEN}Site is up!${RESET}"
+echo ""
+echo ""
+echo "== Site Info ===================="
+echo ""
+echo "Admin Page: http://${DOMAIN}"
+echo "IP: ${IP}"
+echo ""
+echo "================================="
+echo ""
+echo ""
+
+
+
+
+# Install NPM for Gulp
+install_npm

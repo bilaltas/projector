@@ -24,9 +24,6 @@ if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpr
 fi # If current folder is a project folder
 
 
-# wp db reset --yes
-# wp db import "wordpress_data.sql"
-# exit
 
 
 # Ask for the action, if not specified
@@ -34,7 +31,7 @@ ACTION=$1
 if [[ -z $ACTION ]]; then
 
 
-	read -ep "Write the action type (starter | clone | install | uninstall | stop | import | pull): " ACTION
+	read -ep "Write the action type (starter | clone | install | uninstall | start | stop | import | pull): " ACTION
 	if [[ -z $ACTION ]]; then
 
 		echo -e "${RED}No action entered.${RESET}"
@@ -47,7 +44,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != stop ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != pull ]]; then
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != pull ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit

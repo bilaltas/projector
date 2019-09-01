@@ -528,7 +528,10 @@ function install_npm () {
 
 			# RUN THE GULP
 			echo "NPM packages are installing..."
-			docker_compose run --no-deps --rm gulp npm run build
+			(
+				cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+				npm run build
+			)
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 
 
@@ -542,7 +545,10 @@ function install_npm () {
 
 			# RUN THE GULP
 			echo "GULP is running..."
-			docker_compose run --no-deps --rm gulp npm start
+			(
+				cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+				npm start
+			)
 
 
 		fi

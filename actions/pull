@@ -86,10 +86,6 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 	if [[ $INSTALLED == "yes" ]]; then
 
 
-		# Run the server if not running
-		run_server_if_not_running
-
-
 		# Move to the WP area
 		cp "${PROJECTDIR}/database/dump/wordpress_data.sql" "${PROJECTDIR}/wp/wordpress_data.sql"
 
