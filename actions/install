@@ -1,42 +1,11 @@
 #!/bin/bash
 
 
+# Check if the folder not exists
+if [[ ! -d $PROJECTDIR ]]; then
 
-
-# If current folder is not a specific project folder
-if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
-
-
-	# Get project name from args
-	if [[ ! -z $1 ]]; then
-
-		SLUG=$1
-
-	else
-
-
-		# Ask for the project name
-		read -ep "Project name (site-name): " SLUG
-		while [[ -z $SLUG ]]; do
-			read -ep "Project name (site-name): " SLUG
-		done
-
-
-	fi
-
-
-	# Project directory
-	PROJECTDIR="${BASEDIR}/${SLUG}"
-
-
-	# Check if the folder not exists
-	if [[ ! -d $PROJECTDIR ]]; then
-
-		echo -e "${RED}Project folder doesn't exist.${RESET}"
-		exit
-
-	fi
-
+	echo -e "${RED}Project folder doesn't exist.${RESET}"
+	exit
 
 fi
 
@@ -225,7 +194,7 @@ docker_compose up -d --force-recreate
 
 
 # Close the PHPMyadmin
-docker_compose stop phpmyadmin
+#docker_compose stop phpmyadmin
 
 
 

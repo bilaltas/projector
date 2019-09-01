@@ -6,70 +6,78 @@ source "$BUILDERDIR/global.sh"
 
 
 
-# Get the action specified
-if [[ ! -z $1 ]]; then
 
-	ACTION=$1
+# Check if current folder is a project folder
+if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
+
+
+	# Extract the project name from BASEDIR
+	SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
+	SLUG="${SLUG##*/}"
+	#echo "Project name: $SLUG"
+
+
+	# Project directory
+	PROJECTDIR=$BASEDIR
+
+
+fi # If current folder is a project folder
+
+
+
+
+# Ask for the action, if not specified
+ACTION=$1
+if [[ -z $ACTION ]]; then
+
+
+	read -ep "Write the action type (starter | clone | install | uninstall | import): " ACTION
+	if [[ -z $ACTION ]]; then
+
+		echo -e "${RED}No action entered.${RESET}"
+		exit
+
+	fi
+
+
+fi
+
+
+# If unknown answer
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != uninstall ]]; then
+
+	echo -e "${RED}Wrong action.${RESET}"
+	exit
 
 fi
 
 
 
+
 # If current folder is not a specific project folder
-if [[ -z $SLUG ]]; then
+if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
 
 
-	# Ask for the action, if not specified
-	if [[ -z $ACTION ]]; then
+	# Get project name from args
+	if [[ ! -z $2 ]]; then
+
+		SLUG=$2
+
+	else
 
 
-		read -ep "Write the action type (starter | clone | install | uninstall | import): " ACTION
-		if [[ -z $ACTION ]]; then
-
-			echo -e "${RED}No action entered.${RESET}"
-			exit
-
-		fi
-
-
-	fi
-
-
-	# If unknown answer
-	if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != uninstall ]]; then
-
-		echo -e "${RED}Wrong action.${RESET}"
-		exit
-
-	fi
-
-
-else
-
-
-	# Ask for the action, if not specified
-	if [[ -z $ACTION ]]; then
-
-
-		read -ep "Write the action type (install | start | uninstall): " ACTION
-		if [[ -z $ACTION ]]; then
-
-			echo -e "${RED}No action entered.${RESET}"
-			exit
-
-		fi
+		# Ask for the project name
+		read -ep "Project name (site-name): " SLUG
+		while [[ -z $SLUG ]]; do
+			read -ep "Project name (site-name): " SLUG
+		done
 
 
 	fi
 
 
-	# If unknown answer
-	if [[ $ACTION != install ]] && [[ $ACTION != start ]] && [[ $ACTION != uninstall ]]; then
-
-		echo -e "${RED}Wrong action.${RESET}"
-		exit
-
-	fi
+	# Project directory
+	PROJECTDIR="${BASEDIR}/${SLUG}"
 
 
 fi

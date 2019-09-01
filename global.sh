@@ -14,82 +14,6 @@ BASEDIR="$(pwd)"
 
 
 
-# Check if current folder is a project folder
-if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
-
-
-	# Extract the project name from BASEDIR
-	SLUG="${BASEDIR%"${BASEDIR##*[!/]}"}"
-	SLUG="${SLUG##*/}"
-	PROJECTDIR=$BASEDIR
-
-	#echo "Project name: $SLUG"
-
-
-fi
-
-
-
-
-# CHECK DOCKER WHETHER OR NOT RUNNING
-rep=$(docker ps -q &>/dev/null)
-status=$?
-if [[ "$status" != "0" ]]; then
-    
-    echo 'Docker is opening...'
-    open /Applications/Docker.app
-
-
-    while [[ "$status" != "0" ]]; do
-
-        echo 'Docker is starting...'
-        sleep 3
-
-        rep=$(docker ps -q &>/dev/null)
-        status=$?
-
-    done
-
-    echo -e "${GREEN}Docker connected${RESET}"
-
-fi
-
-
-
-# FIND CURRENT OS
-OS="Unknown"
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        OS="Linux"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-        OS="MacOS"
-elif [[ "$OSTYPE" == "cygwin" ]]; then
-        # POSIX compatibility layer and Linux environment emulation for Windows
-		OS="cygwin"
-elif [[ "$OSTYPE" == "msys" ]]; then
-        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-		OS="msys"
-elif [[ "$OSTYPE" == "win32" ]]; then
-        OS="Win32"
-elif [[ "$OSTYPE" == "freebsd"* ]]; then
-        OS="FreeBSD"
-fi
-#echo "Operating System: ${OS}"
-
-
-
-# # Fix the missing WP_VERSION variable
-# if [[ -f "${BASEDIR}/.env" ]]; then
-
-# 	if [ -z $(grep "WP_VERSION" "${BASEDIR}/.env") ]; then 
-# 		echo "WP version not found."
-# 		echo "WP_VERSION=latest" >> "${BASEDIR}/.env"
-# 		echo -e "WP version added ... ${GREEN}done${RESET}"
-# 	fi
-
-# fi
-
-
-
 function sedreplace () {
 
 	if [[ $OS == "MacOS" ]]; then
@@ -598,3 +522,85 @@ function install_npm () {
 
 
 }
+
+
+
+
+# FIND CURRENT OS
+OS="Unknown"
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        OS="Linux"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        OS="MacOS"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+        # POSIX compatibility layer and Linux environment emulation for Windows
+		OS="cygwin"
+elif [[ "$OSTYPE" == "msys" ]]; then
+        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+		OS="msys"
+elif [[ "$OSTYPE" == "win32" ]]; then
+        OS="Win32"
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        OS="FreeBSD"
+fi
+#echo "Operating System: ${OS}"
+
+
+# CHECK IF OS SUPPORTED
+if [[ $OS != "MacOS" ]]; then
+
+	echo -e "${RED}Projector only works on Mac OS systems yet.${RESET}"
+	exit
+
+fi
+
+
+
+
+# CHECK IF DOCKER INSTALLED
+if [[ ! -d "/Applications/Docker.app" ]]; then
+
+	echo -e "${RED}Docker is not installed to your computer. Please install and try again.${RESET}"
+	exit
+
+fi
+
+
+
+
+# CHECK DOCKER WHETHER OR NOT RUNNING
+rep=$(docker ps -q &>/dev/null)
+status=$?
+if [[ "$status" != "0" ]]; then
+    
+    echo 'Docker is opening...'
+    open /Applications/Docker.app
+
+
+    while [[ "$status" != "0" ]]; do
+
+        echo 'Docker is starting...'
+        sleep 3
+
+        rep=$(docker ps -q &>/dev/null)
+        status=$?
+
+    done
+
+    echo -e "${GREEN}Docker connected${RESET}"
+
+fi
+
+
+
+
+# # Fix the missing WP_VERSION variable
+# if [[ -f "${BASEDIR}/.env" ]]; then
+
+# 	if [ -z $(grep "WP_VERSION" "${BASEDIR}/.env") ]; then 
+# 		echo "WP version not found."
+# 		echo "WP_VERSION=latest" >> "${BASEDIR}/.env"
+# 		echo -e "WP version added ... ${GREEN}done${RESET}"
+# 	fi
+
+# fi
