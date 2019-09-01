@@ -96,7 +96,7 @@ if [[ -f "$PROJECTDIR/.env" ]]; then
 
 	if [[ $IP != "127.0.0.1" ]]; then
 
-		INSTALLED="YES"
+		INSTALLED="yes"
 
 	fi # If already installed
 
@@ -132,5 +132,15 @@ fi
 if [[ $ACTION == uninstall ]]; then
 
 	source "$BUILDERDIR/actions/uninstall"
+
+fi
+
+
+
+
+# STOP
+if [[ $ACTION == stop ]]; then
+
+	source "$BUILDERDIR/actions/stop"
 
 fi
