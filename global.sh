@@ -100,6 +100,23 @@ function docker_compose {
 
 }
 
+function run_server_if_installed {
+
+
+	# Check if services are running
+	if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ] || [ -z `docker_compose ps -q db` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]; then
+
+
+		echo "Services not running. Starting..."
+		docker_compose up -d
+		echo -e "Services restarted ... ${GREEN}done${RESET}"
+
+
+	fi # If not running
+
+
+}
+
 function server_permission_update () {
 
 
@@ -144,40 +161,54 @@ function wp {
 function db_backup () {
 
 
-	# Register the IP before overwrite
-	REAL_IP=$IP
+	if [[ $INSTALLED == "yes" ]]; then
 
 
-	# Get data
-	source "${BUILDERDIR}/sample.env"
-	source "${PROJECTDIR}/.env"
+		# Run server if not running
+		run_server_if_installed
 
 
-	# Re-assign the real IP
-	IP=$REAL_IP
+		# Register the IP before overwrite
+		REAL_IP=$IP
 
 
-	# Checking the WP version
-	echo "Checking the WP version..."
-	WP_VERSION="$(wp core version)"
-	WP_VERSION=${WP_VERSION%?}
-	echo -e "WP version found: ${GREEN}${WP_VERSION}${RESET}"
+		# Get data
+		source "${BUILDERDIR}/sample.env"
+		source "${PROJECTDIR}/.env"
 
 
-	# Update environment files
-	update_environment
+		# Re-assign the real IP
+		IP=$REAL_IP
 
 
-	# Update the current local IP on builder
-	sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "${PROJECTDIR}/.env";
+		# Checking the WP version
+		echo "Checking the WP version..."
+		WP_VERSION="$(wp core version)"
+		WP_VERSION=${WP_VERSION%?}
+		echo -e "WP version found: ${GREEN}${WP_VERSION}${RESET}"
 
 
-	# Save the DB backup
-	echo "Backing up the DB..."
-	DB_FILE_NAME=wordpress_data.sql
-	wp db export $DB_FILE_NAME
-	mv "${PROJECTDIR}/wp/${DB_FILE_NAME}" "${PROJECTDIR}/database/dump/${DB_FILE_NAME}"
-	#echo -e "DB Backup saved in '${PROJECTDIR}/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
+		# Update environment files
+		update_environment
+
+
+		# Update the current local IP on builder
+		sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "${PROJECTDIR}/.env";
+
+
+		# Save the DB backup
+		echo "Backing up the DB..."
+		DB_FILE_NAME=wordpress_data.sql
+		wp db export $DB_FILE_NAME
+		mv "${PROJECTDIR}/wp/${DB_FILE_NAME}" "${PROJECTDIR}/database/dump/${DB_FILE_NAME}"
+		#echo -e "DB Backup saved in '${PROJECTDIR}/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
+
+
+	else
+
+		echo -e "${RED}Cannot get DB backup because project is not installed.${RESET}"
+
+	fi
 
 }
 

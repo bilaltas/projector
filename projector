@@ -85,6 +85,27 @@ fi
 
 
 
+# Installation Check
+INSTALLED="no"
+if [[ -f "$PROJECTDIR/.env" ]]; then
+
+
+	# Get data from .env file
+	source "$PROJECTDIR/.env"
+
+
+	if [[ $IP != "127.0.0.1" ]]; then
+
+		INSTALLED="YES"
+
+	fi # If already installed
+
+
+fi # If has an .env file
+
+
+
+
 ## ACTIONS:
 
 # CLONE
