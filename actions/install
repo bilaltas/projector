@@ -193,12 +193,6 @@ docker_compose up -d --force-recreate
 
 
 
-# Close the PHPMyadmin
-#docker_compose stop phpmyadmin
-
-
-
-
 # Install WP-CLI
 echo -e "Installing WP-CLI..."
 docker_compose exec wpcli wp-cli-install.sh
@@ -370,12 +364,6 @@ if [[ -d "${PROJECTDIR}/.git" ]]; then
 	git_permission_update "${PROJECTDIR}/.git"
 
 fi
-
-
-
-
-# Fix the builder git permissions finally
-git_permission_update "${BUILDERDIR}/.git"
 
 
 

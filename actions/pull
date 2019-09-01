@@ -65,7 +65,7 @@ else
 			echo -e "Hard reset ... ${GREEN}done${RESET}"
 		fi
 		git pull
-		echo -e "Git pull complete ... ${GREEN}done${RESET}"
+		echo -e "Git pull ... ${GREEN}done${RESET}"
 	)
 
 
@@ -86,74 +86,47 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 	if [[ $INSTALLED == "yes" ]]; then
 
 
-		if [[ $2 == --import ]] || [[ $3 == --import ]]; then
-
-			# Move the 'wp-content' folder TEMPORARILY
-			make_temporary
-
-		fi
+		# Run the server if not running
+		run_server_if_not_running
 
 
-		echo "Closing server..."
-		docker_compose down
-		echo -e "Server is down ... ${GREEN}done${RESET}"
+		# Move to the WP area
+		cp "${PROJECTDIR}/database/dump/wordpress_data.sql" "${PROJECTDIR}/wp/wordpress_data.sql"
+
+
+		# Import
+		wp db reset --yes
+		wp db import "wordpress_data.sql"
+
+
+		# Delete the file again
+		rm -rf "${PROJECTDIR}/wp/wordpress_data.sql"
+
+
+		# Ask the registered URL and do the replacements
+		db_url_update
+
+
+		# Rewrite Flush
+		wp rewrite flush --hard
+
 
 	else
+
+		echo "Old data removing..."
+		rm -rf "${PROJECTDIR}/database/mysql/"
+		echo -e "Remove old data ... ${GREEN}done${RESET}"
+
 
 		echo -e "${GREEN}Server needs to be restarted to apply DB changes.${RESET}"
 
 	fi
 
 
-	echo "Old data removing..."
-	rm -rf "${PROJECTDIR}/database/mysql/"
-	echo -e "Remove old data ... ${GREEN}done${RESET}"
-
-
 else
 
 
 	echo "DB is identical."
-
-
-fi
-
-
-
-
-# If installed
-if [[ $INSTALLED == "yes" ]]; then
-
-
-	echo "Site is building again..."
-	docker_compose up -d
-	echo -e "Build server again ... ${GREEN}done${RESET}"
-
-
-	# Install WP-CLI
-	echo -e "Installing WP-CLI..."
-	docker_compose exec wpcli wp-cli-install.sh
-	echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
-
-
-	# Check MySQL to be ready
-	wait_for_mysql
-
-
-	# Ask the registered URL and do the replacements
-	db_url_update
-
-
-
-	if [[ $2 == --import ]] || [[ $3 == --import ]]; then
-
-		# Make the 'wp-content' folder permanent
-		make_permanent
-
-	fi
-
-
-	echo -e "Server is ${GREEN}up${RESET}"
 
 
 fi

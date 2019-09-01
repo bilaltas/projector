@@ -100,7 +100,7 @@ function docker_compose {
 
 }
 
-function run_server_if_installed {
+function run_server_if_not_running {
 
 
 	# Check if services are running
@@ -165,7 +165,7 @@ function db_backup () {
 
 
 		# Run server if not running
-		run_server_if_installed
+		run_server_if_not_running
 
 
 		# Register the IP before overwrite

@@ -24,6 +24,9 @@ if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpr
 fi # If current folder is a project folder
 
 
+# wp db reset --yes
+# wp db import "wordpress_data.sql"
+# exit
 
 
 # Ask for the action, if not specified

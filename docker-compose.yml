@@ -12,6 +12,7 @@ services:
       - ${BUILDER_DIR}/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
       - ${BUILDER_DIR}/config/wp-su.sh:/usr/local/bin/wp
       - ${BUILDER_DIR}/config/wp-cli-install.sh:/usr/local/bin/wp-cli-install.sh
+      - ${BUILDER_DIR}/config/wp-cli.phar:/bin/wp-cli.phar
       - ${PROJECT_DIR}/wp:/var/www/html
       - ${PROJECT_DIR}/logs:/var/log/apache2
     environment:
