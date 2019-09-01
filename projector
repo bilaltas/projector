@@ -106,41 +106,9 @@ fi # If has an .env file
 
 
 
-## ACTIONS:
+## DO THE ACTION:
+if [[ -f "$BUILDERDIR/actions/$ACTION" ]]; then
 
-# CLONE
-if [[ $ACTION == clone ]]; then
-
-	source "$BUILDERDIR/actions/clone"
-
-fi
-
-
-
-
-# INSTALL
-if [[ $ACTION == install ]]; then
-
-	source "$BUILDERDIR/actions/install"
-
-fi
-
-
-
-
-# UNINSTALL
-if [[ $ACTION == uninstall ]]; then
-
-	source "$BUILDERDIR/actions/uninstall"
-
-fi
-
-
-
-
-# STOP
-if [[ $ACTION == stop ]]; then
-
-	source "$BUILDERDIR/actions/stop"
+	source "$BUILDERDIR/actions/$ACTION"
 
 fi
