@@ -1,0 +1,90 @@
+#!/bin/bash
+
+
+
+
+# Check if the folder not exists
+if [[ ! -d $PROJECTDIR ]]; then
+
+	echo -e "${RED}Project doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if installed
+if [[ $INSTALLED != "yes" ]]; then
+
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+
+fi
+
+
+
+
+(
+
+	# Open the site directory
+	cd "$PROJECTDIR"
+
+
+
+
+	# Save the DB backup
+	db_backup
+
+
+
+
+	# Early exit if only db backup requested
+	[[ $2 == --db ]] && exit || sleep 0
+
+
+
+
+	# Stage all the changes
+	echo "Staging all the changes..."
+	git add -A .
+	echo -e "Stage all the changes ... ${GREEN}done${RESET}"
+
+
+
+
+	# Show the git status
+	echo "Showing the git status..."
+	git status
+	echo -e "Show the git status ... ${GREEN}done${RESET}"
+
+
+
+
+	# Ask for the commit message
+	read -ep "Commit Message: " COMMIT_MESSAGE
+	while [[ -z "$COMMIT_MESSAGE" ]]; do 
+
+		read -ep "Commit Message: " COMMIT_MESSAGE
+
+	done
+
+
+
+
+	# Commit the changes
+	echo "Committing the changes..."
+	git commit -m "$COMMIT_MESSAGE"
+	echo -e "Commit the changes ... ${GREEN}done${RESET}"
+
+
+
+
+	# Push the changes
+	echo "Pushing the changes..."
+	git push
+	echo -e "Git push complete ... ${GREEN}done${RESET}"
+
+)

@@ -31,7 +31,7 @@ ACTION=$1
 if [[ -z $ACTION ]]; then
 
 
-	read -ep "Write the action type (starter | clone | install | uninstall | start | stop | import | pull): " ACTION
+	read -ep "Write the action type (starter | clone | install | uninstall | start | stop | import | pull | push): " ACTION
 	if [[ -z $ACTION ]]; then
 
 		echo -e "${RED}No action entered.${RESET}"
@@ -44,7 +44,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != pull ]]; then
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit
