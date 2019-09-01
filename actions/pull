@@ -14,17 +14,12 @@ fi
 
 
 
-echo "PULL STARTING"
-
-
-
-
 # Confirmations
 if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
 
 
 	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " ACTION
-	if [[ $ACTION != "yes" ]]; then
+	if [[ $ACTION != "yes" ]] && [[ $ACTION != "y" ]]; then
 
 		echo -e "${RED}Not confirmed.${RESET}"
 		exit
@@ -169,7 +164,8 @@ fi
 # Permission fix needed
 if [[ $2 == --hard ]] || [[ $3 == --hard ]] || [[ $2 == --import ]] || [[ $3 == --import ]]; then
 
-	sudo bash permission-fix
+	git_permission_update "$PROJECTDIR/.git"
+	permission_update "$PROJECTDIR/"
 
 fi
 

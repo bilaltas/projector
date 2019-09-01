@@ -1,1 +1,46 @@
 #!/bin/bash
+
+
+# Do all by default
+DO=site
+
+
+# Specific actions
+if [[ ! -z $2 ]]; then
+
+	DO=$2
+
+fi
+
+
+# Git permissions update
+if [[ $DO == all ]] || [[ $DO == git ]]; then
+
+	git_permission_update "$PROJECTDIR/.git"
+
+fi
+
+
+# Server permission update
+if [[ $DO == all ]] || [[ $DO == server ]]; then
+
+	server_permission_update /var/www/html/
+
+fi
+
+
+# Local file permission update
+if [[ $DO == all ]] || [[ $DO == permission ]]; then
+
+	permission_update "$PROJECTDIR/"
+
+fi
+
+
+# Local file permission update
+if [[ $DO == site ]]; then
+
+	git_permission_update "$PROJECTDIR/.git"
+	permission_update "$PROJECTDIR/"
+
+fi
