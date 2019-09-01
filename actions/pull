@@ -1,0 +1,179 @@
+#!/bin/bash
+
+
+
+
+# Check if the folder not exists
+if [[ ! -d $PROJECTDIR ]]; then
+
+	echo -e "${RED}Project doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+echo "PULL STARTING"
+
+
+
+
+# Confirmations
+if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+
+
+	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " ACTION
+	if [[ $ACTION != "yes" ]]; then
+
+		echo -e "${RED}Not confirmed.${RESET}"
+		exit
+
+	fi
+
+
+	# Create the current backup
+	db_backup
+
+
+fi
+
+
+
+
+# PULL HARD - GET DB BACKUP TO DETECT DB CHANGES
+DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
+DB_SUM1=$(md5 -r $DB_FILE)
+
+
+
+
+if [[ $2 == --import ]] || [[ $3 == --import ]]; then
+
+
+	# Move import files
+	move_import_files
+
+
+else
+
+
+	# Pulling latest changes from git
+	(
+		cd $PROJECTDIR
+		echo "Checking the latest remote changes..."
+		if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+			echo "Hard reset..."
+			git fetch
+			git reset --hard origin/master
+			git clean -df .
+			echo -e "Hard reset ... ${GREEN}done${RESET}"
+		fi
+		git pull
+		echo -e "Git pull complete ... ${GREEN}done${RESET}"
+	)
+
+
+fi
+
+
+
+
+# DETECT DB CHANGES
+DB_SUM2=$(md5 -r $DB_FILE)
+if [[ $DB_SUM1 != $DB_SUM2 ]]; then
+
+
+	echo "DB changed."
+
+
+	# If installed
+	if [[ $INSTALLED == "yes" ]]; then
+
+
+		if [[ $2 == --import ]] || [[ $3 == --import ]]; then
+
+			# Move the 'wp-content' folder TEMPORARILY
+			make_temporary
+
+		fi
+
+
+		echo "Closing server..."
+		docker_compose down
+		echo -e "Server is down ... ${GREEN}done${RESET}"
+
+	else
+
+		echo -e "${GREEN}Server needs to be restarted to apply DB changes.${RESET}"
+
+	fi
+
+
+	echo "Old data removing..."
+	rm -rf "${PROJECTDIR}/database/mysql/"
+	echo -e "Remove old data ... ${GREEN}done${RESET}"
+
+
+else
+
+
+	echo "DB is identical."
+
+
+fi
+
+
+
+
+# If installed
+if [[ $INSTALLED == "yes" ]]; then
+
+
+	echo "Site is building again..."
+	docker_compose up -d
+	echo -e "Build server again ... ${GREEN}done${RESET}"
+
+
+	# Install WP-CLI
+	echo -e "Installing WP-CLI..."
+	docker_compose exec wpcli wp-cli-install.sh
+	echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
+
+
+	# Check MySQL to be ready
+	wait_for_mysql
+
+
+	# Ask the registered URL and do the replacements
+	db_url_update
+
+
+
+	if [[ $2 == --import ]] || [[ $3 == --import ]]; then
+
+		# Make the 'wp-content' folder permanent
+		make_permanent
+
+	fi
+
+
+	echo -e "Server is ${GREEN}up${RESET}"
+
+
+fi
+
+
+
+
+# Permission fix needed
+if [[ $2 == --hard ]] || [[ $3 == --hard ]] || [[ $2 == --import ]] || [[ $3 == --import ]]; then
+
+	sudo bash permission-fix
+
+fi
+
+
+
+
+echo -e "${GREEN}PULLING COMPLETE${RESET}"

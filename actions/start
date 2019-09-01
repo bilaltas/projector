@@ -23,10 +23,3 @@ if [[ $INSTALLED != "yes" ]]; then
 
 
 fi
-
-
-
-
-# Stop the server
-echo "Server is stopping..."
-docker_compose stop

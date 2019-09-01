@@ -6,7 +6,7 @@
 # Check if the folder not exists
 if [[ ! -d $PROJECTDIR ]]; then
 
-	echo -e "${RED}Project folder doesn't exist.${RESET}"
+	echo -e "${RED}Project doesn't exist.${RESET}"
 	exit
 
 fi
