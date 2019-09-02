@@ -3,7 +3,7 @@
 # Builder directory
 BUILDERDIR=builderdir
 
-# Connect to the root access
+# Early access to the root
 sudo true
 
 # Run the app
