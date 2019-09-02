@@ -129,4 +129,10 @@ if [[ -f "$BUILDERDIR/actions/$ACTION" ]]; then
 
 	source "$BUILDERDIR/actions/$ACTION"
 
+
+else
+
+	echo -e "${RED}Action couldn't be found.${RESET}"
+	exit
+
 fi
