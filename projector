@@ -44,7 +44,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]]; then
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != import ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit
