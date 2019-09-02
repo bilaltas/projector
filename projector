@@ -7,7 +7,7 @@ source "$BUILDERDIR/global.sh"
 
 
 
-# Check if current folder is a project folder
+# Check if current folder is a project folder (project-name/)
 if [[ -d "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
 
 
@@ -54,7 +54,7 @@ fi
 
 
 
-# If current folder is not a specific project folder
+# If it's under current folder (Projects/project-name)
 if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
 
 
