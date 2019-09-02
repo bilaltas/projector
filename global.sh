@@ -95,7 +95,7 @@ function docker_compose {
 	
 	(
 		cd $PROJECTDIR
-		command docker-compose -f "${BUILDERDIR}/docker-compose.yml" "$@"
+		command docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
 	)
 
 }
