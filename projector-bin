@@ -3,8 +3,31 @@
 # Builder directory
 BUILDERDIR=builderdir
 
-# Early access to the root
-sudo true
 
-# Run the app
-source "$BUILDERDIR/projector" "$@"
+# Check if the builder exists
+if [[ -f "$BUILDERDIR/projector" ]]; then
+
+
+	# Check update
+	(
+		cd $BUILDERDIR
+		git pull
+	)
+
+
+	# Early access to the root
+	sudo true
+
+
+	# Run the app
+	source "$BUILDERDIR/projector"
+
+
+else
+
+
+	echo -e "${RED}Builder folder has been moved or deleted. Please install PROJECTOR again.${RESET}"
+	exit
+
+
+fi

@@ -77,19 +77,23 @@ else
 
 
 	# Pulling latest changes from git
-	(
-		cd $PROJECTDIR
-		echo "Checking the latest remote changes..."
-		if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
-			echo "Hard reset..."
-			git fetch
-			git reset --hard origin/master
-			git clean -dfx
-			echo -e "Hard reset ... ${GREEN}done${RESET}"
-		fi
-		git pull
-		echo -e "Git pull ... ${GREEN}done${RESET}"
-	)
+	if [[ ! -f "$PROJECTDIR/.git" ]]; then
+
+		(
+			cd $PROJECTDIR
+			echo "Checking the latest remote changes..."
+			if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+				echo "Hard reset..."
+				git fetch
+				git reset --hard origin/master
+				git clean -dfx
+				echo -e "Hard reset ... ${GREEN}done${RESET}"
+			fi
+			git pull
+			echo -e "Git pull ... ${GREEN}done${RESET}"
+		)
+
+	fi
 
 
 fi
