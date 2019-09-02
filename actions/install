@@ -213,7 +213,7 @@ if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $
 	rm -rf "${PROJECTDIR}/.env"
 
 
-	echo -e "${RED}Services are not started. Please try again.${RESET}"
+	echo -e "${RED}Services could not be started. Restart Docker and try installing again.${RESET}"
 	exit
 
 
