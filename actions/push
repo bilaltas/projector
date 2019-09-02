@@ -27,6 +27,19 @@ fi
 
 
 
+# Check if git exist
+if [[ ! -d "$PROJECTDIR/.git" ]]; then
+
+
+	echo -e "${RED}Project doesn't have any git repository.${RESET}"
+	exit
+
+
+fi
+
+
+
+
 (
 
 	# Open the site directory

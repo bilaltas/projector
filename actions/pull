@@ -77,7 +77,7 @@ else
 
 
 	# Pulling latest changes from git
-	if [[ ! -f "$PROJECTDIR/.git" ]]; then
+	if [[ -d "$PROJECTDIR/.git" ]]; then
 
 		(
 			cd $PROJECTDIR
