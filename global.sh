@@ -627,17 +627,3 @@ if [[ "$status" != "0" ]]; then
     echo -e "${GREEN}Docker connected${RESET}"
 
 fi
-
-
-
-
-# # Fix the missing WP_VERSION variable
-# if [[ -f "${BASEDIR}/.env" ]]; then
-
-# 	if [ -z $(grep "WP_VERSION" "${BASEDIR}/.env") ]; then 
-# 		echo "WP version not found."
-# 		echo "WP_VERSION=latest" >> "${BASEDIR}/.env"
-# 		echo -e "WP version added ... ${GREEN}done${RESET}"
-# 	fi
-
-# fi
