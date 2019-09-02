@@ -69,5 +69,18 @@ echo -e ".env file removed from the project ... ${GREEN}done${RESET}"
 
 
 
+# Remove the folder
+if [[ $2 == --remove ]] || [[ $3 == --remove ]]; then
+
+
+	echo -e "Project folder removing..."
+	rm -rf "$PROJECTDIR"
+	echo -e "Project folder removed ... ${GREEN}done${RESET}"
+
+
+fi
+
+
+
 
 echo -e "Uninstalling '${SLUG}' project ... ${GREEN}done${RESET}"
