@@ -15,14 +15,37 @@ fi
 
 
 # Confirmations
-if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+if [[ $2 == --hard ]] || [[ $3 == --hard ]] || [[ $2 == --import ]] || [[ $3 == --import ]]; then
 
 
-	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " ACTION
-	if [[ $ACTION != "yes" ]] && [[ $ACTION != "y" ]]; then
+	# Hard pull confirmation
+	if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
 
-		echo -e "${RED}Not confirmed.${RESET}"
-		exit
+
+		read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " ACTION
+		if [[ $ACTION != "yes" ]] && [[ $ACTION != "y" ]]; then
+
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
+
+		fi
+
+
+	fi
+
+
+	# Import confirmation
+	if [[ $2 == --import ]] || [[ $3 == --import ]]; then
+
+
+		read -ep "Are you sure you want to replace all the changes you might have done? (yes | no): " ACTION
+		if [[ $ACTION != "yes" ]] && [[ $ACTION != "y" ]]; then
+
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
+
+		fi
+
 
 	fi
 
@@ -95,7 +118,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 		wp db import "wordpress_data.sql"
 
 
-		# Delete the file again
+		# Delete the file from WP area
 		rm -rf "${PROJECTDIR}/wp/wordpress_data.sql"
 
 

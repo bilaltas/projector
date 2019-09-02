@@ -32,18 +32,36 @@ if [[ -z $ACTION ]]; then
 
 
 	echo ""
+	echo -e "${GREEN}GENERAL USAGE:${RESET} projector <action> <project-name[if not in project folder]> <option[optional]>"
 	echo ""
 	echo "== Allowed Actions ===================="
 	echo ""
 	echo -e "${BLUE}starter${RESET} - Create a new project from scratch"
-	echo -e "${BLUE}clone${RESET} - Clone a project from BitBucket"
+	echo -e "${BLUE}clone${RESET} - Clone a project from Git"
 	echo -e "${BLUE}install${RESET} - Install a project that already clonned or created"
 	echo -e "${BLUE}uninstall${RESET} - Uninstall a project that already installed"
-	echo -e "${BLUE}start${RESET} - Run the server and Node JS of an installed project"
-	echo -e "${BLUE}stop${RESET} - Stop the servers of an installed project"
+	echo -e "   Options:"
+	echo -e "       Default - Uninstall a project that already installed"
+	echo -e "       --remove - Removes the project folder after uninstallation"
 	echo -e "${BLUE}pull${RESET} - Pull the latest changes from Git"
+	echo -e "   Options:"
+	echo -e "       Default - Pull the latest changes from Git"
+	echo -e "       --hard - Gets all the latest changes from Git"
+	echo -e "       --import - Import site and DB files externally"
 	echo -e "${BLUE}push${RESET} - Push the latest local changes to Git"
+	echo -e "${BLUE}start${RESET} - Run the server and Node JS of an installed project"
+	echo -e "   Options:"
+	echo -e "       Default - Run the server and Node JS of an installed project"
+	echo -e "       --hard - Gets all the latest changes from Git and start regularly"
+	echo -e "       --import - Import site and DB files externally and start regularly"
+	echo -e "${BLUE}stop${RESET} - Stop the servers of an installed project"
 	echo -e "${BLUE}permission-fix${RESET} - If you get permission errors, do this"
+	echo -e "   Options:"
+	echo -e "       Default - Permission fix on .git folder and site folder"
+	echo -e "       --git - Permission fix on .git folder"
+	echo -e "       --server - Permission fix on Docker Container"
+	echo -e "       --permission - Permission fix on site folder"
+	echo -e "       --all - Permission fix on .git folder, site folder, and Docker container"
 	echo -e "${BLUE}import${RESET} - Import an existing files to a project"
 	echo ""
 	echo "================================="
@@ -128,7 +146,6 @@ fi # If has an .env file
 if [[ -f "$BUILDERDIR/actions/$ACTION" ]]; then
 
 	source "$BUILDERDIR/actions/$ACTION"
-
 
 else
 

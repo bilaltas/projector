@@ -11,6 +11,11 @@ if [[ ! -z $2 ]]; then
 	DO=$2
 
 fi
+if [[ ! -z $3 ]]; then
+
+	DO=$3
+
+fi
 
 
 # Git permissions update
@@ -37,7 +42,7 @@ if [[ $DO == all ]] || [[ $DO == permission ]]; then
 fi
 
 
-# Local file permission update
+# Site folder permission update
 if [[ $DO == site ]]; then
 
 	git_permission_update "$PROJECTDIR/.git"
