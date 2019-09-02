@@ -14,10 +14,14 @@ fi
 
 # Test the git URL
 if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" HEAD &>/dev/null; then
+
 	echo -e "${GREEN}Repository found, clone starting for '$SLUG' project.${RESET}"
+
 else
+
 	echo -e "${RED}Remote repository not found.${RESET}"
 	exit
+
 fi
 
 

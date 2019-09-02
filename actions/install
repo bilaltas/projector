@@ -230,20 +230,20 @@ if [[ $MODE == install-starter ]]; then
 
 
 	# Download the template
-	git clone https://github.com/Twelve12com/wp-flexible-starter-template.git site/wp/wp-content/themes/${SLUG}/
-	rm -rf site/wp/wp-content/themes/${SLUG}/.git
+	git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
+	rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/.git"
 	echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
 
 
 	# Theme function prefix changes
-	sedreplace "s/sitename/${PREFIX}/g" site/wp/wp-content/themes/${SLUG}/functions.php;
-	sedreplace "s/sitename/${PREFIX}/g" site/wp/wp-content/themes/${SLUG}/header.php;
+	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php";
+	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php";
 	echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
 
 
 	# Theme info changes
-	sedreplace "s/Site Name/${NAME}/g" site/wp/wp-content/themes/${SLUG}/style.scss;
-	sedreplace "s/Site tagline/${DESC}/g" site/wp/wp-content/themes/${SLUG}/style.scss;
+	sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
+	sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
 	echo -e "Theme information updated as '${NAME}' ... ${GREEN}done${RESET}"
 
 
@@ -251,7 +251,6 @@ if [[ $MODE == install-starter ]]; then
 	echo "NPM packages installing..."
 	docker_compose run --no-deps --rm gulp npm run-script build
 	echo -e "SCSS file built ... ${GREEN}done${RESET}"
-
 
 
 	# DO THE WP WORKS

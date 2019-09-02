@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#if [[ ! -f /bin/wp-cli.phar ]]; then
-
-	apt-get update -qq
-	apt-get install -qq -y sudo less mariadb-client
-	rm -rf /var/lib/apt/lists/*
-
-#fi
+apt-get update -qq &> /dev/null
+apt-get install -qq -y sudo less mariadb-client &> /dev/null
+rm -rf /var/lib/apt/lists/*
