@@ -5,7 +5,6 @@
 source global.sh
 
 
-
 echo "PROJECTOR installing..."
 cp projector-bin /usr/local/bin/projector
 chmod +rwx /usr/local/bin/projector
