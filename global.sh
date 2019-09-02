@@ -441,7 +441,7 @@ function move_import_files () {
 
 
 	# Remove existing MySQL files if exists
-	if [[ -d "${PROJECTDIR}/database/mysql/" ]]; then
+	if [[ $INSTALLED != "yes" ]] && [[ -d "${PROJECTDIR}/database/mysql/" ]]; then
 	
 		rm -rf "${PROJECTDIR}/database/mysql/"
 
