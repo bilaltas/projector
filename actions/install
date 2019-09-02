@@ -177,7 +177,7 @@ echo -e "'${IP}' changed as '${IP}' on .env file ... ${GREEN}done${RESET}"
 
 
 # Open that IP slot
-ifconfig lo0 alias $IP up
+sudo ifconfig lo0 alias $IP up
 echo -e "'${IP}' is now available to build server ... ${GREEN}done${RESET}"
 
 
@@ -243,7 +243,7 @@ INSTALLED="yes"
 
 # Add the host to the /etc/hosts file
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
-killall -HUP mDNSResponder
+sudo killall -HUP mDNSResponder
 
 
 

@@ -19,6 +19,7 @@ services:
       WORDPRESS_DB_NAME: wordpress_data
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_TABLE_PREFIX: ${DB_PREFIX}
     depends_on:
       - db
 

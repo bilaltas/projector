@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Builder directory
+BUILDERDIR=builderdir
+
+# Connect to the root access
+sudo true
+
+# Run the app
+source "$BUILDERDIR/projector" "$@"

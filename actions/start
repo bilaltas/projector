@@ -28,7 +28,7 @@ fi
 
 
 # Open that IP slot
-ifconfig lo0 alias $IP up
+sudo ifconfig lo0 alias $IP up
 echo -e "'${IP}' is now available ... ${GREEN}done${RESET}"
 
 

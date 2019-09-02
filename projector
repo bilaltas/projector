@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Builder directory
-BUILDERDIR=~/Desktop/projector
+
+# Get the functions
 source "$BUILDERDIR/global.sh"
 
 
