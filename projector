@@ -8,7 +8,7 @@ source "$BUILDERDIR/global.sh"
 
 
 # Check if current folder is a project folder
-if [[ -d "${BASEDIR}/wp/wp-content" ]] && [[ -f "${BASEDIR}/database/dump/wordpress_data.sql" ]]; then
+if [[ -d "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
 
 
 	# Extract the project name from BASEDIR

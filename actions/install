@@ -197,12 +197,22 @@ docker_compose up -d --force-recreate
 if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]; then
 
 
+	# Update the temporary files
+	if [[ $MODE != install-starter ]]; then
+
+		make_permanent
+
+	fi
+
+
 	# Uninstall the server
 	docker_compose down
 
+
 	# Delete the .env file
 	rm -rf "${PROJECTDIR}/.env"
-	
+
+
 	echo -e "${RED}Services are not started. Please try again.${RESET}"
 	exit
 

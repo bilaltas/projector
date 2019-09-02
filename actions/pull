@@ -61,7 +61,7 @@ else
 			echo "Hard reset..."
 			git fetch
 			git reset --hard origin/master
-			git clean -df .
+			git clean -dfx
 			echo -e "Hard reset ... ${GREEN}done${RESET}"
 		fi
 		git pull
