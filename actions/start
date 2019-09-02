@@ -34,9 +34,8 @@ echo -e "'${IP}' is now available ... ${GREEN}done${RESET}"
 
 
 
-echo "Site is building again..."
-docker_compose up -d
-echo -e "Build server again ... ${GREEN}done${RESET}"
+# Run the server
+run_server_if_not_running
 
 
 
@@ -47,7 +46,7 @@ wait_for_mysql
 
 
 
-# Pull the changes and start
+# Pull the changes and start (optionally --hard)
 source "$BUILDERDIR/actions/pull"
 
 

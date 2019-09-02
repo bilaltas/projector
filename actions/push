@@ -85,6 +85,6 @@ fi
 	# Push the changes
 	echo "Pushing the changes..."
 	git push
-	echo -e "Git push complete ... ${GREEN}done${RESET}"
+	echo -e "Git push ... ${GREEN}done${RESET}"
 
 )
