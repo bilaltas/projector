@@ -113,8 +113,13 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 		cp "${PROJECTDIR}/database/dump/wordpress_data.sql" "${PROJECTDIR}/wp/wordpress_data.sql"
 
 
-		# Import
+		# Delete all the tables
+		echo "Resetting DB..."
 		wp db reset --yes
+
+
+		# Import the DB
+		echo "Importing DB..."
 		wp db import "wordpress_data.sql"
 
 
