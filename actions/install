@@ -108,7 +108,7 @@ if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
 	fi
 
 
-	# Update environment files
+	# Create and Update environment files
 	update_environment
 
 
@@ -193,6 +193,20 @@ docker_compose up -d --force-recreate
 
 
 
+# Check if services are running
+if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ] || [ -z `docker_compose ps -q db` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]; then
+
+
+	# Delete the .env file
+	rm -rf "${PROJECTDIR}/.env"
+	echo "${RED}Services are not started. Please try again.${RESET}"
+
+
+fi # If not running
+
+
+
+
 # Install WP-CLI
 echo -e "Installing WP-CLI..."
 docker_compose exec wpcli wp-cli-install.sh
@@ -201,16 +215,16 @@ echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
 
 
 
-# Add the host to the /etc/hosts file
-sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
-killall -HUP mDNSResponder
-
-
-
-
 # Check MySQL to be ready
 wait_for_mysql
 INSTALLED="yes"
+
+
+
+
+# Add the host to the /etc/hosts file
+sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
+killall -HUP mDNSResponder
 
 
 
