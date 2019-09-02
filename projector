@@ -24,9 +24,6 @@ if [[ -f "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
 fi # If current folder is a project folder
 
 
-# wp --info
-# exit
-
 
 
 # Ask for the action, if not specified
