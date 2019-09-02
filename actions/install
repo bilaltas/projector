@@ -194,12 +194,16 @@ docker_compose up -d --force-recreate
 
 
 # Check if services are running
-if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ] || [ -z `docker_compose ps -q db` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]; then
+if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]; then
 
+
+	# Uninstall the server
+	docker_compose down
 
 	# Delete the .env file
 	rm -rf "${PROJECTDIR}/.env"
-	echo "${RED}Services are not started. Please try again.${RESET}"
+	
+	echo -e "${RED}Services are not started. Please try again.${RESET}"
 	exit
 
 
