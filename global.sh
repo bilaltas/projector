@@ -49,8 +49,8 @@ function update_environment {
 	sedreplace "s#PROJECT_DIR=projectdir#PROJECT_DIR=$PROJECTDIR#g" $LOCAL_ENV;
 
 	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" $LOCAL_ENV;
-	sedreplace "s/Site Name/$NAME/g" $LOCAL_ENV;
-	sedreplace "s/Site tagline/$DESC/g" $LOCAL_ENV;
+	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" $LOCAL_ENV;
+	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" $LOCAL_ENV;
 	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" $LOCAL_ENV;
 	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" $LOCAL_ENV;
 	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" $LOCAL_ENV;
