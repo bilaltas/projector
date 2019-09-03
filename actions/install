@@ -10,6 +10,15 @@ if [[ ! -d $PROJECTDIR ]]; then
 fi
 
 
+# Check if the project is already installed
+if [[ $INSTALLED == "yes" ]]; then
+
+	echo -e "${RED}Project is already installed.${RESET}"
+	exit
+
+fi
+
+
 
 
 # Get data from sample.env file
@@ -31,7 +40,7 @@ fi
 
 
 
-# Check if already installed
+# Get .env in project folder, if exists
 if [[ -f "$PROJECTDIR/.env" ]]; then
 
 
@@ -39,15 +48,13 @@ if [[ -f "$PROJECTDIR/.env" ]]; then
 	source "$PROJECTDIR/.env"
 
 
-	if [[ $IP != "127.0.0.1" ]]; then
-
-		echo -e "${RED}Project is already installed.${RESET}"
-		exit
-
-	fi
-
-
 fi
+
+
+
+
+# Update the slug
+SLUG=$PROJECTNAME
 
 
 
@@ -88,7 +95,12 @@ fi
 echo "==================================="
 echo ""
 echo ""
-read -ep "Are these correct? (type 'yes' to confirm): " confirm
+
+if [[ $MODE != install-starter ]]; then
+
+	read -ep "Are these correct? (type 'yes' to confirm): " confirm
+
+fi
 
 
 
@@ -263,7 +275,7 @@ if [[ $MODE == install-starter ]]; then
 
 
 	# DO THE WP WORKS
-	source wp.sh
+	source "$BUILDERDIR/config/wp.sh"
 
 
 fi

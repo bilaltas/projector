@@ -1,21 +1,52 @@
 #!/bin/bash
 
 
-# Check if the project folder already exists
-if [[ -d $PROJECTDIR ]]; then
+# Check if the project is already installed
+if [[ $INSTALLED == "yes" ]]; then
 
-
-	## Detect interupted starter installations here !!!
-
-	echo -e "${RED}Project folder already exist.${RESET}"
+	echo -e "${RED}Project is already installed.${RESET}"
 	exit
 
 fi
 
 
 
-# Get data from sample.env
+
+# Get data from sample.env file
 source "$BUILDERDIR/sample.env"
+PLUGINS=$DEFAULT_PLUGINS
+
+
+
+
+# Get local.env in project folder, if exists
+if [[ -f "$PROJECTDIR/local.env" ]]; then
+
+
+	# Get data from .env file
+	source "$PROJECTDIR/local.env"
+
+
+fi
+
+
+
+
+# Get .env in project folder, if exists
+if [[ -f "$PROJECTDIR/.env" ]]; then
+
+
+	# Get data from .env file
+	source "$PROJECTDIR/.env"
+
+
+fi
+
+
+
+
+# Update the slug
+SLUG=$PROJECTNAME
 
 
 
@@ -46,17 +77,8 @@ read -ep "Website Tagline (${DESC}): " desc
 [[ ! -z "$desc" ]] && DESC=$desc || echo "Using '${DESC}'"
 
 
-read -ep "Plugins that need to be installed (${DEFAULT_PLUGINS}): " plugins
-if [[ ! -z "$plugins" ]]; then
-
-	PLUGINS=$plugins
-
-else
-
-	echo "Using '${DEFAULT_PLUGINS}'"
-	PLUGINS=$DEFAULT_PLUGINS
-
-fi
+read -ep "Plugins that need to be installed (${PLUGINS}): " plugins
+[[ ! -z "$plugins" ]] && PLUGINS=$plugins || echo "Using '${PLUGINS}'"
 
 
 # Ask for the admin info
@@ -125,8 +147,6 @@ echo ""
 read -ep "Are these correct? (type 'yes' to confirm): " confirm
 
 
-
-
 # If not confirmed, close the installation
 if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
 
@@ -138,13 +158,15 @@ fi
 
 
 
-
-
 # Create the project folder
-mkdir $PROJECTDIR
+if [[ ! -d $PROJECTDIR ]]; then
+
+	mkdir $PROJECTDIR
+
+fi
 
 
-# Update environment files
+# Update environment files with the new info
 update_environment
 
 
@@ -161,9 +183,11 @@ permission_update "$PROJECTDIR"
 
 
 # Download the template
+rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/"
 git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/${SLUG}/"
 rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/.git"
 echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
+
 
 # Check the theme files
 if [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss" ]]; then
@@ -186,8 +210,10 @@ echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
 
 # Theme info changes
 sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
+echo -e "Theme name updated as '${NAME}' ... ${GREEN}done${RESET}"
+
 sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
-echo -e "Theme information updated as '${NAME}' ... ${GREEN}done${RESET}"
+echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 
 
 
@@ -214,6 +240,6 @@ echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
 
 
 
-# # START THE INSTALLATION
-# MODE=install-starter
-# source "$BUILDERDIR/actions/install"
+# START THE INSTALLATION
+MODE=install-starter
+source "$BUILDERDIR/actions/install"

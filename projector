@@ -17,7 +17,8 @@ if [[ -f "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
 	#echo "Project name: $SLUG"
 
 
-	# Project directory
+	# Project info
+	PROJECTNAME=$SLUG
 	PROJECTDIR=$BASEDIR
 
 
@@ -119,7 +120,8 @@ if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
 	fi
 
 
-	# Project directory
+	# Project info
+	PROJECTNAME=$SLUG
 	PROJECTDIR="${BASEDIR}/${SLUG}"
 
 
@@ -135,6 +137,7 @@ if [[ -f "$PROJECTDIR/.env" ]]; then
 
 	# Get data from .env file
 	source "$PROJECTDIR/.env"
+	SLUG=$PROJECTNAME
 
 
 	if [[ $IP != "127.0.0.1" ]]; then
