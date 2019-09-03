@@ -1,0 +1,166 @@
+#!/bin/bash
+
+
+
+
+# Check if the folder not exists
+if [[ ! -d $PROJECTDIR ]]; then
+
+	echo -e "${RED}Project doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if installed
+if [[ $INSTALLED != "yes" ]]; then
+
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+
+fi
+
+
+
+
+echo "EXPORTING STARTED"
+
+
+
+
+# Ask for the target domain
+read -ep "Target domain (www.domainname.com): " targetdomain
+while [[ -z "$targetdomain" ]]; do 
+
+	read -ep "Target domain (www.domainname.com): " targetdomain
+
+done
+
+
+
+
+# Ask for the target protocol
+read -ep "Target protocol (http | https): " targetprotocol
+while [[ $targetprotocol != http ]] && [[ $targetprotocol != https ]]; do 
+
+	read -ep "Target protocol (http | https): " targetprotocol
+
+done
+
+
+
+
+# Backup the current DB
+wp db export "tmp_wordpress_data.sql"
+
+
+
+
+# Check the initial backup
+if [[ -f "${PROJECTDIR}/wp/tmp_wordpress_data.sql" ]]; then
+
+
+	# Do the replacements
+	echo -e "Replacement 1 starting... '${BLUE}http://${DOMAIN}${RESET}' -> '${BLUE}${targetprotocol}://${targetdomain}${RESET}'"
+	wp search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
+	echo -e "Replacement 1 ... ${GREEN}done${RESET}"
+
+	echo -e "Replacement 2 starting... '${BLUE}${DOMAIN}${RESET}' -> '${BLUE}${targetdomain}${RESET}'"
+	wp search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
+	echo -e "Replacement 2 ... ${GREEN}done${RESET}"
+
+
+	# Backup after replacements
+	wp db export "live.sql"
+
+
+	# Revert the DB
+	wp db import "tmp_wordpress_data.sql"
+	rm -rf "${PROJECTDIR}/wp/tmp_wordpress_data.sql"
+
+
+else
+
+	echo -e "${RED}DB backup not found.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Move the SQL to the export folder
+if [[ -f "${PROJECTDIR}/wp/live.sql" ]]; then
+
+
+	# Check the 'export' folder
+	if [[ -d "${PROJECTDIR}/export/" ]]; then
+
+		rm -rf "${PROJECTDIR}/export/"
+
+	fi
+
+
+	# Create the export folder
+	mkdir -p "${PROJECTDIR}/export/"
+
+
+	# Move the SQL file
+	mv "${PROJECTDIR}/wp/live.sql" "${PROJECTDIR}/export/live.sql"
+
+
+	# Copy the theme folder
+	cp -rf "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/" "${PROJECTDIR}/export/${SLUG}/"
+
+
+	# Delete 'node_modules' folder if exists
+	if [[ -d "${PROJECTDIR}/export/${SLUG}/node_modules/" ]]; then
+
+		rm -rf "${PROJECTDIR}/export/${SLUG}/node_modules/"
+
+	fi
+
+
+	# Delete 'package-lock.json' file if exists
+	if [[ -f "${PROJECTDIR}/export/${SLUG}/package-lock.json" ]]; then
+
+		rm -rf "${PROJECTDIR}/export/${SLUG}/package-lock.json"
+
+	fi
+
+
+	# Zip the folder
+	echo -e "Zipping the theme folder..."
+	(
+		cd "${PROJECTDIR}/export/"
+		zip -r -X "${SLUG}.zip" "${SLUG}"
+	)
+	echo -e "'${SLUG}.zip' theme file created ... ${GREEN}done${RESET}"
+
+
+	# Remove the theme folder
+	rm -rf "${PROJECTDIR}/export/${SLUG}/"
+	echo -e "Theme folder removed ... ${GREEN}done${RESET}"
+
+
+else
+
+	echo -e "${RED}CHANGED SQL FILE NOT FOUND.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Permission fix on 'export' folder
+permission_update "${PROJECTDIR}/export/"
+
+
+
+
+echo -e "${GREEN}EXPORTING COMPLETE${RESET}"

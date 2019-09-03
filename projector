@@ -68,6 +68,8 @@ if [[ -z $ACTION ]]; then
 	echo -e "     --permission       Permission fix on site folder"
 	echo -e "     --all              Permission fix on .git folder, site folder, and Docker container"
 	echo -e ""
+	echo -e "${BLUE}export${RESET}           Exports the theme folder zip and DB for a live site"
+	echo -e ""
 	echo ""
 	echo "================================="
 	echo ""
@@ -85,7 +87,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]]; then
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit
