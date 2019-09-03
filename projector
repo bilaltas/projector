@@ -34,7 +34,7 @@ if [[ -z $ACTION ]]; then
 	echo ""
 	echo -e "${GREEN}GENERAL USAGE:${RESET} projector <action> <project-name[if not in project folder]> <option[optional]>"
 	echo ""
-	echo "== Allowed Actions ===================="
+	echo "== PROJECTOR v0.1 - Allowed Actions ===================="
 	echo ""
 	echo -e "${BLUE}starter${RESET}          Create a new project from scratch"
 	echo -e ""
