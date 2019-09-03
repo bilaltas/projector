@@ -1,0 +1,9 @@
+.env
+logs/
+database/mysql
+wp/wp-content/themes/*/node_modules
+.DS_Store
+wp/*
+!wp/wp-content
+wp/wp-content/cache
+export/

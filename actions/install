@@ -63,6 +63,7 @@ echo ""
 echo "Project Name: $SLUG"
 echo "Short Name: $PREFIX"
 echo "WP Version: $WP_VERSION"
+echo ""
 
 if [[ $MODE == install-starter ]]; then
 	echo "Website Name: $NAME"
@@ -84,7 +85,6 @@ if [[ $MODE == install-starter ]]; then
 
 fi
 
-echo ""
 echo "==================================="
 echo ""
 echo ""
@@ -106,6 +106,10 @@ if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
 		make_temporary
 
 	fi
+
+
+	# Put the new gitignore
+	cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
 
 
 	# Create and Update environment files
