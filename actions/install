@@ -113,7 +113,11 @@ if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
 
 
 	# Move the 'wp-content' folder TEMPORARILY
-	make_temporary
+	if [[ $MODE != install-starter ]]; then
+
+		make_temporary
+
+	fi
 
 
 	# Put the new gitignore
@@ -260,10 +264,10 @@ sudo killall -HUP mDNSResponder
 
 
 
-# Ask the registered URL and do the replacements
+# Update the temporary files
 if [[ $MODE != install-starter ]]; then
 
-	db_url_update
+	make_permanent
 
 fi
 
@@ -273,18 +277,19 @@ fi
 # Do the WP works if starter
 if [[ $MODE == install-starter ]]; then
 
-
-	# DO THE WP WORKS
 	source "$BUILDERDIR/config/wp.sh"
-
 
 fi
 
 
 
 
-# Update the temporary files
-make_permanent
+# Ask the registered URL and do the replacements
+if [[ $MODE != install-starter ]]; then
+
+	db_url_update
+
+fi
 
 
 
