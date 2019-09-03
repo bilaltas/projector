@@ -19,8 +19,15 @@ if [[ -f "$BUILDERDIR/projector" ]]; then
 	sudo true
 
 
-	# Run the app
-	source "$BUILDERDIR/projector"
+	# Check the sudo access to run the app
+	if [ "$(sudo -n uptime 2>&1|grep "load"|wc -l)" -gt 0 ]; then
+		
+		# Run the app
+		source "$BUILDERDIR/projector"
+
+	else
+		exit
+	fi
 
 
 else
