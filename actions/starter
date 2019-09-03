@@ -1,1 +1,218 @@
 #!/bin/bash
+
+
+# Check if the project folder already exists
+if [[ -d $PROJECTDIR ]]; then
+
+
+	## Detect interupted starter installations here !!!
+
+	echo -e "${RED}Project folder already exist.${RESET}"
+	exit
+
+fi
+
+
+
+# Get data from sample.env
+source "$BUILDERDIR/sample.env"
+
+
+
+
+# ASK THE SITE INFO
+read -ep "Short Name (${PREFIX}): " prefix
+[[ ! -z "$prefix" ]] && PREFIX=$prefix || echo "Using '${PREFIX}'"
+
+
+read -ep "Domain Name (${DOMAIN}): " domain
+[[ ! -z "$domain" ]] && DOMAIN=$domain || echo "Using '${DOMAIN}'"
+
+
+# Check the local domain availability
+echo "Checking '${DOMAIN}' availability..."
+if grep -q "${DOMAIN}" /etc/hosts; then
+	echo -e "${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
+	exit
+fi
+echo -e "${GREEN}${DOMAIN}${RESET} - AVAILABLE"
+
+
+read -ep "Website Name (${NAME}): " name
+[[ ! -z "$name" ]] && NAME=$name || echo "Using '${NAME}'"
+
+
+read -ep "Website Tagline (${DESC}): " desc
+[[ ! -z "$desc" ]] && DESC=$desc || echo "Using '${DESC}'"
+
+
+read -ep "Plugins that need to be installed (${DEFAULT_PLUGINS}): " plugins
+if [[ ! -z "$plugins" ]]; then
+
+	PLUGINS=$plugins
+
+else
+
+	echo "Using '${DEFAULT_PLUGINS}'"
+	PLUGINS=$DEFAULT_PLUGINS
+
+fi
+
+
+# Ask for the admin info
+read -ep "Developer Email (${DEVELOPER_EMAIL}): " developer_email
+[[ ! -z "$developer_email" ]] && DEVELOPER_EMAIL=$developer_email || echo "Using '${DEVELOPER_EMAIL}'"
+
+
+if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
+
+
+	read -ep "Developer Username (${DEVELOPER_USERNAME}): " developer_username
+	[[ ! -z "$developer_username" ]] && DEVELOPER_USERNAME=$developer_username || echo "Using '${DEVELOPER_USERNAME}'"
+
+
+	read -ep "Developer First Name (${DEVELOPER_NAME}): " developer_name
+	[[ ! -z "$developer_name" ]] && DEVELOPER_NAME=$developer_name || echo "Using '${DEVELOPER_NAME}'"
+
+
+	read -ep "Developer Last Name (${DEVELOPER_LAST_NAME}): " developer_last_name
+	[[ ! -z "$developer_last_name" ]] && DEVELOPER_LAST_NAME=$developer_last_name || echo "Using '${DEVELOPER_LAST_NAME}'"
+
+
+	read -ep "Developer Website URL (${DEVELOPER_URL}): " developer_url
+	[[ ! -z "$developer_url" ]] && DEVELOPER_URL=$developer_url || echo "Using '${DEVELOPER_URL}'"
+
+
+fi
+
+
+
+
+# Confirm the information
+echo ""
+echo ""
+echo "== Information Entered ============"
+echo ""
+echo "Local development domain: $DOMAIN"
+echo ""
+echo "Project Name: $SLUG"
+echo "Short Name: $PREFIX"
+echo "WP Version: $WP_VERSION"
+
+
+	echo "Website Name: $NAME"
+	echo "Website Tagline: $DESC"
+	[[ ! -z "$plugins" ]] && echo "Plugins: $plugins" || echo "Plugins: $PLUGINS"
+	echo ""
+
+	echo "Developer Email: $DEVELOPER_EMAIL"
+	if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
+
+		echo "Developer Username: $DEVELOPER_USERNAME"
+		echo "Developer First Name: $DEVELOPER_NAME"
+		echo "Developer Last Name: $DEVELOPER_LAST_NAME"
+		echo "Developer URL: $DEVELOPER_URL"
+		echo ""
+
+	fi
+
+
+
+echo ""
+echo "==================================="
+echo ""
+echo ""
+read -ep "Are these correct? (type 'yes' to confirm): " confirm
+
+
+
+
+# If not confirmed, close the installation
+if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+	echo -e "${RED}Not confirmed.${RESET}"
+	exit
+
+fi
+
+
+
+
+
+
+# Create the project folder
+mkdir $PROJECTDIR
+
+
+# Update environment files
+update_environment
+
+
+# Get data from the new .env file
+source "$PROJECTDIR/.env"
+
+
+# Update the permissions
+permission_update "$PROJECTDIR"
+
+
+
+
+
+
+# Download the template
+git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/${SLUG}/"
+rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/.git"
+echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
+
+# Check the theme files
+if [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss" ]]; then
+
+	echo -e "${RED}Missing theme files.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Theme function prefix changes
+sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php";
+sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php";
+echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
+
+
+
+
+# Theme info changes
+sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
+sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
+echo -e "Theme information updated as '${NAME}' ... ${GREEN}done${RESET}"
+
+
+
+
+# Install NPM packages
+echo "NPM packages are installing..."
+(
+	cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+	npm install
+)
+echo -e "NPM packages installed ... ${GREEN}done${RESET}"
+
+
+
+
+# Build the style.css
+echo "'style.css' is being built..."
+(
+	cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+	npm run build
+)
+echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
+
+
+
+
+# DO THE WP WORKS
+#source wp.sh

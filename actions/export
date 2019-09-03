@@ -58,32 +58,8 @@ done
 wp db export "tmp_wordpress_data.sql"
 
 
-
-
-# Check the initial backup
-if [[ -f "${PROJECTDIR}/wp/tmp_wordpress_data.sql" ]]; then
-
-
-	# Do the replacements
-	echo -e "Replacement 1 starting... '${BLUE}http://${DOMAIN}${RESET}' -> '${BLUE}${targetprotocol}://${targetdomain}${RESET}'"
-	wp search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
-	echo -e "Replacement 1 ... ${GREEN}done${RESET}"
-
-	echo -e "Replacement 2 starting... '${BLUE}${DOMAIN}${RESET}' -> '${BLUE}${targetdomain}${RESET}'"
-	wp search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
-	echo -e "Replacement 2 ... ${GREEN}done${RESET}"
-
-
-	# Backup after replacements
-	wp db export "live.sql"
-
-
-	# Revert the DB
-	wp db import "tmp_wordpress_data.sql"
-	rm -rf "${PROJECTDIR}/wp/tmp_wordpress_data.sql"
-
-
-else
+# Check the initial backup file
+if [[ ! -f "${PROJECTDIR}/wp/tmp_wordpress_data.sql" ]]; then
 
 	echo -e "${RED}DB backup not found.${RESET}"
 	exit
@@ -93,66 +69,86 @@ fi
 
 
 
-# Move the SQL to the export folder
-if [[ -f "${PROJECTDIR}/wp/live.sql" ]]; then
+# Do the replacements
+echo -e "Replacement 1 starting... '${BLUE}http://${DOMAIN}${RESET}' -> '${BLUE}${targetprotocol}://${targetdomain}${RESET}'"
+wp search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
+echo -e "Replacement 1 ... ${GREEN}done${RESET}"
+
+echo -e "Replacement 2 starting... '${BLUE}${DOMAIN}${RESET}' -> '${BLUE}${targetdomain}${RESET}'"
+wp search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
+echo -e "Replacement 2 ... ${GREEN}done${RESET}"
 
 
-	# Check the 'export' folder
-	if [[ -d "${PROJECTDIR}/export/" ]]; then
-
-		rm -rf "${PROJECTDIR}/export/"
-
-	fi
+# Backup after replacements
+wp db export "live.sql"
 
 
-	# Create the export folder
-	mkdir -p "${PROJECTDIR}/export/"
+# Revert the DB
+wp db import "tmp_wordpress_data.sql"
+rm -rf "${PROJECTDIR}/wp/tmp_wordpress_data.sql"
 
 
-	# Move the SQL file
-	mv "${PROJECTDIR}/wp/live.sql" "${PROJECTDIR}/export/live.sql"
-
-
-	# Copy the theme folder
-	cp -rf "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/" "${PROJECTDIR}/export/${SLUG}/"
-
-
-	# Delete 'node_modules' folder if exists
-	if [[ -d "${PROJECTDIR}/export/${SLUG}/node_modules/" ]]; then
-
-		rm -rf "${PROJECTDIR}/export/${SLUG}/node_modules/"
-
-	fi
-
-
-	# Delete 'package-lock.json' file if exists
-	if [[ -f "${PROJECTDIR}/export/${SLUG}/package-lock.json" ]]; then
-
-		rm -rf "${PROJECTDIR}/export/${SLUG}/package-lock.json"
-
-	fi
-
-
-	# Zip the folder
-	echo -e "Zipping the theme folder..."
-	(
-		cd "${PROJECTDIR}/export/"
-		zip -r -X "${SLUG}.zip" "${SLUG}"
-	)
-	echo -e "'${SLUG}.zip' theme file created ... ${GREEN}done${RESET}"
-
-
-	# Remove the theme folder
-	rm -rf "${PROJECTDIR}/export/${SLUG}/"
-	echo -e "Theme folder removed ... ${GREEN}done${RESET}"
-
-
-else
+# Check the replaced backup file
+if [[ ! -f "${PROJECTDIR}/wp/live.sql" ]]; then
 
 	echo -e "${RED}CHANGED SQL FILE NOT FOUND.${RESET}"
 	exit
 
 fi
+
+
+
+
+# Remove existing "export" folder
+rm -rf "${PROJECTDIR}/export/"
+
+
+
+
+# Create the export folder
+mkdir -p "${PROJECTDIR}/export/"
+
+
+
+
+# Move the SQL file
+mv "${PROJECTDIR}/wp/live.sql" "${PROJECTDIR}/export/live.sql"
+
+
+
+
+# Copy the theme folder
+cp -rf "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/" "${PROJECTDIR}/export/${SLUG}/"
+
+
+
+
+# Delete 'node_modules' folder if exists
+rm -rf "${PROJECTDIR}/export/${SLUG}/node_modules/"
+
+
+
+
+# Delete 'package-lock.json' file if exists
+rm -rf "${PROJECTDIR}/export/${SLUG}/package-lock.json"
+
+
+
+
+# Zip the folder
+echo -e "Zipping the theme folder..."
+(
+	cd "${PROJECTDIR}/export/"
+	zip -r -X "${SLUG}.zip" "${SLUG}"
+)
+echo -e "'${SLUG}.zip' theme file created ... ${GREEN}done${RESET}"
+
+
+
+
+# Remove the theme folder
+rm -rf "${PROJECTDIR}/export/${SLUG}/"
+echo -e "Theme folder removed ... ${GREEN}done${RESET}"
 
 
 
