@@ -18,8 +18,17 @@ fi
 if [[ $INSTALLED != "yes" ]]; then
 
 
-	echo -e "${RED}Project is not installed.${RESET}"
-	exit
+	read -ep "Project is not installed. Would you like to install it first? (yes | no)" confirm
+	if [[ $confirm == "yes" ]] || [[ $confirm == "y" ]]; then
+
+		source "$BUILDERDIR/actions/install"
+
+	else
+
+		echo -e "${RED}Not confirmed.${RESET}"
+		exit
+
+	fi
 
 
 fi
@@ -69,4 +78,8 @@ echo ""
 
 
 # Install NPM for Gulp
-install_npm
+if [[ $2 != --nonode ]] && [[ $3 != --nonode ]]; then
+
+	install_npm
+
+fi

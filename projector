@@ -52,6 +52,7 @@ if [[ -z $ACTION ]]; then
 	echo -e "${BLUE}start${RESET} - Run the server and Node JS of an installed project"
 	echo -e "   Options:"
 	echo -e "       Default - Run the server and Node JS of an installed project"
+	echo -e "       --nonode - Only runs the server, no Node JS installation"
 	echo -e "       --hard - Gets all the latest changes from Git and start regularly"
 	echo -e "       --import - Import site and DB files externally and start regularly"
 	echo -e "${BLUE}stop${RESET} - Stop the servers of an installed project"
