@@ -101,18 +101,14 @@ if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
 
 
 	# Move the 'wp-content' folder TEMPORARILY
-	if [[ $MODE != install-starter ]]; then
-
-		make_temporary
-
-	fi
+	make_temporary
 
 
 	# Put the new gitignore
 	cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
 
 
-	# Create and Update environment files
+	# Create and Update environment files !!! ???
 	update_environment
 
 
@@ -262,32 +258,8 @@ fi
 
 
 
-# PREPARE THE STARTER TEMPLATE
+# Do the WP works if starter
 if [[ $MODE == install-starter ]]; then
-
-
-	# Download the template
-	git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
-	rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/.git"
-	echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
-
-
-	# Theme function prefix changes
-	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php";
-	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php";
-	echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
-
-
-	# Theme info changes
-	sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
-	sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
-	echo -e "Theme information updated as '${NAME}' ... ${GREEN}done${RESET}"
-
-
-	# Install NPM packages
-	echo "NPM packages installing..."
-	docker_compose run --no-deps --rm gulp npm run-script build
-	echo -e "SCSS file built ... ${GREEN}done${RESET}"
 
 
 	# DO THE WP WORKS
@@ -300,11 +272,7 @@ fi
 
 
 # Update the temporary files
-if [[ $MODE != install-starter ]]; then
-
-	make_permanent
-
-fi
+make_permanent
 
 
 

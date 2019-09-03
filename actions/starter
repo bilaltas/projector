@@ -214,5 +214,6 @@ echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
 
 
 
-# DO THE WP WORKS
-#source wp.sh
+# # START THE INSTALLATION
+# MODE=install-starter
+# source "$BUILDERDIR/actions/install"
