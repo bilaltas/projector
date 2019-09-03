@@ -174,12 +174,6 @@ update_environment
 source "$PROJECTDIR/.env"
 
 
-# Update the permissions
-permission_update "$PROJECTDIR"
-
-
-
-
 
 
 # Download the template
@@ -243,3 +237,9 @@ echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
 # START THE INSTALLATION
 MODE=install-starter
 source "$BUILDERDIR/actions/install"
+
+
+
+
+# Update the permissions
+permission_update "$PROJECTDIR"

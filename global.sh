@@ -49,6 +49,9 @@ function update_environment {
 	sedreplace "s#PROJECT_DIR=projectdir#PROJECT_DIR=$PROJECTDIR#g" $LOCAL_ENV;
 
 	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" $LOCAL_ENV;
+	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$SLUG/g" $LOCAL_ENV;
+	sedreplace "s/DB_PREFIX=wp_/DB_PREFIX=$DB_PREFIX/g" $LOCAL_ENV;
+
 	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" $LOCAL_ENV;
 	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" $LOCAL_ENV;
 	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" $LOCAL_ENV;
@@ -154,7 +157,7 @@ function git_permission_update () {
 
 function wp {
 
-	docker_compose exec wpcli wp "$@"
+	docker_compose exec wpcli wp --allow-root "$@"
 
 }
 
