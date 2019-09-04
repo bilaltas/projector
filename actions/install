@@ -103,44 +103,58 @@ if [[ -z $confirm ]]; then
 fi
 
 
+# If not confirmed, close the installation
+if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
 
-
-# CHANGE THE FILE IF YES
-if [[ $confirm == yes ]] || [[ $confirm == y ]]; then
-
-
-	echo -e "${GREEN}Confirmed.${RESET}"
-
-
-	# Move the 'wp-content' folder TEMPORARILY
-	if [[ $MODE != install-starter ]]; then
-
-		make_temporary
-
-	fi
-
-
-	# Put the new gitignore
-	cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
-
-
-	# Create and Update environment files !!! ???
-	update_environment
-
-
-	# Get data from the new .env file
-	source "$PROJECTDIR/.env"
-
-
-	# Update the permissions
-	permission_update $PROJECTDIR
-
-
-else
-
-	# If not confirmed, close the installation
 	echo -e "${RED}Not confirmed.${RESET}"
 	exit
+
+fi
+
+
+
+
+echo -e "${GREEN}Confirmed.${RESET}"
+
+
+# Move the 'wp-content' folder TEMPORARILY
+if [[ $MODE != install-starter ]]; then
+
+	make_temporary
+
+fi
+
+
+
+
+# Put the new gitignore
+cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
+
+
+
+
+# Create and Update environment files !!! ???
+update_environment
+
+
+
+
+# Get data from the new .env file
+source "$PROJECTDIR/.env"
+
+
+
+
+# Update the permissions
+permission_update $PROJECTDIR
+
+
+
+
+# Check if the services already exists even though site is not installed
+if [ ! -z `docker_compose ps -q wpcli` ] && [ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]; then
+
+	docker_compose down
 
 fi
 
