@@ -12,6 +12,17 @@ fi
 
 
 
+# Check the git repository
+if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" HEAD &>/dev/null; then
+
+	echo -e "${RED}Remote repository already exists for '$SLUG' project.${RESET}"
+	exit
+
+fi
+
+
+
+
 # Get data from sample.env file
 source "$BUILDERDIR/sample.env"
 PLUGINS=$DEFAULT_PLUGINS

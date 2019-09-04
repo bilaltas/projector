@@ -38,6 +38,8 @@ if [[ -z $ACTION ]]; then
 	echo "== PROJECTOR v0.1 - Allowed Actions ===================="
 	echo ""
 	echo -e "${BLUE}starter${RESET}          Create a new project from scratch"
+	echo -e "   Options:"
+	echo -e "     --existing         Start with an existing site"
 	echo -e ""
 	echo -e "${BLUE}clone${RESET}            Clone a project from Git"
 	echo -e ""
