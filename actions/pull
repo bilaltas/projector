@@ -51,7 +51,11 @@ if [[ $2 == --hard ]] || [[ $3 == --hard ]] || [[ $2 == --import ]] || [[ $3 == 
 
 
 	# Create the current backup
-	db_backup
+	if [[ $INSTALLED == "yes" ]]; then
+
+		db_backup
+
+	fi
 
 
 fi
