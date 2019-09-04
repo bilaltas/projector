@@ -39,7 +39,7 @@ if [[ -z $ACTION ]]; then
 	echo ""
 	echo -e "${BLUE}starter${RESET}          Create a new project from scratch"
 	echo -e "   Options:"
-	echo -e "     --existing         Start with an existing site"
+	echo -e "     --existing         In development: Start with an existing site"
 	echo -e ""
 	echo -e "${BLUE}clone${RESET}            Clone a project from Git"
 	echo -e ""
