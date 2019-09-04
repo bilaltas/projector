@@ -241,17 +241,17 @@ fi # If not running
 
 
 
-# Check MySQL to be ready
-wait_for_mysql
-INSTALLED="yes"
-
-
-
-
 # Install WP-CLI
 echo -e "Installing WP-CLI..."
 source "$BUILDERDIR/config/wp-cli-install.sh"
 echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
+
+
+
+
+# Check MySQL to be ready
+wait_for_mysql
+INSTALLED="yes"
 
 
 
