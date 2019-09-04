@@ -73,6 +73,7 @@ echo "WP Version: $WP_VERSION"
 echo ""
 
 if [[ $MODE == install-starter ]]; then
+
 	echo "Website Name: $NAME"
 	echo "Website Tagline: $DESC"
 	[[ ! -z "$plugins" ]] && echo "Plugins: $plugins" || echo "Plugins: $PLUGINS"
@@ -117,6 +118,8 @@ fi
 echo -e "${GREEN}Confirmed.${RESET}"
 
 
+
+
 # Move the 'wp-content' folder TEMPORARILY
 if [[ $MODE != install-starter ]]; then
 
@@ -154,6 +157,7 @@ permission_update $PROJECTDIR
 # Check if the services already exists even though site is not installed
 if [ ! -z `docker_compose ps -q wpcli` ] && [ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]; then
 
+	echo -e "${RED}Project services are already exist. Removing...${RESET}"
 	docker_compose down
 
 fi
