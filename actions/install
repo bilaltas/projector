@@ -243,8 +243,8 @@ fi # If not running
 
 # Install WP-CLI
 echo -e "Installing WP-CLI..."
-docker_compose exec wpcli chmod +x /usr/local/bin/wp-cli-install.sh
-docker_compose exec wpcli wp-cli-install.sh
+docker_compose exec wpcli chmod +rwx /bin/wp-cli-install.sh
+docker_compose exec wpcli bash /bin/wp-cli-install.sh
 echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
 
 
