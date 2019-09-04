@@ -250,8 +250,7 @@ INSTALLED="yes"
 
 # Install WP-CLI
 echo -e "Installing WP-CLI..."
-docker_compose exec wpcli chmod +rwx /bin/wp-cli-install.sh
-docker_compose exec wpcli bash /bin/wp-cli-install.sh
+source "$BUILDERDIR/config/wp-cli-install.sh"
 echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
 
 

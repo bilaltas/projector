@@ -10,7 +10,6 @@ services:
       - ${IP}:80:80
     volumes:
       - ${BUILDER_DIR}/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      - ${BUILDER_DIR}/config/wp-cli-install.sh:/bin/wp-cli-install.sh
       - ${PROJECT_DIR}/wp:/var/www/html
       - ${PROJECT_DIR}/logs:/var/log/apache2
     environment:
