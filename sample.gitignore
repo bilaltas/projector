@@ -1,9 +1,9 @@
-.env
-logs/
-database/mysql
-wp/wp-content/themes/*/node_modules
+/.env
+/logs
+/database/mysql
+/wp/wp-content/themes/*/node_modules
+/wp/*
+!/wp/wp-content
+/wp/wp-content/cache
+/export
 .DS_Store
-wp/*
-!wp/wp-content
-wp/wp-content/cache
-export/
