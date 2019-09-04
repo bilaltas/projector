@@ -234,12 +234,12 @@ echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
 
 
 
+# Update the permissions
+permission_update "$PROJECTDIR"
+
+
+
+
 # START THE INSTALLATION
 MODE=install-starter
 source "$BUILDERDIR/actions/install"
-
-
-
-
-# Update the permissions
-permission_update "$PROJECTDIR"

@@ -30,3 +30,19 @@ fi
 # Clone the repo
 git clone "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" "${PROJECTDIR}"
 echo -e "Cloning '$SLUG' project ... ${GREEN}done${RESET}"
+
+
+
+
+# START THE INSTALLATION
+read -ep "Project has been clonned but not installed. Would you like to install it? (Press 'enter' or type 'no')" confirm
+if [[ $confirm != "no" ]]; then
+
+	source "$BUILDERDIR/actions/install"
+
+else
+
+	echo -e "${RED}Not installed.${RESET}"
+	exit
+
+fi

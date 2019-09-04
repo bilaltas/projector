@@ -96,7 +96,7 @@ echo "==================================="
 echo ""
 echo ""
 
-if [[ $MODE != install-starter ]]; then
+if [[ -z $confirm ]]; then
 
 	read -ep "Are these correct? (type 'yes' to confirm): " confirm
 
@@ -201,7 +201,6 @@ echo -e "'${IP}' is now available to build server ... ${GREEN}done${RESET}"
 
 # BUILD THE SERVER
 echo "Server is building..."
-docker_compose down
 docker_compose rm
 docker_compose pull
 docker_compose build --no-cache
