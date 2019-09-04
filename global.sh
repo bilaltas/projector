@@ -47,6 +47,7 @@ function update_environment {
 	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" $LOCAL_ENV;
 	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" $LOCAL_ENV;
 	sedreplace "s#PROJECT_DIR=projectdir#PROJECT_DIR=$PROJECTDIR#g" $LOCAL_ENV;
+	sedreplace "s#BUILDER_DIR=builderdir#BUILDER_DIR=$BUILDERDIR#g" $LOCAL_ENV;
 
 	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" $LOCAL_ENV;
 	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$SLUG/g" $LOCAL_ENV;
