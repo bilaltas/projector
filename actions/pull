@@ -76,10 +76,14 @@ else
 	# Pulling latest changes from git
 	if [[ -d "$PROJECTDIR/.git" ]]; then
 
+
 		(
 			cd $PROJECTDIR
-			echo "Checking the latest remote changes..."
+
 			if [[ $OPTION1 == --hard ]]; then
+
+
+				echo "Hard reset..."
 
 
 				# Make 'mysql' folder temporary
@@ -92,17 +96,24 @@ else
 				fi
 
 
-				echo "Hard reset..."
+				echo "Fetching..."
 				git fetch
 				git reset --hard origin/master
 				git clean -dfx
+				echo -e "Fetching ... ${GREEN}done${RESET}"
+
+
 				echo -e "Hard reset ... ${GREEN}done${RESET}"
 
 
 			fi
+
+
+			echo "Checking the latest remote changes..."
 			git pull
 			echo -e "Git pull ... ${GREEN}done${RESET}"
 		)
+
 
 	fi
 
@@ -127,7 +138,7 @@ if [[ $OPTION1 == --hard ]]; then
 
 
 	# Download the WP
-	if [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]]; then
+	if [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]] && [[ $INSTALLED == "yes" ]]; then
 
 
 		# Recreate the .env file
