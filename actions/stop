@@ -17,10 +17,8 @@ fi
 # Check if installed
 if [[ $INSTALLED != "yes" ]]; then
 
-
 	echo -e "${RED}Project is not installed.${RESET}"
 	exit
-
 
 fi
 

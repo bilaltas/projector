@@ -17,10 +17,8 @@ fi
 # Check if installed
 if [[ $INSTALLED != "yes" ]]; then
 
-
 	echo -e "${RED}Project is not installed.${RESET}"
 	exit
-
 
 fi
 
@@ -30,10 +28,8 @@ fi
 # Check if git exist
 if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
-
 	echo -e "${RED}Project doesn't have any git repository.${RESET}"
 	exit
-
 
 fi
 
@@ -55,7 +51,7 @@ fi
 
 
 	# Early exit if only db backup requested
-	[[ $2 == --db ]] && exit || sleep 0
+	[[ $OPTION1 == --db ]] && exit || sleep 0
 
 
 

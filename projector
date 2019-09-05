@@ -22,6 +22,11 @@ if [[ -f "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
 	PROJECTDIR=$BASEDIR
 
 
+	# Options
+	OPTION1=$2
+	OPTION2=$3
+
+
 fi # If current folder is a project folder
 
 
@@ -108,6 +113,12 @@ if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
 	if [[ ! -z $2 ]]; then
 
 		SLUG=$2
+
+
+		# Options
+		OPTION1=$3
+		OPTION2=$4
+
 
 	else
 

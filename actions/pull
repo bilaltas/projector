@@ -14,49 +14,35 @@ fi
 
 
 
-# Confirmations
-if [[ $2 == --hard ]] || [[ $3 == --hard ]] || [[ $2 == --import ]] || [[ $3 == --import ]]; then
+# Hard pull confirmation
+if [[ $OPTION1 == --hard ]]; then
+
+	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " confirm
+
+fi
 
 
-	# Hard pull confirmation
-	if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+# Import confirmation
+if [[ $OPTION1 == --import ]]; then
+
+	read -ep "Are you sure you want to replace all the changes you might have done? (yes | no): " confirm
+
+fi
 
 
-		read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " ACTION
-		if [[ $ACTION != "yes" ]] && [[ $ACTION != "y" ]]; then
+if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
 
-			echo -e "${RED}Not confirmed.${RESET}"
-			exit
+	echo -e "${RED}Not confirmed.${RESET}"
+	exit
 
-		fi
-
-
-	fi
+fi
 
 
-	# Import confirmation
-	if [[ $2 == --import ]] || [[ $3 == --import ]]; then
 
+# Create the current DB backup
+if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
 
-		read -ep "Are you sure you want to replace all the changes you might have done? (yes | no): " ACTION
-		if [[ $ACTION != "yes" ]] && [[ $ACTION != "y" ]]; then
-
-			echo -e "${RED}Not confirmed.${RESET}"
-			exit
-
-		fi
-
-
-	fi
-
-
-	# Create the current backup
-	if [[ $INSTALLED == "yes" ]]; then
-
-		db_backup
-
-	fi
-
+	db_backup
 
 fi
 
@@ -70,7 +56,7 @@ DB_SUM1=$(md5 -r $DB_FILE)
 
 
 
-if [[ $2 == --import ]] || [[ $3 == --import ]]; then
+if [[ $OPTION1 == --import ]]; then
 
 
 	# Move import files
@@ -86,7 +72,7 @@ else
 		(
 			cd $PROJECTDIR
 			echo "Checking the latest remote changes..."
-			if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+			if [[ $OPTION1 == --hard ]]; then
 
 
 				# Make 'mysql' folder temporary
@@ -231,7 +217,7 @@ fi
 
 
 # Permission fix needed
-if [[ $2 == --hard ]] || [[ $3 == --hard ]] || [[ $2 == --import ]] || [[ $3 == --import ]]; then
+if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
 
 	git_permission_update "$PROJECTDIR/.git"
 	permission_update "$PROJECTDIR/"

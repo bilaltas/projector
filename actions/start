@@ -78,7 +78,7 @@ echo ""
 
 
 # Install NPM for Gulp
-if [[ $2 != --nonode ]] && [[ $3 != --nonode ]]; then
+if [[ $OPTION1 != --nonode ]]; then
 
 	install_npm
 
