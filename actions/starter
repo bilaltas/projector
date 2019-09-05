@@ -33,10 +33,7 @@ PLUGINS=$DEFAULT_PLUGINS
 # Get local.env in project folder, if exists
 if [[ -f "$PROJECTDIR/local.env" ]]; then
 
-
-	# Get data from .env file
 	source "$PROJECTDIR/local.env"
-
 
 fi
 
@@ -46,10 +43,7 @@ fi
 # Get .env in project folder, if exists
 if [[ -f "$PROJECTDIR/.env" ]]; then
 
-
-	# Get data from .env file
 	source "$PROJECTDIR/.env"
-
 
 fi
 

@@ -28,6 +28,31 @@ function sedreplace () {
 
 }
 
+function get_env_data {
+
+
+	# Get data from sample.env file
+	source "$BUILDERDIR/sample.env"
+
+
+	# Get local.env in project folder, if exists
+	if [[ -f "$PROJECTDIR/local.env" ]]; then
+
+		source "$PROJECTDIR/local.env"
+
+	fi
+
+
+	# Get .env in project folder, if exists
+	if [[ -f "$PROJECTDIR/.env" ]]; then
+
+		source "$PROJECTDIR/.env"
+
+	fi
+
+
+}
+
 function update_environment {
 
 

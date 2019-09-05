@@ -21,34 +21,8 @@ fi
 
 
 
-# Get data from sample.env file
-source "$BUILDERDIR/sample.env"
-
-
-
-
-# Get local.env in project folder, if exists
-if [[ -f "$PROJECTDIR/local.env" ]]; then
-
-
-	# Get data from .env file
-	source "$PROJECTDIR/local.env"
-
-
-fi
-
-
-
-
-# Get .env in project folder, if exists
-if [[ -f "$PROJECTDIR/.env" ]]; then
-
-
-	# Get data from .env file
-	source "$PROJECTDIR/.env"
-
-
-fi
+# Get environmental data
+get_env_data
 
 
 
@@ -136,7 +110,7 @@ cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
 
 
 
-# Create and Update environment files !!! ???
+# Create and Update environment files
 update_environment
 
 

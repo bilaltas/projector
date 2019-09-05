@@ -17,12 +17,21 @@ fi
 # Check if installed
 if [[ $INSTALLED != "yes" ]]; then
 
-
 	echo -e "${RED}Project is not installed.${RESET}"
-	exit
-
 
 fi
+
+
+
+
+# Get environmental data
+get_env_data
+
+
+
+
+# Create and Update environment files
+update_environment
 
 
 
