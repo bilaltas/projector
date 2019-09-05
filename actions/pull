@@ -87,11 +87,25 @@ else
 			cd $PROJECTDIR
 			echo "Checking the latest remote changes..."
 			if [[ $2 == --hard ]] || [[ $3 == --hard ]]; then
+
+
+				# Make 'mysql' folder temporary
+				if [[ $INSTALLED == "yes" ]]; then
+
+					echo "Making 'mysql' folder temporary..."
+					cp "${PROJECTDIR}/database/mysql" "$BUILDERDIR/temp/${SLUG}_mysql"
+					echo -e "Make 'mysql' folder temporary ... ${GREEN}done${RESET}"
+
+				fi
+
+
 				echo "Hard reset..."
 				git fetch
 				git reset --hard origin/master
 				git clean -dfx
 				echo -e "Hard reset ... ${GREEN}done${RESET}"
+
+
 			fi
 			git pull
 			echo -e "Git pull ... ${GREEN}done${RESET}"
@@ -127,6 +141,12 @@ if [[ $INSTALLED == "yes" ]]; then
 		echo -e "DB info updating..."
 		wp config create --dbname=wordpress_data --dbuser=root --dbpass=password --dbhost=db --force
 		echo -e "DB info updated ... ${GREEN}done${RESET}"
+
+
+		# Make 'mysql' folder permanent
+		echo "Making 'mysql' folder permanent..."
+		mv "$BUILDERDIR/temp/${SLUG}_mysql" "${PROJECTDIR}/database/mysql"
+		echo -e "Make 'mysql' folder permanent ... ${GREEN}done${RESET}"
 
 
 	fi
