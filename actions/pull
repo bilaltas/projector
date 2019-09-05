@@ -93,7 +93,7 @@ else
 				if [[ $INSTALLED == "yes" ]]; then
 
 					echo "Making 'mysql' folder temporary..."
-					cp "${PROJECTDIR}/database/mysql" "$BUILDERDIR/temp/${SLUG}_mysql"
+					cp -rf "${PROJECTDIR}/database/mysql" "$BUILDERDIR/temp/${SLUG}_mysql"
 					echo -e "Make 'mysql' folder temporary ... ${GREEN}done${RESET}"
 
 				fi
@@ -170,7 +170,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
 		# Move to the WP area
-		cp "${PROJECTDIR}/database/dump/wordpress_data.sql" "${PROJECTDIR}/wp/wordpress_data.sql"
+		cp -rf "${PROJECTDIR}/database/dump/wordpress_data.sql" "${PROJECTDIR}/wp/wordpress_data.sql"
 
 
 		# Delete all the tables
