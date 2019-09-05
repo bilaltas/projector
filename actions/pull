@@ -113,38 +113,6 @@ fi
 
 
 
-# Re-install the WP core files and DB
-if [[ $OPTION1 == --hard ]]; then
-
-
-	# Download the WP
-	if [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]] && [[ $INSTALLED == "yes" ]]; then
-
-
-		# Recreate the .env file
-		update_environment
-
-
-		# Download the WP files
-		echo -e "WP files adding..."
-		wp core download --version=$WP_VERSION --skip-content --force
-		echo -e "WP Files added ... ${GREEN}done${RESET}"
-
-
-		# Create the config file
-		echo -e "DB info updating..."
-		wp config create --dbname=wordpress_data --dbuser=root --dbpass=password --dbhost=db --force
-		echo -e "DB info updated ... ${GREEN}done${RESET}"
-
-
-	fi
-
-
-fi
-
-
-
-
 # DETECT DB CHANGES
 DB_SUM2=$(md5 -r $DB_FILE)
 if [[ $DB_SUM1 != $DB_SUM2 ]]; then
