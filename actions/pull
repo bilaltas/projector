@@ -17,15 +17,7 @@ fi
 # Hard pull confirmation
 if [[ $OPTION1 == --hard ]]; then
 
-
 	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " confirm
-	if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
-
-		echo -e "${RED}Not confirmed.${RESET}"
-		exit
-
-	fi
-
 
 fi
 
@@ -33,8 +25,17 @@ fi
 # Import confirmation
 if [[ $OPTION1 == --import ]]; then
 
-
 	read -ep "Are you sure you want to replace all the changes you might have done? (yes | no): " confirm
+
+fi
+
+
+
+
+if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
+
+
+	# Confirmation check
 	if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
 
 		echo -e "${RED}Not confirmed.${RESET}"
@@ -43,13 +44,7 @@ if [[ $OPTION1 == --import ]]; then
 	fi
 
 
-fi
-
-
-
-# Create the current DB backup
-if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
-
+	# Create the current DB backup
 	if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
 
 		db_backup
@@ -61,7 +56,7 @@ fi
 
 
 
-# PULL HARD - GET DB BACKUP TO DETECT DB CHANGES
+# DETECT DB CHANGES
 DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
 DB_SUM1=$(md5 -r $DB_FILE)
 
