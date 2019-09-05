@@ -84,24 +84,14 @@ else
 
 
 				echo "Hard reset..."
-
-
-				# Make 'mysql' folder temporary
-				if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
-
-					echo "Making 'mysql' folder temporary..."
-					cp -rf "${PROJECTDIR}/database/mysql" "$BUILDERDIR/temp/${SLUG}_mysql"
-					echo -e "Make 'mysql' folder temporary ... ${GREEN}done${RESET}"
-
-				fi
-
-
-				echo "Fetching..."
 				git fetch
 				git reset --hard origin/master
-				git clean -dfx
-				echo -e "Fetching ... ${GREEN}done${RESET}"
 
+				if [[ $INSTALLED != "yes" ]]; then
+					git clean -dfx
+				else
+					git clean -df
+				fi
 
 				echo -e "Hard reset ... ${GREEN}done${RESET}"
 
