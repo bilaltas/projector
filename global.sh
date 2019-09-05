@@ -78,8 +78,6 @@ function update_environment {
 	# Update the .env file
 	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" $LOCAL_ENV;
 	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" $LOCAL_ENV;
-	sedreplace "s#PROJECT_DIR=projectdir#PROJECT_DIR=$PROJECTDIR#g" $LOCAL_ENV;
-	sedreplace "s#BUILDER_DIR=builderdir#BUILDER_DIR=$BUILDERDIR#g" $LOCAL_ENV;
 
 	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" $LOCAL_ENV;
 	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$SLUG/g" $LOCAL_ENV;
@@ -104,6 +102,12 @@ function update_environment {
 	rm -f $PROJECT_ENV
 	cp $LOCAL_ENV $PROJECT_ENV
 	echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
+
+
+	# Add the PROJECT_DIR and BUILDER_DIR to .env file
+	echo "PROJECT_DIR=$PROJECTDIR" >> $PROJECT_ENV
+	echo "BUILDER_DIR=$BUILDERDIR" >> $PROJECT_ENV
+	echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
 
 
 	echo -e "Updating environment files ... ${GREEN}done${RESET}"
