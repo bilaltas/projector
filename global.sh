@@ -542,15 +542,12 @@ function move_import_files () {
 function make_temporary () {
 
 
-	echo -e "'wp-content' folder is being temporary..."
-
 	# Make the wp-content folder temporary
 	if [[ -d "${PROJECTDIR}/wp/wp-content" ]]; then
-		
-		# Delete the old tmp_wp-content folder if exists
-		rm -rf "${PROJECTDIR}/wp/tmp_wp-content"
-		mv "${PROJECTDIR}/wp/wp-content" "${PROJECTDIR}/wp/tmp_wp-content"
 
+		echo -e "'wp-content' folder is being temporary..."
+		rm -rf "${BUILDERDIR}/temp/${SLUG}_wp-content"
+		mv "${PROJECTDIR}/wp/wp-content" "${BUILDERDIR}/temp/${SLUG}_wp-content"
 		echo -e "'wp-content' folder has been made temporary ... ${GREEN}done${RESET}"
 
 	fi
@@ -561,15 +558,12 @@ function make_temporary () {
 function make_permanent () {
 
 
-	echo -e "'wp-content' folder is being permenant..."
-
 	# Make the wp-content folder temporary
-	if [[ -d "${PROJECTDIR}/wp/tmp_wp-content" ]]; then
+	if [[ -d "${BUILDERDIR}/temp/${SLUG}_wp-content" ]]; then
 		
-		# Delete the old wp-content folder
+		echo -e "'wp-content' folder is being permenant..."
 		rm -rf "${PROJECTDIR}/wp/wp-content"
-		mv "${PROJECTDIR}/wp/tmp_wp-content" "${PROJECTDIR}/wp/wp-content"
-
+		mv "${BUILDERDIR}/temp/${SLUG}_wp-content" "${PROJECTDIR}/wp/wp-content"
 		echo -e "'wp-content' folder has been made permenant ... ${GREEN}done${RESET}"
 
 	fi
