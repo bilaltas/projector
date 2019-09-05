@@ -17,7 +17,15 @@ fi
 # Hard pull confirmation
 if [[ $OPTION1 == --hard ]]; then
 
+
 	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " confirm
+	if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
+
+		echo -e "${RED}Not confirmed.${RESET}"
+		exit
+
+	fi
+
 
 fi
 
@@ -25,16 +33,15 @@ fi
 # Import confirmation
 if [[ $OPTION1 == --import ]]; then
 
+
 	read -ep "Are you sure you want to replace all the changes you might have done? (yes | no): " confirm
+	if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
 
-fi
+		echo -e "${RED}Not confirmed.${RESET}"
+		exit
 
+	fi
 
-# Confirmation check
-if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
-
-	echo -e "${RED}Not confirmed.${RESET}"
-	exit
 
 fi
 
@@ -110,16 +117,26 @@ fi
 
 
 
+# Re-install the WP core files and DB
+if [[ $OPTION1 == --hard ]]; then
 
-if [[ $INSTALLED == "yes" ]]; then
 
+	# Make 'mysql' folder permanent
+	if [[ -d "$BUILDERDIR/temp/${SLUG}_mysql" ]]; then
 
-	# Recreate the .env file
-	update_environment
+		echo "Making 'mysql' folder permanent..."
+		mv "$BUILDERDIR/temp/${SLUG}_mysql" "${PROJECTDIR}/database/mysql"
+		echo -e "Make 'mysql' folder permanent ... ${GREEN}done${RESET}"
+
+	fi
 
 
 	# Download the WP
 	if [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]]; then
+
+
+		# Recreate the .env file
+		update_environment
 
 
 		# Download the WP files
@@ -132,16 +149,6 @@ if [[ $INSTALLED == "yes" ]]; then
 		echo -e "DB info updating..."
 		wp config create --dbname=wordpress_data --dbuser=root --dbpass=password --dbhost=db --force
 		echo -e "DB info updated ... ${GREEN}done${RESET}"
-
-
-		# Make 'mysql' folder permanent
-		if [[ -d "$BUILDERDIR/temp/${SLUG}_mysql" ]]; then
-
-			echo "Making 'mysql' folder permanent..."
-			mv "$BUILDERDIR/temp/${SLUG}_mysql" "${PROJECTDIR}/database/mysql"
-			echo -e "Make 'mysql' folder permanent ... ${GREEN}done${RESET}"
-
-		fi
 
 
 	fi
@@ -164,22 +171,8 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 	if [[ $INSTALLED == "yes" ]]; then
 
 
-		# Move to the WP area
-		cp -rf "${PROJECTDIR}/database/dump/wordpress_data.sql" "${PROJECTDIR}/wp/wordpress_data.sql"
-
-
-		# Delete all the tables
-		echo "Resetting DB..."
-		wp db reset --yes
-
-
 		# Import the DB
-		echo "Importing DB..."
-		wp db import "wordpress_data.sql"
-
-
-		# Delete the file from WP area
-		rm -rf "${PROJECTDIR}/wp/wordpress_data.sql"
+		db_import "${PROJECTDIR}/database/dump/wordpress_data.sql"
 
 
 		# Ask the registered URL and do the replacements
@@ -197,16 +190,14 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 		echo -e "Remove old data ... ${GREEN}done${RESET}"
 
 
-		echo -e "${GREEN}Server needs to be restarted to apply DB changes.${RESET}"
+		echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
 
 	fi
 
 
 else
 
-
 	echo "DB is identical."
-
 
 fi
 

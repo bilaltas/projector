@@ -248,6 +248,29 @@ function db_backup () {
 
 }
 
+function db_import {
+
+
+	# Move to the WP area
+	cp -rf "$1" "${PROJECTDIR}/wp/wordpress_data.sql"
+
+
+	# Delete all the tables
+	echo "Resetting DB..."
+	wp db reset --yes
+
+
+	# Import the DB
+	echo "Importing DB..."
+	wp db import "wordpress_data.sql"
+
+
+	# Delete the file from WP area
+	rm -rf "${PROJECTDIR}/wp/wordpress_data.sql"
+
+
+}
+
 function search_replace {
 
 
