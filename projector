@@ -56,6 +56,7 @@ if [[ -z $ACTION ]]; then
 	echo -e ""
 	echo -e "${BLUE}pull${RESET}             Pull the latest changes from Git"
 	echo -e "   Options:"
+	echo -e "     --commit           In development: Gets all the changes from a commit"
 	echo -e "     --hard             Gets all the latest changes from Git"
 	echo -e "     --import           Import site and DB files externally"
 	echo -e ""
