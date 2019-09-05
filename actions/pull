@@ -117,16 +117,6 @@ fi
 if [[ $OPTION1 == --hard ]]; then
 
 
-	# Make the DB importable
-	if [[ -d "$BUILDERDIR/temp/${SLUG}_mysql" ]]; then
-
-		echo "Making 'mysql' folder permanent..."
-		mv "$BUILDERDIR/temp/${SLUG}_mysql" "${PROJECTDIR}/database/mysql"
-		echo -e "Make 'mysql' folder permanent ... ${GREEN}done${RESET}"
-
-	fi
-
-
 	# Download the WP
 	if [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]] && [[ $INSTALLED == "yes" ]]; then
 
