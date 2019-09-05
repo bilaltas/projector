@@ -106,7 +106,32 @@ fi
 
 
 # Recreate the .env file
-update_environment
+if [[ $INSTALLED == "yes" ]]; then
+
+
+	update_environment
+
+
+	# Download the WP
+	if [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]]; then
+
+
+		# Download the WP files
+		echo -e "WP files adding..."
+		wp core download --version=$WP_VERSION --skip-content --force
+		echo -e "WP Files added ... ${GREEN}done${RESET}"
+
+
+		# Create the config file
+		echo -e "DB info updating..."
+		wp config create --dbname=wordpress_data --dbuser=root --dbpass=password --dbhost=db --force
+		echo -e "DB info updated ... ${GREEN}done${RESET}"
+
+
+	fi
+
+
+fi
 
 
 
@@ -143,6 +168,18 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 		# Ask the registered URL and do the replacements
 		db_url_update
+
+
+
+	
+
+
+	# Download the WP files
+	echo -e "WP files adding..."
+	wp --path=${SLUG}/wp --version=${WP_VERSION} --skip-content core download
+	echo -e "WP Files added ... ${GREEN}done${RESET}"
+
+
 
 
 		# Rewrite Flush

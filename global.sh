@@ -33,6 +33,13 @@ function update_environment {
 
 	echo "Start updating environment files..."
 
+	if [[ -z $WP_VERSION ]]; then
+		
+		echo -e "${RED}Environment variables couldn't be updated.${RESET}"
+		return
+
+	fi
+
 	SAMPLE_ENV="${BUILDERDIR}/sample.env"
 	PROJECT_ENV="${PROJECTDIR}/.env"
 	LOCAL_ENV="${PROJECTDIR}/local.env"
