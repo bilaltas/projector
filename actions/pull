@@ -30,6 +30,7 @@ if [[ $OPTION1 == --import ]]; then
 fi
 
 
+# Confirmation check
 if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
 
 	echo -e "${RED}Not confirmed.${RESET}"
@@ -40,9 +41,13 @@ fi
 
 
 # Create the current DB backup
-if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
+if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
 
-	db_backup
+	if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
+
+		db_backup
+
+	fi
 
 fi
 
@@ -76,7 +81,7 @@ else
 
 
 				# Make 'mysql' folder temporary
-				if [[ $INSTALLED == "yes" ]]; then
+				if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
 
 					echo "Making 'mysql' folder temporary..."
 					cp -rf "${PROJECTDIR}/database/mysql" "$BUILDERDIR/temp/${SLUG}_mysql"
@@ -130,9 +135,13 @@ if [[ $INSTALLED == "yes" ]]; then
 
 
 		# Make 'mysql' folder permanent
-		echo "Making 'mysql' folder permanent..."
-		mv "$BUILDERDIR/temp/${SLUG}_mysql" "${PROJECTDIR}/database/mysql"
-		echo -e "Make 'mysql' folder permanent ... ${GREEN}done${RESET}"
+		if [[ -d "$BUILDERDIR/temp/${SLUG}_mysql" ]]; then
+
+			echo "Making 'mysql' folder permanent..."
+			mv "$BUILDERDIR/temp/${SLUG}_mysql" "${PROJECTDIR}/database/mysql"
+			echo -e "Make 'mysql' folder permanent ... ${GREEN}done${RESET}"
+
+		fi
 
 
 	fi
@@ -175,18 +184,6 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 		# Ask the registered URL and do the replacements
 		db_url_update
-
-
-
-	
-
-
-	# Download the WP files
-	echo -e "WP files adding..."
-	wp --path=${SLUG}/wp --version=${WP_VERSION} --skip-content core download
-	echo -e "WP Files added ... ${GREEN}done${RESET}"
-
-
 
 
 		# Rewrite Flush
