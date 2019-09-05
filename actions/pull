@@ -127,7 +127,7 @@ fi
 if [[ $OPTION1 == --hard ]]; then
 
 
-	# Make 'mysql' folder permanent
+	# Make the DB importable
 	if [[ -d "$BUILDERDIR/temp/${SLUG}_mysql" ]]; then
 
 		echo "Making 'mysql' folder permanent..."

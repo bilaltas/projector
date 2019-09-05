@@ -17,7 +17,7 @@ fi
 # Check if installed
 if [[ $INSTALLED != "yes" ]]; then
 
-	echo -e "${RED}Project is not installed.${RESET}"
+	echo -e "${RED}Project is not installed. But still trying to remove...${RESET}"
 
 fi
 
@@ -44,6 +44,7 @@ db_backup
 
 
 
+# Close the server
 echo "Server is closing..."
 docker_compose down
 
@@ -56,9 +57,11 @@ killall -HUP mDNSResponder
 
 
 
+
 # Delete the DB files
 rm -rf "$PROJECTDIR/database/mysql"
 echo -e "MySQL files removed ... ${GREEN}done${RESET}"
+
 
 
 
@@ -78,7 +81,8 @@ echo -e ".env file removed from the project ... ${GREEN}done${RESET}"
 
 
 
-# Remove the folder
+
+# Optional: Remove the folder
 if [[ $OPTION1 == --remove ]]; then
 
 
