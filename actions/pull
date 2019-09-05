@@ -105,10 +105,11 @@ fi
 
 
 
-# Recreate the .env file
+
 if [[ $INSTALLED == "yes" ]]; then
 
 
+	# Recreate the .env file
 	update_environment
 
 
