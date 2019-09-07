@@ -118,7 +118,7 @@ DB_SUM2=$(md5 -r $DB_FILE)
 if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
-	echo "DB changed."
+	echo -e "${BLUE}DB changed.${RESET}"
 
 
 	# If installed
@@ -153,7 +153,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 else
 
-	echo "DB is identical."
+	echo -e "${BLUE}DB is identical.${RESET}"
 
 fi
 
