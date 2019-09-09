@@ -10,7 +10,7 @@ if [[ -f "$BUILDERDIR/projector" ]]; then
 
 	# Check update
 	(
-		cd $BUILDERDIR
+		cd "$BUILDERDIR"
 		git pull
 	)
 
@@ -21,7 +21,7 @@ if [[ -f "$BUILDERDIR/projector" ]]; then
 
 	# Check the sudo access to run the app
 	if [ "$(sudo -n uptime 2>&1|grep "load"|wc -l)" -gt 0 ]; then
-		
+
 		# Run the app
 		source "$BUILDERDIR/projector"
 

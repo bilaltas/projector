@@ -2,7 +2,7 @@
 
 
 # Check if the folder not exists
-if [[ ! -d $PROJECTDIR ]]; then
+if [[ ! -d "$PROJECTDIR" ]]; then
 
 	echo -e "${RED}Project doesn't exist.${RESET}"
 	exit
@@ -123,7 +123,7 @@ source "$PROJECTDIR/.env"
 
 
 # Update the permissions
-permission_update $PROJECTDIR
+permission_update "$PROJECTDIR"
 
 
 
@@ -180,7 +180,7 @@ while [[ $COUNTER -lt 120 ]]; do
 done
 
 # Update the environment file (.env) with the available IP
-sedreplace "s/IP=127.0.0.1/IP=${IP}/g" "${PROJECTDIR}/.env";
+sedreplace "s/IP=127.0.0.1/IP=${IP}/g" "$PROJECTDIR/.env";
 echo -e "'${IP}' changed as '${IP}' on .env file ... ${GREEN}done${RESET}"
 
 
@@ -221,7 +221,7 @@ if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $
 
 
 	# Delete the .env file
-	rm -rf "${PROJECTDIR}/.env"
+	rm -rf "$PROJECTDIR/.env"
 
 
 	echo -e "${RED}Services could not be started. Restart Docker and try installing again.${RESET}"
@@ -292,7 +292,7 @@ db_backup
 
 
 # Ask for the git initialization
-if [[ ! -d "${PROJECTDIR}/.git" ]]; then
+if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 	read -ep "Would you like to create new this project to Git? (Press 'enter' or type 'no'): " gitconfirm
@@ -311,7 +311,7 @@ if [[ ! -d "${PROJECTDIR}/.git" ]]; then
 			(
 
 				# Open the site directory
-				cd $PROJECTDIR
+				cd "$PROJECTDIR"
 				echo -e "Open the site directory ... ${GREEN}done${RESET}"
 
 
@@ -381,9 +381,9 @@ fi
 
 
 # Fix the site git permissions
-if [[ -d "${PROJECTDIR}/.git" ]]; then
-	
-	git_permission_update "${PROJECTDIR}/.git"
+if [[ -d "$PROJECTDIR/.git" ]]; then
+
+	git_permission_update "$PROJECTDIR/.git"
 
 fi
 

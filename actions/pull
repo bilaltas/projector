@@ -4,7 +4,7 @@
 
 
 # Check if the folder not exists
-if [[ ! -d $PROJECTDIR ]]; then
+if [[ ! -d "$PROJECTDIR" ]]; then
 
 	echo -e "${RED}Project doesn't exist.${RESET}"
 	exit
@@ -45,7 +45,7 @@ if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
 
 
 	# Create the current DB backup
-	if [[ -d "${PROJECTDIR}/database/mysql" ]]; then
+	if [[ -d "$PROJECTDIR/database/mysql" ]]; then
 
 		db_backup
 
@@ -78,7 +78,7 @@ else
 
 
 		(
-			cd $PROJECTDIR
+			cd "$PROJECTDIR"
 
 			if [[ $OPTION1 == --hard ]]; then
 
@@ -126,7 +126,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
 		# Import the DB
-		db_import "${PROJECTDIR}/database/dump/wordpress_data.sql"
+		db_import "$PROJECTDIR/database/dump/wordpress_data.sql"
 
 
 		# Ask the registered URL and do the replacements
@@ -141,7 +141,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
 		echo "Old data removing..."
-		rm -rf "${PROJECTDIR}/database/mysql/"
+		rm -rf "$PROJECTDIR/database/mysql/"
 		echo -e "Remove old data ... ${GREEN}done${RESET}"
 
 

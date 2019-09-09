@@ -59,54 +59,54 @@ function update_environment {
 	echo "Start updating environment files..."
 
 	if [[ -z $WP_VERSION ]]; then
-		
+
 		echo -e "${RED}Environment variables couldn't be updated.${RESET}"
 		return
 
 	fi
 
-	SAMPLE_ENV="${BUILDERDIR}/sample.env"
-	PROJECT_ENV="${PROJECTDIR}/.env"
-	LOCAL_ENV="${PROJECTDIR}/local.env"
+	SAMPLE_ENV="$BUILDERDIR/sample.env"
+	PROJECT_ENV="$PROJECTDIR/.env"
+	LOCAL_ENV="$PROJECTDIR/local.env"
 
 	# Create the .env file from the template (local.env)
-	rm -f $LOCAL_ENV
-	cp $SAMPLE_ENV $LOCAL_ENV
+	rm -f "$LOCAL_ENV"
+	cp "$SAMPLE_ENV" "$LOCAL_ENV"
 	echo -e "local.env file created ... ${GREEN}done${RESET}"
 
 
 	# Update the .env file
-	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" $LOCAL_ENV;
-	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" $LOCAL_ENV;
+	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" "$LOCAL_ENV";
+	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" "$LOCAL_ENV";
 
-	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" $LOCAL_ENV;
-	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$SLUG/g" $LOCAL_ENV;
-	sedreplace "s/DB_PREFIX=wp_/DB_PREFIX=$DB_PREFIX/g" $LOCAL_ENV;
+	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" "$LOCAL_ENV";
+	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$SLUG/g" "$LOCAL_ENV";
+	sedreplace "s/DB_PREFIX=wp_/DB_PREFIX=$DB_PREFIX/g" "$LOCAL_ENV";
 
-	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" $LOCAL_ENV;
-	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" $LOCAL_ENV;
-	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" $LOCAL_ENV;
-	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" $LOCAL_ENV;
-	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" $LOCAL_ENV;
+	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" "$LOCAL_ENV";
+	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" "$LOCAL_ENV";
+	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "$LOCAL_ENV";
+	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" "$LOCAL_ENV";
+	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" "$LOCAL_ENV";
 
-	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" $LOCAL_ENV;
-	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" $LOCAL_ENV;
-	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" $LOCAL_ENV;
-	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" $LOCAL_ENV;
-	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" $LOCAL_ENV;
+	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" "$LOCAL_ENV";
+	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" "$LOCAL_ENV";
+	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" "$LOCAL_ENV";
+	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "$LOCAL_ENV";
+	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "$LOCAL_ENV";
 
 	echo -e "local.env file updated with the new info ... ${GREEN}done${RESET}"
 
 
 	# Make the local.env live
-	rm -f $PROJECT_ENV
-	cp $LOCAL_ENV $PROJECT_ENV
+	rm -f "$PROJECT_ENV"
+	cp "$LOCAL_ENV" "$PROJECT_ENV"
 	echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
 
 
 	# Add the PROJECT_DIR and BUILDER_DIR to .env file
-	echo "PROJECT_DIR=$PROJECTDIR" >> $PROJECT_ENV
-	echo "BUILDER_DIR=$BUILDERDIR" >> $PROJECT_ENV
+	echo "PROJECT_DIR=\"$PROJECTDIR\"" >> "$PROJECT_ENV"
+	echo "BUILDER_DIR=\"$BUILDERDIR\"" >> "$PROJECT_ENV"
 	echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
 
 
@@ -118,7 +118,7 @@ function update_environment {
 function self_update () {
 
 	(
-		cd $BUILDERDIR
+		cd "$BUILDERDIR"
 
 		# Builder updates
 		echo "Updating the builder..."
@@ -132,9 +132,9 @@ function self_update () {
 }
 
 function docker_compose {
-	
+
 	(
-		cd $PROJECTDIR
+		cd "$PROJECTDIR"
 		command docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
 	)
 
@@ -213,8 +213,8 @@ function db_backup () {
 
 
 		# Get data
-		source "${BUILDERDIR}/sample.env"
-		source "${PROJECTDIR}/.env"
+		source "$BUILDERDIR/sample.env"
+		source "$PROJECTDIR/.env"
 
 
 		# Re-assign the real IP
@@ -233,15 +233,15 @@ function db_backup () {
 
 
 		# Update the current local IP on builder
-		sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "${PROJECTDIR}/.env";
+		sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "$PROJECTDIR/.env";
 
 
 		# Save the DB backup
 		echo "Backing up the DB..."
 		DB_FILE_NAME=wordpress_data.sql
 		wp db export $DB_FILE_NAME
-		mv "${PROJECTDIR}/wp/${DB_FILE_NAME}" "${PROJECTDIR}/database/dump/${DB_FILE_NAME}"
-		#echo -e "DB Backup saved in '${PROJECTDIR}/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
+		mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
+		#echo -e "DB Backup saved in '$PROJECTDIR/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
 
 
 	else
@@ -256,7 +256,7 @@ function db_import {
 
 
 	# Move to the WP area
-	cp -rf "$1" "${PROJECTDIR}/wp/wordpress_data.sql"
+	cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
 
 
 	# Delete all the tables
@@ -270,7 +270,7 @@ function db_import {
 
 
 	# Delete the file from WP area
-	rm -rf "${PROJECTDIR}/wp/wordpress_data.sql"
+	rm -rf "$PROJECTDIR/wp/wordpress_data.sql"
 
 
 }
@@ -378,13 +378,13 @@ function move_import_files () {
 
 
 	# If no "import/" folder added yet
-	if [[ ! -d "${PROJECTDIR}/import/" ]]; then
-		
-		echo -e "${BLUE}Please move your 'import/' folder to the '${PROJECTDIR}/' folder and hit enter${RESET}"
-		read IMPORT
-		while [[ ! -d "${PROJECTDIR}/import" ]]; do 
+	if [[ ! -d "$PROJECTDIR/import/" ]]; then
 
-			echo -e "${BLUE}Please move your 'import/' folder to the '${PROJECTDIR}/' folder and hit enter${RESET}"
+		echo -e "${BLUE}Please move your 'import/' folder to the '$PROJECTDIR/' folder and hit enter${RESET}"
+		read IMPORT
+		while [[ ! -d "$PROJECTDIR/import" ]]; do
+
+			echo -e "${BLUE}Please move your 'import/' folder to the '$PROJECTDIR/' folder and hit enter${RESET}"
 			read IMPORT
 
 		done
@@ -396,7 +396,7 @@ function move_import_files () {
 
 
 	# Prepare the backup folder
-	if [[ -f "${PROJECTDIR}/import/wp-config.php" ]]; then
+	if [[ -f "$PROJECTDIR/import/wp-config.php" ]]; then
 
 
 		echo -e "${BLUE}FULL SITE BACKUP DETECTED${RESET}"
@@ -404,59 +404,59 @@ function move_import_files () {
 
 		echo -e "WP core files are being removed..."
 		(
-			cd "${PROJECTDIR}/import/"
+			cd "$PROJECTDIR/import/"
 			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
 		)
 		echo -e "WP core files removed ... ${GREEN}done${RESET}"
 
 
-		if [[ -f "${PROJECTDIR}/import/wp-content/mysql.sql" ]]; then
+		if [[ -f "$PROJECTDIR/import/wp-content/mysql.sql" ]]; then
 
 			echo -e "Moving the DB file..."
-			mv "${PROJECTDIR}/import/wp-content/mysql.sql" "${PROJECTDIR}/import/mysql.sql"
+			mv "$PROJECTDIR/import/wp-content/mysql.sql" "$PROJECTDIR/import/mysql.sql"
 			echo -e "DB file moved ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -f "${PROJECTDIR}/import/wp-content/advanced-cache.php" ]]; then
+		if [[ -f "$PROJECTDIR/import/wp-content/advanced-cache.php" ]]; then
 
-			rm -rf "${PROJECTDIR}/import/wp-content/advanced-cache.php"
+			rm -rf "$PROJECTDIR/import/wp-content/advanced-cache.php"
 			echo -e "'wp-content/advanced-cache.php' file removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${PROJECTDIR}/import/wp-content/cache/" ]] || [[ -d "${PROJECTDIR}/import/wp-content/uploads/cache/" ]]; then
+		if [[ -d "$PROJECTDIR/import/wp-content/cache/" ]] || [[ -d "$PROJECTDIR/import/wp-content/uploads/cache/" ]]; then
 
-			rm -rf "${PROJECTDIR}/import/wp-content/cache/"
-			rm -rf "${PROJECTDIR}/import/wp-content/uploads/cache/"
+			rm -rf "$PROJECTDIR/import/wp-content/cache/"
+			rm -rf "$PROJECTDIR/import/wp-content/uploads/cache/"
 			echo -e "'cache' folders removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${PROJECTDIR}/import/wp-content/mu-plugins/" ]]; then
+		if [[ -d "$PROJECTDIR/import/wp-content/mu-plugins/" ]]; then
 
-			rm -rf "${PROJECTDIR}/import/wp-content/mu-plugins/"
+			rm -rf "$PROJECTDIR/import/wp-content/mu-plugins/"
 			echo -e "'mu-plugins' folder removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${PROJECTDIR}/import/wp-content/plugins/hyperdb" ]]; then
+		if [[ -d "$PROJECTDIR/import/wp-content/plugins/hyperdb" ]]; then
 
-			rm -rf "${PROJECTDIR}/import/wp-content/plugins/hyperdb"
-			rm -rf "${PROJECTDIR}/import/wp-content/plugins/hyperdb-1"
-			rm -rf "${PROJECTDIR}/import/wp-content/plugins/hyperdb-1-1"
+			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb"
+			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1"
+			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1-1"
 			echo -e "'hyperdb' plugin removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "${PROJECTDIR}/import/wp-content/plugins/really-simple-ssl" ]]; then
+		if [[ -d "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl" ]]; then
 
-			rm -rf "${PROJECTDIR}/import/wp-content/plugins/really-simple-ssl"
+			rm -rf "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl"
 			echo -e "'really-simple-ssl' plugin removed ... ${GREEN}done${RESET}"
 
 		fi
@@ -469,30 +469,30 @@ function move_import_files () {
 
 
 	# Create target folders if not exist
-	if [[ ! -d "${PROJECTDIR}/database/dump/" ]]; then
+	if [[ ! -d "$PROJECTDIR/database/dump/" ]]; then
 
-		mkdir -p "${PROJECTDIR}/database/dump/"
+		mkdir -p "$PROJECTDIR/database/dump/"
 
 	fi
 
-	if [[ ! -d "${PROJECTDIR}/wp/wp-content/" ]]; then
+	if [[ ! -d "$PROJECTDIR/wp/wp-content/" ]]; then
 
-		mkdir -p "${PROJECTDIR}/wp/wp-content/"
+		mkdir -p "$PROJECTDIR/wp/wp-content/"
 
 	fi
 
 
 	# Move the SQL file
-	if [[ -f "${PROJECTDIR}/import/db.sql" ]]; then
+	if [[ -f "$PROJECTDIR/import/db.sql" ]]; then
 
-		rm -rf "${PROJECTDIR}/database/dump/wordpress_data.sql"
-		mv "${PROJECTDIR}/import/db.sql" "${PROJECTDIR}/database/dump/wordpress_data.sql"
+		rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
+		mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
 		echo -e "SQL file moved ... ${GREEN}done${RESET}"
 
-	elif [[ -f "${PROJECTDIR}/import/mysql.sql" ]]; then
+	elif [[ -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
-		rm -rf "${PROJECTDIR}/database/dump/wordpress_data.sql"
-		mv "${PROJECTDIR}/import/mysql.sql" "${PROJECTDIR}/database/dump/wordpress_data.sql"
+		rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
+		mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
 		echo -e "SQL file moved ... ${GREEN}done${RESET}"
 
 	else
@@ -504,28 +504,28 @@ function move_import_files () {
 
 
 	# Remove existing MySQL files if exists
-	if [[ $INSTALLED != "yes" ]] && [[ -d "${PROJECTDIR}/database/mysql/" ]]; then
-	
-		rm -rf "${PROJECTDIR}/database/mysql/"
+	if [[ $INSTALLED != "yes" ]] && [[ -d "$PROJECTDIR/database/mysql/" ]]; then
+
+		rm -rf "$PROJECTDIR/database/mysql/"
 
 	fi
 
 
 	# Move the wp-content folder
-	if [[ -d "${PROJECTDIR}/import/wp-content/" ]]; then
+	if [[ -d "$PROJECTDIR/import/wp-content/" ]]; then
 
-		rm -rf "${PROJECTDIR}/wp/tmp_wp-content/"
-		rm -rf "${PROJECTDIR}/wp/wp-content/"
-		mv "${PROJECTDIR}/import/wp-content" "${PROJECTDIR}/wp/wp-content"
+		rm -rf "$PROJECTDIR/wp/tmp_wp-content/"
+		rm -rf "$PROJECTDIR/wp/wp-content/"
+		mv "$PROJECTDIR/import/wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e "'wp-content' folder moved in place ... ${GREEN}done${RESET}"
 
 	fi
 
 
 	# Remove the import folder if successful
-	if [[ ! -d "${PROJECTDIR}/import/wp-content/" ]] && [[ ! -f "${PROJECTDIR}/import/db.sql" ]] && [[ ! -f "${PROJECTDIR}/import/mysql.sql" ]]; then
-	
-		rm -rf "${PROJECTDIR}/import/"
+	if [[ ! -d "$PROJECTDIR/import/wp-content/" ]] && [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
+
+		rm -rf "$PROJECTDIR/import/"
 		echo -e "'import' folder removed ... ${GREEN}done${RESET}"
 
 
@@ -543,11 +543,11 @@ function make_temporary () {
 
 
 	# Make the wp-content folder temporary
-	if [[ -d "${PROJECTDIR}/wp/wp-content" ]]; then
+	if [[ -d "$PROJECTDIR/wp/wp-content" ]]; then
 
 		echo -e "'wp-content' folder is being temporary..."
-		rm -rf "${BUILDERDIR}/temp/${SLUG}_wp-content"
-		mv "${PROJECTDIR}/wp/wp-content" "${BUILDERDIR}/temp/${SLUG}_wp-content"
+		rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
+		mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
 		echo -e "'wp-content' folder has been made temporary ... ${GREEN}done${RESET}"
 
 	fi
@@ -559,11 +559,11 @@ function make_permanent () {
 
 
 	# Make the wp-content folder temporary
-	if [[ -d "${BUILDERDIR}/temp/${SLUG}_wp-content" ]]; then
-		
+	if [[ -d "$BUILDERDIR/temp/${SLUG}_wp-content" ]]; then
+
 		echo -e "'wp-content' folder is being permenant..."
-		rm -rf "${PROJECTDIR}/wp/wp-content"
-		mv "${BUILDERDIR}/temp/${SLUG}_wp-content" "${PROJECTDIR}/wp/wp-content"
+		rm -rf "$PROJECTDIR/wp/wp-content"
+		mv "$BUILDERDIR/temp/${SLUG}_wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e "'wp-content' folder has been made permenant ... ${GREEN}done${RESET}"
 
 	fi
@@ -575,18 +575,18 @@ function install_npm () {
 
 
 	# If package.json exist in theme folder
-	if [[ -f "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/package.json" ]]; then
+	if [[ -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/package.json" ]]; then
 
 
 
 		# If Gulp not installed, build the gulp
-		if [[ ! -d "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
+		if [[ ! -d "$PROJECTDIR/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "$PROJECTDIR/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
 
 
 			# RUN THE GULP
 			echo "NPM packages are installing..."
 			(
-				cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+				cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
 				npm run build
 			)
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
@@ -597,13 +597,13 @@ function install_npm () {
 
 
 		# If Gulp file exist in theme folder
-		if [[ -f "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/gulpfile.js" ]]; then
+		if [[ -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/gulpfile.js" ]]; then
 
 
 			# RUN THE GULP
 			echo "GULP is running..."
 			(
-				cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+				cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
 				npm start
 			)
 
@@ -666,7 +666,7 @@ fi
 rep=$(docker ps -q &>/dev/null)
 status=$?
 if [[ "$status" != "0" ]]; then
-    
+
     echo 'Docker is opening...'
     open /Applications/Docker.app
 

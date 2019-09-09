@@ -37,7 +37,7 @@ fi
 # Local file permission update
 if [[ $DO == all ]] || [[ $DO == permission ]]; then
 
-	permission_update "$PROJECTDIR/"
+	permission_update "$PROJECTDIR"
 
 fi
 
@@ -46,6 +46,6 @@ fi
 if [[ $DO == site ]]; then
 
 	git_permission_update "$PROJECTDIR/.git"
-	permission_update "$PROJECTDIR/"
+	permission_update "$PROJECTDIR"
 
 fi

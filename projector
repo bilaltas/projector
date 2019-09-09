@@ -107,7 +107,7 @@ fi
 
 
 # If it's under current folder (Projects/project-name)
-if [[ -z $SLUG ]] && [[ -z $PROJECTDIR ]]; then
+if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]]; then
 
 
 	# Get project name from args

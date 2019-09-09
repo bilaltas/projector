@@ -2,7 +2,7 @@
 
 
 # Check if the project folder already exists
-if [[ -d $PROJECTDIR ]]; then
+if [[ -d "$PROJECTDIR" ]]; then
 
 	echo -e "${RED}Project folder already exist.${RESET}"
 	exit
@@ -28,7 +28,7 @@ fi
 
 
 # Clone the repo
-git clone "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" "${PROJECTDIR}"
+git clone "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" "$PROJECTDIR"
 echo -e "Cloning '$SLUG' project ... ${GREEN}done${RESET}"
 
 

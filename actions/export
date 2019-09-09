@@ -4,7 +4,7 @@
 
 
 # Check if the folder not exists
-if [[ ! -d $PROJECTDIR ]]; then
+if [[ ! -d "$PROJECTDIR" ]]; then
 
 	echo -e "${RED}Project doesn't exist.${RESET}"
 	exit
@@ -32,7 +32,7 @@ echo "EXPORTING STARTED"
 
 # Ask for the target domain
 read -ep "Target domain (www.domainname.com): " targetdomain
-while [[ -z "$targetdomain" ]]; do 
+while [[ -z "$targetdomain" ]]; do
 
 	read -ep "Target domain (www.domainname.com): " targetdomain
 
@@ -43,7 +43,7 @@ done
 
 # Ask for the target protocol
 read -ep "Target protocol (http | https): " targetprotocol
-while [[ $targetprotocol != http ]] && [[ $targetprotocol != https ]]; do 
+while [[ $targetprotocol != http ]] && [[ $targetprotocol != https ]]; do
 
 	read -ep "Target protocol (http | https): " targetprotocol
 
@@ -57,7 +57,7 @@ wp db export "tmp_wordpress_data.sql"
 
 
 # Check the initial backup file
-if [[ ! -f "${PROJECTDIR}/wp/tmp_wordpress_data.sql" ]]; then
+if [[ ! -f "$PROJECTDIR/wp/tmp_wordpress_data.sql" ]]; then
 
 	echo -e "${RED}DB backup not found.${RESET}"
 	exit
@@ -83,11 +83,11 @@ wp db export "live.sql"
 
 # Revert the DB
 wp db import "tmp_wordpress_data.sql"
-rm -rf "${PROJECTDIR}/wp/tmp_wordpress_data.sql"
+rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
 
 
 # Check the replaced backup file
-if [[ ! -f "${PROJECTDIR}/wp/live.sql" ]]; then
+if [[ ! -f "$PROJECTDIR/wp/live.sql" ]]; then
 
 	echo -e "${RED}CHANGED SQL FILE NOT FOUND.${RESET}"
 	exit
@@ -98,37 +98,37 @@ fi
 
 
 # Remove existing "export" folder
-rm -rf "${PROJECTDIR}/export/"
+rm -rf "$PROJECTDIR/export/"
 
 
 
 
 # Create the export folder
-mkdir -p "${PROJECTDIR}/export/"
+mkdir -p "$PROJECTDIR/export/"
 
 
 
 
 # Move the SQL file
-mv "${PROJECTDIR}/wp/live.sql" "${PROJECTDIR}/export/live.sql"
+mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
 
 
 
 
 # Copy the theme folder
-cp -rf "${PROJECTDIR}/wp/wp-content/themes/${SLUG}/" "${PROJECTDIR}/export/${SLUG}/"
+cp -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/" "$PROJECTDIR/export/${SLUG}/"
 
 
 
 
 # Delete 'node_modules' folder if exists
-rm -rf "${PROJECTDIR}/export/${SLUG}/node_modules/"
+rm -rf "$PROJECTDIR/export/${SLUG}/node_modules/"
 
 
 
 
 # Delete 'package-lock.json' file if exists
-rm -rf "${PROJECTDIR}/export/${SLUG}/package-lock.json"
+rm -rf "$PROJECTDIR/export/${SLUG}/package-lock.json"
 
 
 
@@ -136,7 +136,7 @@ rm -rf "${PROJECTDIR}/export/${SLUG}/package-lock.json"
 # Zip the folder
 echo -e "Zipping the theme folder..."
 (
-	cd "${PROJECTDIR}/export/"
+	cd "$PROJECTDIR/export/"
 	zip -r -X "${SLUG}.zip" "${SLUG}"
 )
 echo -e "'${SLUG}.zip' theme file created ... ${GREEN}done${RESET}"
@@ -145,14 +145,14 @@ echo -e "'${SLUG}.zip' theme file created ... ${GREEN}done${RESET}"
 
 
 # Remove the theme folder
-rm -rf "${PROJECTDIR}/export/${SLUG}/"
+rm -rf "$PROJECTDIR/export/${SLUG}/"
 echo -e "Theme folder removed ... ${GREEN}done${RESET}"
 
 
 
 
 # Permission fix on 'export' folder
-permission_update "${PROJECTDIR}/export/"
+permission_update "$PROJECTDIR/export/"
 
 
 

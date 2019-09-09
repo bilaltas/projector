@@ -164,9 +164,9 @@ fi
 
 
 # Create the project folder
-if [[ ! -d $PROJECTDIR ]]; then
+if [[ ! -d "$PROJECTDIR" ]]; then
 
-	mkdir $PROJECTDIR
+	mkdir "$PROJECTDIR"
 
 fi
 
@@ -220,7 +220,7 @@ echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 # Install NPM packages
 echo "NPM packages are installing..."
 (
-	cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+	cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
 	npm install
 )
 echo -e "NPM packages installed ... ${GREEN}done${RESET}"
@@ -231,7 +231,7 @@ echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 # Build the style.css
 echo "'style.css' is being built..."
 (
-	cd "${PROJECTDIR}/wp/wp-content/themes/${SLUG}"
+	cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
 	npm run build
 )
 echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
