@@ -104,9 +104,14 @@ function update_environment {
 	echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
 
 
+	# Add slashes to the directories
+	PROJECT_DIR=$(echo "$PROJECTDIR" | sed 's/ /\\ /g')
+	BUILDER_DIR=$(echo "$BUILDERDIR" | sed 's/ /\\ /g')
+
+
 	# Add the PROJECT_DIR and BUILDER_DIR to .env file
-	echo "PROJECT_DIR=\"$PROJECTDIR\"" >> "$PROJECT_ENV"
-	echo "BUILDER_DIR=\"$BUILDERDIR\"" >> "$PROJECT_ENV"
+	echo "PROJECT_DIR=$PROJECT_DIR" >> "$PROJECT_ENV"
+	echo "BUILDER_DIR=$BUILDER_DIR" >> "$PROJECT_ENV"
 	echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
 
 

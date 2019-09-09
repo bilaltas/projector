@@ -7,11 +7,11 @@ services:
     restart: "always"
     user: root
     ports:
-      - ${IP}:80:80
+      - $IP:80:80
     volumes:
-      - ${BUILDER_DIR}/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      - ${PROJECT_DIR}/wp:/var/www/html
-      - ${PROJECT_DIR}/logs:/var/log/apache2
+      - "$BUILDER_DIR/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
+      - "$PROJECT_DIR/wp:/var/www/html"
+      - "$PROJECT_DIR/logs:/var/log/apache2"
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: wordpress_data
@@ -34,8 +34,8 @@ services:
       '--collation-server=utf8mb4_unicode_ci'
     ]
     volumes:
-      - ${PROJECT_DIR}/database/dump:/docker-entrypoint-initdb.d
-      - ${PROJECT_DIR}/database/mysql:/var/lib/mysql
+      - "$PROJECT_DIR/database/dump:/docker-entrypoint-initdb.d"
+      - "$PROJECT_DIR/database/mysql:/var/lib/mysql"
     environment:
       MYSQL_DATABASE: wordpress_data
       MYSQL_ROOT_PASSWORD: password
@@ -51,7 +51,7 @@ services:
     depends_on:
         - db
     ports:
-        - ${IP}:8000:80
+        - $IP:8000:80
     environment:
         MYSQL_USER: root
         MYSQL_PASSWORD: password
