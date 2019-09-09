@@ -300,7 +300,7 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 		# Check the git repository
-		if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" HEAD &>/dev/null; then
+		if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
 
 			echo -e "${RED}Remote repository already exists for '$SLUG' project.${RESET}"
 
@@ -415,4 +415,4 @@ echo ""
 
 
 
-echo -e "Installing '${SLUG}' project ... ${GREEN}done${RESET}"
+echo -e "Installing '$SLUG' project ... ${GREEN}done${RESET}"

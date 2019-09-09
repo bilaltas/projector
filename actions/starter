@@ -13,7 +13,7 @@ fi
 
 
 # Check the git repository
-if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/${SLUG}.git" HEAD &>/dev/null; then
+if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
 
 	echo -e "${RED}Remote repository already exists for '$SLUG' project.${RESET}"
 	exit
@@ -182,14 +182,14 @@ source "$PROJECTDIR/.env"
 
 
 # Download the template
-rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/"
-git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/${SLUG}/"
-rm -rf "$PROJECTDIR/wp/wp-content/themes/${SLUG}/.git"
+rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/"
+git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG/"
+rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/.git"
 echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
 
 
 # Check the theme files
-if [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss" ]]; then
+if [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss" ]]; then
 
 	echo -e "${RED}Missing theme files.${RESET}"
 	exit
@@ -200,18 +200,18 @@ fi
 
 
 # Theme function prefix changes
-sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/functions.php";
-sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/header.php";
+sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php";
+sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php";
 echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
 
 
 
 
 # Theme info changes
-sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
+sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss";
 echo -e "Theme name updated as '${NAME}' ... ${GREEN}done${RESET}"
 
-sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/${SLUG}/style.scss";
+sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss";
 echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 
 
@@ -220,7 +220,7 @@ echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 # Install NPM packages
 echo "NPM packages are installing..."
 (
-	cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
+	cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 	npm install
 )
 echo -e "NPM packages installed ... ${GREEN}done${RESET}"
@@ -231,7 +231,7 @@ echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 # Build the style.css
 echo "'style.css' is being built..."
 (
-	cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
+	cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 	npm run build
 )
 echo -e "'style.css' has been built ... ${GREEN}done${RESET}"

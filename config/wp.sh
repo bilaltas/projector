@@ -67,7 +67,7 @@ wp option update timezone_string "${TIMEZONE}"
 wp rewrite structure "${POST_PERMALINK}"
 
 # Activate our theme
-wp theme activate ${SLUG}
+wp theme activate $SLUG
 
 # Delete the default themes
 wp theme delete twentysixteen twentyseventeen twentynineteen

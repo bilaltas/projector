@@ -8,7 +8,7 @@ source "$BUILDERDIR/global.sh"
 
 
 # Check if current folder is a project folder (project-name/)
-if [[ -f "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
+if [[ -f "$BASEDIR/local.env" ]] || [[ -f "$BASEDIR/.env" ]]; then
 
 
 	# Extract the project name from BASEDIR
@@ -19,7 +19,7 @@ if [[ -f "${BASEDIR}/local.env" ]] || [[ -f "${BASEDIR}/.env" ]]; then
 
 	# Project info
 	PROJECTNAME=$SLUG
-	PROJECTDIR=$BASEDIR
+	PROJECTDIR="$BASEDIR"
 
 
 	# Options
@@ -143,7 +143,7 @@ if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]]; then
 
 	# Project info
 	PROJECTNAME=$SLUG
-	PROJECTDIR="${BASEDIR}/${SLUG}"
+	PROJECTDIR="$BASEDIR/$SLUG"
 
 
 fi

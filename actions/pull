@@ -58,7 +58,7 @@ fi
 
 # DETECT DB CHANGES
 DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
-DB_SUM1=$(md5 -r $DB_FILE)
+DB_SUM1=$(md5 -r "$DB_FILE")
 
 
 
@@ -114,7 +114,7 @@ fi
 
 
 # DETECT DB CHANGES
-DB_SUM2=$(md5 -r $DB_FILE)
+DB_SUM2=$(md5 -r "$DB_FILE")
 if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 

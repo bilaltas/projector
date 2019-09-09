@@ -96,4 +96,4 @@ fi
 
 
 
-echo -e "Uninstalling '${SLUG}' project ... ${GREEN}done${RESET}"
+echo -e "Uninstalling '$SLUG' project ... ${GREEN}done${RESET}"

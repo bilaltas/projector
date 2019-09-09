@@ -9,7 +9,7 @@ RESET='\033[0m' # No Color
 
 # Get current directory
 BASEDIR="$(pwd)"
-#echo -e "BASEDIR: ${BASEDIR}"
+#echo -e "BASEDIR: $BASEDIR"
 
 
 
@@ -497,7 +497,7 @@ function move_import_files () {
 
 	else
 
-		echo -e "${RED}'db.sql' or 'mysql.sql' file does not exist in '${BASEDIR}site/import/' folder.${RESET}"
+		echo -e "${RED}'db.sql' or 'mysql.sql' file does not exist in '$BASEDIR/site/import/' folder.${RESET}"
 		exit
 
 	fi
@@ -575,18 +575,18 @@ function install_npm () {
 
 
 	# If package.json exist in theme folder
-	if [[ -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/package.json" ]]; then
+	if [[ -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/package.json" ]]; then
 
 
 
 		# If Gulp not installed, build the gulp
-		if [[ ! -d "$PROJECTDIR/wp/wp-content/themes/${SLUG}/node_modules" ]] || [[ ! -d "$PROJECTDIR/wp/wp-content/themes/${SLUG}/node_modules/gulp" ]]; then
+		if [[ ! -d "$PROJECTDIR/wp/wp-content/themes/$SLUG/node_modules" ]] || [[ ! -d "$PROJECTDIR/wp/wp-content/themes/$SLUG/node_modules/gulp" ]]; then
 
 
 			# RUN THE GULP
 			echo "NPM packages are installing..."
 			(
-				cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
+				cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 				npm run build
 			)
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
@@ -597,13 +597,13 @@ function install_npm () {
 
 
 		# If Gulp file exist in theme folder
-		if [[ -f "$PROJECTDIR/wp/wp-content/themes/${SLUG}/gulpfile.js" ]]; then
+		if [[ -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/gulpfile.js" ]]; then
 
 
 			# RUN THE GULP
 			echo "GULP is running..."
 			(
-				cd "$PROJECTDIR/wp/wp-content/themes/${SLUG}"
+				cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 				npm start
 			)
 
