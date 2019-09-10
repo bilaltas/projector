@@ -122,7 +122,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
 	# If installed
-	if [[ $INSTALLED == "yes" ]]; then
+	if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
 
 
 		# Import the DB
@@ -164,7 +164,7 @@ fi
 if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
 
 	git_permission_update "$PROJECTDIR/.git"
-	permission_update "$PROJECTDIR/"
+	permission_update "$PROJECTDIR"
 
 fi
 

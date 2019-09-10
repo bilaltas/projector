@@ -279,22 +279,36 @@ function db_backup () {
 function db_import {
 
 
-	# Move to the WP area
-	cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
+	if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
 
 
-	# Delete all the tables
-	echo "Resetting DB..."
-	wp db reset --yes
+		# Run server if not running
+		run_server_if_not_running
 
 
-	# Import the DB
-	echo "Importing DB..."
-	wp db import "wordpress_data.sql"
+		# Move to the WP area
+		cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
 
 
-	# Delete the file from WP area
-	rm -rf "$PROJECTDIR/wp/wordpress_data.sql"
+		# Delete all the tables
+		echo "Resetting DB..."
+		wp db reset --yes
+
+
+		# Import the DB
+		echo "Importing DB..."
+		wp db import "wordpress_data.sql"
+
+
+		# Delete the file from WP area
+		rm -rf "$PROJECTDIR/wp/wordpress_data.sql"
+
+
+	else
+
+		echo -e "${BLUE}Cannot import DB file because project is not installed.${RESET}"
+
+	fi
 
 
 }
