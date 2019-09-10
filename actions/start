@@ -36,6 +36,17 @@ fi
 
 
 
+# Check if container exists
+if [[ $CONTAINEREXISTS != "yes" ]]; then
+
+	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
+	exit
+
+fi
+
+
+
+
 # Open that IP slot
 sudo ifconfig lo0 alias $IP up
 echo -e "'${IP}' is now available ... ${GREEN}done${RESET}"

@@ -25,6 +25,28 @@ fi
 
 
 
+# Check if container exists
+if [[ $CONTAINEREXISTS != "yes" ]]; then
+
+	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if container is running
+if [[ $CONTAINERRUNNING != "yes" ]]; then
+
+	echo -e "${RED}Cannot stop because containers are not running.${RESET}"
+	exit
+
+fi
+
+
+
+
 # Stop the server
 echo "Server is stopping..."
 docker_compose stop

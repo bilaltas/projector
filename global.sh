@@ -47,6 +47,7 @@ function get_env_data {
 	if [[ -f "$PROJECTDIR/.env" ]]; then
 
 		source "$PROJECTDIR/.env"
+		SLUG=$PROJECTNAME
 
 	fi
 
@@ -138,10 +139,18 @@ function self_update () {
 
 function docker_compose {
 
-	(
-		cd "$PROJECTDIR"
-		command docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
-	)
+	if [[ -f "$PROJECTDIR/.env" ]]; then
+
+		(
+			cd "$PROJECTDIR"
+			command docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
+		)
+	
+	else
+
+		echo -e "${RED}Cannot do any docker-compose command because project is not installed.${RESET}"
+
+	fi
 
 }
 
@@ -149,12 +158,22 @@ function run_server_if_not_running {
 
 
 	# Check if services are running
-	if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ] || [ -z `docker_compose ps -q db` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]; then
+	if [[ $CONTAINEREXISTS == "yes" ]] && [[ $CONTAINERRUNNING == "no" ]]; then
 
 
 		echo "Services not running. Starting..."
-		docker_compose up -d
-		echo -e "Services restarted ... ${GREEN}done${RESET}"
+		docker_compose up -d --no-recreate
+
+		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+			CONTAINERRUNNING="yes"
+			echo -e "Services restarted ... ${GREEN}done${RESET}"
+
+		else
+
+			echo -e "${RED}Services could not be started.${RESET}"
+
+		fi
 
 
 	fi # If not running
@@ -206,7 +225,7 @@ function wp {
 function db_backup () {
 
 
-	if [[ $INSTALLED == "yes" ]]; then
+	if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
 
 
 		# Run server if not running
@@ -251,7 +270,7 @@ function db_backup () {
 
 	else
 
-		echo -e "${RED}Cannot get DB backup because project is not installed.${RESET}"
+		echo -e "${BLUE}Cannot get DB backup because project is not installed.${RESET}"
 
 	fi
 

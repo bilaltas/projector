@@ -154,24 +154,66 @@ fi
 
 
 
+# Get environmental data
+get_env_data
+
+
+
+
 # Installation Check
 INSTALLED="no"
-if [[ -f "$PROJECTDIR/.env" ]]; then
+if [[ $IP != "127.0.0.1" ]]; then
+
+	INSTALLED="yes"
+	echo -e "${GREEN}PROJECT INSTALLED${RESET}"
+
+else
+
+	# Create and Update environment files
+	update_environment
+	echo -e "${RED}PROJECT NOT INSTALLED${RESET}"
+
+fi # If already installed
 
 
-	# Get data from .env file
-	source "$PROJECTDIR/.env"
-	SLUG=$PROJECTNAME
+
+# Check if services are running
+CONTAINEREXISTS="no"
+CONTAINERRUNNING="no"
+if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` ]]; then
+
+	CONTAINEREXISTS="yes"
+	echo -e "${GREEN}CONTAINER EXISTS${RESET}"
 
 
-	if [[ $IP != "127.0.0.1" ]]; then
+	# Check if services are running
+	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
-		INSTALLED="yes"
+		CONTAINERRUNNING="yes"
+		echo -e "${GREEN}CONTAINER RUNNING${RESET}"
 
-	fi # If already installed
+	else
+
+		echo -e "${RED}CONTAINER NOT RUNNING${RESET}"
+
+	fi # If not running
+
+else
+
+	echo -e "${RED}CONTAINER NOT EXISTS${RESET}"
+
+fi # If not exist
 
 
-fi # If has an .env file
+
+# Remove the .env file again if not installed
+if [[ $INSTALLED == "no" ]]; then
+
+	rm -rf "$PROJECTDIR/.env"
+	echo -e ".env file removed ... ${GREEN}done${RESET}"
+
+fi
+#exit
 
 
 

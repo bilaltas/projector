@@ -21,18 +21,6 @@ fi
 
 
 
-# Get environmental data
-get_env_data
-
-
-
-
-# Update the slug
-SLUG=$PROJECTNAME
-
-
-
-
 # Confirm the information
 echo ""
 echo ""
@@ -129,7 +117,7 @@ permission_update "$PROJECTDIR"
 
 
 # Check if the services already exists even though site is not installed
-if [ ! -z `docker_compose ps -q wpcli` ] && [ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]; then
+if [ ! -z `docker_compose ps -q wpcli` ] || [ ! -z `docker_compose ps -q db` ]; then
 
 	echo -e "${RED}Project services are already exist. Removing...${RESET}"
 	docker_compose down
@@ -202,7 +190,7 @@ docker_compose up -d --force-recreate
 
 
 # Check if services are running
-if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]; then
+if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
 
 	echo -e "${RED}Could not installed. Reverting, please wait...${RESET}"
@@ -217,7 +205,7 @@ if [ -z `docker_compose ps -q wpcli` ] || [ -z `docker ps -q --no-trunc | grep $
 
 
 	# Uninstall the server
-	docker_compose down
+	docker_compose down -v --rmi local --remove-orphans
 
 
 	# Delete the .env file
@@ -244,6 +232,8 @@ echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
 # Check MySQL to be ready
 wait_for_mysql
 INSTALLED="yes"
+CONTAINEREXISTS="yes"
+CONTAINERRUNNING="yes"
 
 
 

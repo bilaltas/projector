@@ -46,7 +46,7 @@ db_backup
 
 # Close the server
 echo "Server is closing..."
-docker_compose down
+docker_compose down -v --rmi local --remove-orphans
 
 
 
