@@ -92,6 +92,9 @@ if [[ -z $ACTION ]]; then
 	fi
 
 
+	# Separate the action and option here!!!
+
+
 fi
 
 
