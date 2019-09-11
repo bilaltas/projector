@@ -14,7 +14,7 @@ BASEDIR="$(pwd)"
 
 
 
-function sedreplace () {
+function sedreplace {
 
 	if [[ $OS == "MacOS" ]]; then
 
@@ -121,7 +121,7 @@ function update_environment {
 
 }
 
-function self_update () {
+function self_update {
 
 	(
 		cd "$BUILDERDIR"
@@ -181,7 +181,7 @@ function run_server_if_not_running {
 
 }
 
-function server_permission_update () {
+function server_permission_update {
 
 
 	echo "Fixing the server file permissions in ($1)..."
@@ -194,7 +194,25 @@ function server_permission_update () {
 
 }
 
-function permission_update () {
+function git_permission_update {
+
+	echo "Fixing the git permissions in ($1)..."
+	# cd /path/to/repo.git
+	sudo chmod -R g+rwX "$1"
+	find "$1" -type d -exec chmod g+s '{}' +
+	echo -e "Git permissions fixed ... ${GREEN}done${RESET}"
+
+}
+
+function permission_update {
+
+	# Git permission update
+	if [[ -f "$1/.git" ]]; then
+
+		git_permission_update "$1/.git"
+
+	fi
+
 
 	echo "Fixing the file permissions in ($1)..."
 	#sudo chown -R $(logname):staff $1
@@ -206,23 +224,13 @@ function permission_update () {
 
 }
 
-function git_permission_update () {
-
-	echo "Fixing the git permissions in ($1)..."
-	# cd /path/to/repo.git
-	sudo chmod -R g+rwX "$1"
-	find "$1" -type d -exec chmod g+s '{}' +
-	echo -e "Git permissions fixed ... ${GREEN}done${RESET}"
-
-}
-
 function wp {
 
 	docker_compose exec wpcli wp --allow-root "$@"
 
 }
 
-function db_backup () {
+function db_backup {
 
 
 	if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
@@ -375,7 +383,7 @@ function search_replace {
 
 }
 
-function db_url_update () {
+function db_url_update {
 
 
 	echo -e "Checking registered domain name..."
@@ -399,7 +407,7 @@ function db_url_update () {
 
 }
 
-function wait_for_mysql () {
+function wait_for_mysql {
 
 
 	# Check MySQL to be ready
@@ -412,11 +420,11 @@ function wait_for_mysql () {
 
 }
 
-function move_import_files () {
+function move_import_files {
 
 
-	# If no "import/" folder added yet
-	if [[ ! -d "$PROJECTDIR/import/" ]]; then
+	# If no "import" folder added yet
+	if [[ ! -d "$PROJECTDIR/import" ]]; then
 
 		echo -e "${BLUE}Please move your 'import/' folder to the '$PROJECTDIR/' folder and hit enter${RESET}"
 		read IMPORT
@@ -442,7 +450,7 @@ function move_import_files () {
 
 		echo -e "WP core files are being removed..."
 		(
-			cd "$PROJECTDIR/import/"
+			cd "$PROJECTDIR/import"
 			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
 		)
 		echo -e "WP core files removed ... ${GREEN}done${RESET}"
@@ -465,18 +473,18 @@ function move_import_files () {
 		fi
 
 
-		if [[ -d "$PROJECTDIR/import/wp-content/cache/" ]] || [[ -d "$PROJECTDIR/import/wp-content/uploads/cache/" ]]; then
+		if [[ -d "$PROJECTDIR/import/wp-content/cache" ]] || [[ -d "$PROJECTDIR/import/wp-content/uploads/cache" ]]; then
 
-			rm -rf "$PROJECTDIR/import/wp-content/cache/"
-			rm -rf "$PROJECTDIR/import/wp-content/uploads/cache/"
+			rm -rf "$PROJECTDIR/import/wp-content/cache"
+			rm -rf "$PROJECTDIR/import/wp-content/uploads/cache"
 			echo -e "'cache' folders removed ... ${GREEN}done${RESET}"
 
 		fi
 
 
-		if [[ -d "$PROJECTDIR/import/wp-content/mu-plugins/" ]]; then
+		if [[ -d "$PROJECTDIR/import/wp-content/mu-plugins" ]]; then
 
-			rm -rf "$PROJECTDIR/import/wp-content/mu-plugins/"
+			rm -rf "$PROJECTDIR/import/wp-content/mu-plugins"
 			echo -e "'mu-plugins' folder removed ... ${GREEN}done${RESET}"
 
 		fi
@@ -507,15 +515,15 @@ function move_import_files () {
 
 
 	# Create target folders if not exist
-	if [[ ! -d "$PROJECTDIR/database/dump/" ]]; then
+	if [[ ! -d "$PROJECTDIR/database/dump" ]]; then
 
-		mkdir -p "$PROJECTDIR/database/dump/"
+		mkdir -p "$PROJECTDIR/database/dump"
 
 	fi
 
-	if [[ ! -d "$PROJECTDIR/wp/wp-content/" ]]; then
+	if [[ ! -d "$PROJECTDIR/wp/wp-content" ]]; then
 
-		mkdir -p "$PROJECTDIR/wp/wp-content/"
+		mkdir -p "$PROJECTDIR/wp/wp-content"
 
 	fi
 
@@ -542,18 +550,18 @@ function move_import_files () {
 
 
 	# Remove existing MySQL files if exists
-	if [[ $INSTALLED != "yes" ]] && [[ -d "$PROJECTDIR/database/mysql/" ]]; then
+	if [[ $INSTALLED != "yes" ]] && [[ -d "$PROJECTDIR/database/mysql" ]]; then
 
-		rm -rf "$PROJECTDIR/database/mysql/"
+		rm -rf "$PROJECTDIR/database/mysql"
 
 	fi
 
 
 	# Move the wp-content folder
-	if [[ -d "$PROJECTDIR/import/wp-content/" ]]; then
+	if [[ -d "$PROJECTDIR/import/wp-content" ]]; then
 
-		rm -rf "$PROJECTDIR/wp/tmp_wp-content/"
-		rm -rf "$PROJECTDIR/wp/wp-content/"
+		rm -rf "$PROJECTDIR/wp/tmp_wp-content"
+		rm -rf "$PROJECTDIR/wp/wp-content"
 		mv "$PROJECTDIR/import/wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e "'wp-content' folder moved in place ... ${GREEN}done${RESET}"
 
@@ -561,9 +569,9 @@ function move_import_files () {
 
 
 	# Remove the import folder if successful
-	if [[ ! -d "$PROJECTDIR/import/wp-content/" ]] && [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
+	if [[ ! -d "$PROJECTDIR/import/wp-content" ]] && [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
-		rm -rf "$PROJECTDIR/import/"
+		rm -rf "$PROJECTDIR/import"
 		echo -e "'import' folder removed ... ${GREEN}done${RESET}"
 
 
@@ -577,7 +585,7 @@ function move_import_files () {
 
 }
 
-function make_temporary () {
+function make_temporary {
 
 
 	# Make the wp-content folder temporary
@@ -593,7 +601,7 @@ function make_temporary () {
 
 }
 
-function make_permanent () {
+function make_permanent {
 
 
 	# Make the wp-content folder temporary
@@ -609,7 +617,7 @@ function make_permanent () {
 
 }
 
-function install_npm () {
+function install_npm {
 
 
 	# If package.json exist in theme folder

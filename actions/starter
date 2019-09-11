@@ -182,8 +182,8 @@ source "$PROJECTDIR/.env"
 
 
 # Download the template
-rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/"
-git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG/"
+rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/.git"
 echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
 

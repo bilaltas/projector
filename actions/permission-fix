@@ -29,7 +29,7 @@ fi
 # Server permission update
 if [[ $DO == all ]] || [[ $DO == server ]]; then
 
-	server_permission_update /var/www/html/
+	server_permission_update "/var/www/html"
 
 fi
 
@@ -45,7 +45,6 @@ fi
 # Site folder permission update
 if [[ $DO == site ]]; then
 
-	git_permission_update "$PROJECTDIR/.git"
 	permission_update "$PROJECTDIR"
 
 fi

@@ -141,7 +141,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
 		echo "Old data removing..."
-		rm -rf "$PROJECTDIR/database/mysql/"
+		rm -rf "$PROJECTDIR/database/mysql"
 		echo -e "Remove old data ... ${GREEN}done${RESET}"
 
 
@@ -163,7 +163,6 @@ fi
 # Permission fix needed
 if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
 
-	git_permission_update "$PROJECTDIR/.git"
 	permission_update "$PROJECTDIR"
 
 fi

@@ -98,13 +98,13 @@ fi
 
 
 # Remove existing "export" folder
-rm -rf "$PROJECTDIR/export/"
+rm -rf "$PROJECTDIR/export"
 
 
 
 
 # Create the export folder
-mkdir -p "$PROJECTDIR/export/"
+mkdir -p "$PROJECTDIR/export"
 
 
 
@@ -116,13 +116,13 @@ mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
 
 
 # Copy the theme folder
-cp -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/" "$PROJECTDIR/export/$SLUG/"
+cp -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG" "$PROJECTDIR/export/$SLUG"
 
 
 
 
 # Delete 'node_modules' folder if exists
-rm -rf "$PROJECTDIR/export/$SLUG/node_modules/"
+rm -rf "$PROJECTDIR/export/$SLUG/node_modules"
 
 
 
@@ -136,7 +136,7 @@ rm -rf "$PROJECTDIR/export/$SLUG/package-lock.json"
 # Zip the folder
 echo -e "Zipping the theme folder..."
 (
-	cd "$PROJECTDIR/export/"
+	cd "$PROJECTDIR/export"
 	zip -r -X "$SLUG.zip" "$SLUG"
 )
 echo -e "'$SLUG.zip' theme file created ... ${GREEN}done${RESET}"
@@ -145,14 +145,14 @@ echo -e "'$SLUG.zip' theme file created ... ${GREEN}done${RESET}"
 
 
 # Remove the theme folder
-rm -rf "$PROJECTDIR/export/$SLUG/"
+rm -rf "$PROJECTDIR/export/$SLUG"
 echo -e "Theme folder removed ... ${GREEN}done${RESET}"
 
 
 
 
 # Permission fix on 'export' folder
-permission_update "$PROJECTDIR/export/"
+permission_update "$PROJECTDIR/export"
 
 
 
