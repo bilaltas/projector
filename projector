@@ -173,6 +173,16 @@ else
 	update_environment
 	echo -e "${RED}PROJECT NOT INSTALLED${RESET}"
 
+
+	# If not installed, containers should be removed
+	if [[ ! -z `docker_compose ps -q wpcli` ]] || [[ ! -z `docker_compose ps -q db` ]]; then
+
+		echo -e "${BLUE}Cleaning up...${RESET}"
+		docker_compose down -v --rmi local --remove-orphans
+		echo -e "Cleaning up ... ${GREEN}done${RESET}"
+
+	fi
+
 fi # If already installed
 
 
