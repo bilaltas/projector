@@ -1,0 +1,69 @@
+#!/bin/bash
+
+
+
+
+# Check if the folder not exists
+if [[ ! -d "$PROJECTDIR" ]]; then
+
+	echo -e "${RED}Project doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if installed
+if [[ $INSTALLED != "yes" ]]; then
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if container exists
+if [[ $CONTAINEREXISTS != "yes" ]]; then
+
+	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if container is running
+if [[ $CONTAINERRUNNING != "yes" ]]; then
+
+	echo -e "${RED}Cannot start phpMyAdmin because server is not running. Use 'projector start' command first.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Stop phpMyAdmin service
+if [[ $OPTION1 == --stop ]]; then
+
+	echo "phpMyAdmin is stopping..."
+	docker_compose stop phpmyadmin
+	exit
+
+fi
+
+
+
+
+# Stop the server
+echo "PhpMyAdmin is starting..."
+docker_compose up -d phpmyadmin
+echo -e "PhpMyAdmin is starting ... ${GREEN}done${RESET}"
+
+
+echo -e "${GREEN}PhpMyAdmin is opening (http://$DOMAIN:8000)${RESET}"
+open "http://$DOMAIN:8000"
