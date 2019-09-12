@@ -162,7 +162,7 @@ function run_server_if_not_running {
 
 
 		echo "Services not running. Starting..."
-		docker_compose up -d --no-recreate
+		docker_compose up -d --no-recreate wpcli db
 
 		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
@@ -207,7 +207,7 @@ function git_permission_update {
 function permission_update {
 
 	# Git permission update
-	if [[ -f "$1/.git" ]]; then
+	if [[ -d "$1/.git" ]]; then
 
 		git_permission_update "$1/.git"
 

@@ -184,7 +184,7 @@ echo "Server is building..."
 docker_compose rm
 docker_compose pull
 docker_compose build --no-cache
-docker_compose up -d --force-recreate
+docker_compose up -d --force-recreate wpcli db
 
 
 
