@@ -508,7 +508,7 @@ function move_import_files {
 		fi
 
 
-		echo -e "${BLUE}FULL SITE BACKUP PREPARATION COMPLETE.${RESET}"
+		echo -e "${GREEN}FULL SITE BACKUP PREPARATION COMPLETE${RESET}"
 
 
 	fi
