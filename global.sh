@@ -184,23 +184,22 @@ function run_server_if_not_running {
 function server_permission_update {
 
 
-	echo "Fixing the server file permissions in ($1)..."
+	printf "Fixing the server file permissions in ($1) ..."
 	docker_compose exec wpcli chown -R www-data:www-data "$1"
 	# docker_compose exec wpcli chmod -R a=rwx $1
 	docker_compose exec wpcli find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
 	docker_compose exec wpcli find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
-	echo -e "Server file permissions fixed ... ${GREEN}done${RESET}"
+	echo -e " ${GREEN}done${RESET}"
 
 
 }
 
 function git_permission_update {
 
-	echo "Fixing the git permissions in ($1)..."
-	# cd /path/to/repo.git
+	printf "Fixing the git permissions in ($1) ..."
 	sudo chmod -R g+rwX "$1"
 	find "$1" -type d -exec chmod g+s '{}' +
-	echo -e "Git permissions fixed ... ${GREEN}done${RESET}"
+	echo -e " ${GREEN}done${RESET}"
 
 }
 
@@ -214,13 +213,13 @@ function permission_update {
 	fi
 
 
-	echo "Fixing the file permissions in ($1)..."
+	printf "Fixing the file permissions in ($1) ..."
 	#sudo chown -R $(logname):staff $1
 	find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
 	# sudo chmod -R a=rwx $1
 	find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
 	find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
-	echo -e "File permissions fixed ... ${GREEN}done${RESET}"
+	echo -e " ${GREEN}done${RESET}"
 
 }
 
