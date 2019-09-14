@@ -175,7 +175,7 @@ else
 
 	# Create and Update environment files
 	update_environment
-	echo -e "${RED}PROJECT NOT INSTALLED${RESET}"
+	echo -e "${BLUE}PROJECT NOT INSTALLED${RESET}"
 
 
 	# If not installed, containers should be removed
@@ -208,13 +208,13 @@ if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` 
 
 	else
 
-		echo -e "${RED}CONTAINER NOT RUNNING${RESET}"
+		echo -e "${BLUE}CONTAINER NOT RUNNING${RESET}"
 
 	fi # If not running
 
 else
 
-	echo -e "${RED}CONTAINER NOT EXISTS${RESET}"
+	echo -e "${BLUE}CONTAINER NOT EXISTS${RESET}"
 
 fi # If not exist
 
