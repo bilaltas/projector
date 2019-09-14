@@ -230,7 +230,7 @@ echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
 
 # Check files to be ready
 printf "Files are being ready ..."
-while [[ ! -f "$PROJECTDIR/wp/wp-content.php" ]]; do
+while [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]]; do
 	printf "."
 	sleep 3
 done
