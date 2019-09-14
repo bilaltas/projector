@@ -73,7 +73,7 @@ function update_environment {
 	# Create the .env file from the template (local.env)
 	rm -f "$LOCAL_ENV"
 	cp "$SAMPLE_ENV" "$LOCAL_ENV"
-	echo -e "local.env file created ... ${GREEN}done${RESET}"
+	#echo -e "local.env file created ... ${GREEN}done${RESET}"
 
 
 	# Update the .env file
@@ -96,13 +96,13 @@ function update_environment {
 	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "$LOCAL_ENV";
 	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "$LOCAL_ENV";
 
-	echo -e "local.env file updated with the new info ... ${GREEN}done${RESET}"
+	#echo -e "local.env file updated with the new info ... ${GREEN}done${RESET}"
 
 
 	# Make the local.env live
 	rm -f "$PROJECT_ENV"
 	cp "$LOCAL_ENV" "$PROJECT_ENV"
-	echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
+	#echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
 
 
 	# Add slashes to the directories
@@ -113,7 +113,7 @@ function update_environment {
 	# Add the PROJECT_DIR and BUILDER_DIR to .env file
 	echo "PROJECT_DIR=$PROJECT_DIR" >> "$PROJECT_ENV"
 	echo "BUILDER_DIR=$BUILDER_DIR" >> "$PROJECT_ENV"
-	echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
+	#echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
 
 
 	echo -e "Updating environment files ... ${GREEN}done${RESET}"
@@ -411,11 +411,12 @@ function wait_for_mysql {
 
 
 	# Check MySQL to be ready
+	printf "MySQL is being ready ..."
 	while ! docker_compose exec db mysqladmin --user=root --password=password --host "$IP" ping --silent &> /dev/null ; do
-		echo "Waiting for database connection ..."
+		printf "."
 		sleep 3
 	done
-	echo -e "MySQL is ready! ... ${GREEN}done${RESET}"
+	echo -e " ${GREEN}done${RESET}"
 
 
 }

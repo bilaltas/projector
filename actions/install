@@ -141,7 +141,6 @@ echo -e "${GREEN}${DOMAIN}${RESET} - AVAILABLE"
 
 
 # CHECK IP AND CREATE HOST
-echo "Checking IP availability..."
 COUNTER=2
 while [[ $COUNTER -lt 120 ]]; do
 
@@ -225,6 +224,17 @@ fi # If not running
 echo -e "Installing WP-CLI..."
 source "$BUILDERDIR/config/wp-cli-install.sh"
 echo -e "Installing WP-CLI ... ${GREEN}done${RESET}"
+
+
+
+
+# Check files to be ready
+printf "Files are being ready ..."
+while [[ ! -f "$PROJECTDIR/wp/wp-content.php" ]]; do
+	printf "."
+	sleep 3
+done
+echo -e " ${GREEN}done${RESET}"
 
 
 
