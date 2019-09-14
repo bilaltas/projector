@@ -165,17 +165,18 @@ get_env_data
 
 
 # Installation Check
-echo "Project Status:"
 INSTALLED="no"
 if [[ $IP != "127.0.0.1" ]]; then
 
 	INSTALLED="yes"
+	echo "Project Status:"
 	echo -e "${GREEN}PROJECT INSTALLED${RESET}"
 
 else
 
 	# Create and Update environment files
 	update_environment
+	echo "Project Status:"
 	echo -e "${BLUE}PROJECT NOT INSTALLED${RESET}"
 
 
