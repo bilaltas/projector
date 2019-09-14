@@ -165,6 +165,7 @@ get_env_data
 
 
 # Installation Check
+echo "Project Status:"
 INSTALLED="no"
 if [[ $IP != "127.0.0.1" ]]; then
 
