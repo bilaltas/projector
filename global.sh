@@ -591,10 +591,10 @@ function make_temporary {
 	# Make the wp-content folder temporary
 	if [[ -d "$PROJECTDIR/wp/wp-content" ]]; then
 
-		echo -e "'wp-content' folder is being temporary..."
+		printf "'wp-content' folder is being temporary ..."
 		rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
 		mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
-		echo -e "'wp-content' folder has been made temporary ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 	fi
 
@@ -607,10 +607,10 @@ function make_permanent {
 	# Make the wp-content folder temporary
 	if [[ -d "$BUILDERDIR/temp/${SLUG}_wp-content" ]]; then
 
-		echo -e "'wp-content' folder is being permenant..."
+		printf "'wp-content' folder is being permenant ..."
 		rm -rf "$PROJECTDIR/wp/wp-content"
 		mv "$BUILDERDIR/temp/${SLUG}_wp-content" "$PROJECTDIR/wp/wp-content"
-		echo -e "'wp-content' folder has been made permenant ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 	fi
 
