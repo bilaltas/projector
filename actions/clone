@@ -19,7 +19,7 @@ if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD 
 
 else
 
-	echo -e "${RED}Remote repository not found.${RESET}"
+	echo -e "${RED}Remote repository not found for '$SLUG' project.${RESET}"
 	exit
 
 fi

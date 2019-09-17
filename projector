@@ -159,77 +159,92 @@ fi
 
 
 # Get environmental data
-get_env_data
+if [[ -d "$PROJECTDIR" ]]; then
+
+	get_env_data
+
+fi
 
 
+
+
+# DEFAULT PROJECT STATUSES
+INSTALLED="no"
+CONTAINEREXISTS="no"
+CONTAINERRUNNING="no"
 
 
 # Installation Check
-INSTALLED="no"
-if [[ $IP != "127.0.0.1" ]]; then
-
-	INSTALLED="yes"
-	echo "Project Status:"
-	echo -e "${GREEN}PROJECT INSTALLED${RESET}"
-
-else
-
-	# Create and Update environment files
-	update_environment
-	echo "Project Status:"
-	echo -e "${BLUE}PROJECT NOT INSTALLED${RESET}"
+if [[ -d "$PROJECTDIR" ]]; then
 
 
-	# If not installed, containers should be removed
-	if [[ ! -z `docker_compose ps -q wpcli` ]] || [[ ! -z `docker_compose ps -q db` ]]; then
+	if [[ $IP != "127.0.0.1" ]]; then
 
-		echo -e "${BLUE}Cleaning up...${RESET}"
-		docker_compose down -v --rmi local --remove-orphans
-		echo -e "Cleaning up ... ${GREEN}done${RESET}"
-
-	fi
-
-fi # If already installed
-
-
-
-# Check if services are running
-CONTAINEREXISTS="no"
-CONTAINERRUNNING="no"
-if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` ]]; then
-
-	CONTAINEREXISTS="yes"
-	echo -e "${GREEN}CONTAINER EXISTS${RESET}"
-
-
-	# Check if services are running
-	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
-
-		CONTAINERRUNNING="yes"
-		echo -e "${GREEN}CONTAINER RUNNING${RESET}"
+		INSTALLED="yes"
+		echo "Project Status:"
+		echo -e "${GREEN}PROJECT INSTALLED${RESET}"
 
 	else
 
-		echo -e "${BLUE}CONTAINER NOT RUNNING${RESET}"
 
-	fi # If not running
+		# Create and Update environment files
+		update_environment
 
-else
-
-	echo -e "${BLUE}CONTAINER NOT EXISTS${RESET}"
-
-fi # If not exist
+		echo "Project Status:"
+		echo -e "${BLUE}PROJECT NOT INSTALLED${RESET}"
 
 
+		# If not installed, containers should be removed
+		if [[ ! -z `docker_compose ps -q wpcli` ]] || [[ ! -z `docker_compose ps -q db` ]]; then
 
-# Remove the .env file again if not installed
-if [[ $INSTALLED == "no" ]]; then
+			echo -e "${BLUE}Cleaning up...${RESET}"
+			docker_compose down -v --rmi local --remove-orphans
+			echo -e "Cleaning up ... ${GREEN}done${RESET}"
 
-	rm -rf "$PROJECTDIR/.env"
-	echo -e ".env file removed ... ${GREEN}done${RESET}"
+		fi
 
-fi
-#exit
+
+	fi # If already installed
+
+
+
+	# Check if services are running
+	if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` ]]; then
+
+		CONTAINEREXISTS="yes"
+		echo -e "${GREEN}CONTAINER EXISTS${RESET}"
+
+
+		# Check if services are running
+		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+			CONTAINERRUNNING="yes"
+			echo -e "${GREEN}CONTAINER RUNNING${RESET}"
+
+		else
+
+			echo -e "${BLUE}CONTAINER NOT RUNNING${RESET}"
+
+		fi # If not running
+
+	else
+
+		echo -e "${BLUE}CONTAINER NOT EXISTS${RESET}"
+
+	fi # If not exist
+
+
+
+	# Remove the .env file again if not installed
+	if [[ $INSTALLED == "no" ]]; then
+
+		rm -rf "$PROJECTDIR/.env"
+		echo -e ".env file removed ... ${GREEN}done${RESET}"
+
+	fi
+
+
+fi # If project folder exists
 
 
 
