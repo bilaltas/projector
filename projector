@@ -158,16 +158,6 @@ fi
 
 
 
-# Get environmental data
-if [[ -d "$PROJECTDIR" ]]; then
-
-	get_env_data
-
-fi
-
-
-
-
 # DEFAULT PROJECT STATUSES
 INSTALLED="no"
 CONTAINEREXISTS="no"
@@ -176,6 +166,10 @@ CONTAINERRUNNING="no"
 
 # Installation Check
 if [[ -d "$PROJECTDIR" ]]; then
+
+
+	# Get environmental data
+	get_env_data
 
 
 	if [[ $IP != "127.0.0.1" ]]; then
