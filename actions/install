@@ -130,12 +130,12 @@ fi
 ## INSTALLATION:
 
 # CHECK THE LOCAL DOMAIN AVAILABILITY
-echo "Checking '${DOMAIN}' availability..."
+printf "Checking '${DOMAIN}' availability ..."
 if grep -q "${DOMAIN}" /etc/hosts; then
-	echo -e "${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
+	echo -e " ${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
 	exit
 fi
-echo -e "${GREEN}${DOMAIN}${RESET} - AVAILABLE"
+echo -e " ${GREEN}Available${RESET}"
 
 
 
@@ -147,15 +147,15 @@ while [[ $COUNTER -lt 120 ]]; do
 	IP="127.0.0.${COUNTER}"
 
 
-	echo "Checking '${IP}' availability..."
+	printf "Checking '${IP}' availability ..."
 	if grep -q "${IP}" /etc/hosts; then
-		echo "${IP} - NOT AVAILABLE"
+		echo -e " ${BLUE}Not Available${RESET}"
 	else
 
 		if curl --max-time 3 --output /dev/null --silent --head --fail "${IP}"; then
-			echo -e "${RED}${IP}${RESET} - NOT AVAILABLE"
+			echo -e " ${RED}Not Available${RESET}"
 		else
-			echo -e "${GREEN}${IP}${RESET} - AVAILABLE"
+			echo -e " ${GREEN}Available${RESET}"
 			break
 		fi
 
@@ -250,7 +250,7 @@ CONTAINERRUNNING="yes"
 
 # Add the host to the /etc/hosts file
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
-sudo killall -HUP mDNSResponder
+#sudo killall -HUP mDNSResponder
 
 
 

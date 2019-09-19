@@ -53,7 +53,7 @@ docker_compose down -v --rmi local --remove-orphans
 
 # Remove the host to the list
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -remove $DOMAIN
-killall -HUP mDNSResponder
+#killall -HUP mDNSResponder
 
 
 

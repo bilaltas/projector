@@ -57,11 +57,11 @@ function get_env_data {
 function update_environment {
 
 
-	echo "Start updating environment files..."
+	printf "Updating environment files ..."
 
 	if [[ -z $WP_VERSION ]]; then
 
-		echo -e "${RED}Environment variables couldn't be updated.${RESET}"
+		echo -e " ${RED}Environment variables couldn't be updated.${RESET}"
 		return
 
 	fi
@@ -116,7 +116,7 @@ function update_environment {
 	#echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
 
 
-	echo -e "Updating environment files ... ${GREEN}done${RESET}"
+	echo -e " ${GREEN}done${RESET}"
 
 
 }
@@ -253,10 +253,10 @@ function db_backup {
 
 
 		# Checking the WP version
-		echo "Checking the WP version..."
+		printf "Checking the WP version ..."
 		WP_VERSION="$(wp core version)"
 		WP_VERSION=${WP_VERSION%?}
-		echo -e "WP version found: ${GREEN}${WP_VERSION}${RESET}"
+		echo -e " ${GREEN}${WP_VERSION}${RESET}"
 
 
 		# Update environment files
