@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+ssh-add -K ~/.ssh/twelve12_private_key

@@ -77,6 +77,8 @@ if [[ -z $ACTION ]]; then
 	echo -e "     --permission       Permission fix on site folder"
 	echo -e "     --all              Permission fix on .git folder, site folder, and Docker container"
 	echo -e ""
+	echo -e "${BLUE}ssh-fix${RESET}          If you get permission errors while connecting to test server, do this"
+	echo -e ""
 	echo -e "${BLUE}phpmyadmin${RESET}       Start the phpMyAdmin service and open in a browser"
 	echo -e "   Options:"
 	echo -e "     --stop           	 Stop the phpMyAdmin service"
@@ -103,7 +105,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]] && [[ $ACTION != phpmyadmin ]]; then
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]] && [[ $ACTION != phpmyadmin ]] && [[ $ACTION != ssh-fix ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit
