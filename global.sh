@@ -196,10 +196,10 @@ function server_permission_update {
 
 function git_permission_update {
 
-	printf "Fixing the git permissions in ($1) ..."
+	#printf "Fixing the git permissions in ($1) ..."
 	sudo chmod -R g+rwX "$1"
 	find "$1" -type d -exec chmod g+s '{}' +
-	echo -e " ${GREEN}done${RESET}"
+	#echo -e " ${GREEN}done${RESET}"
 
 }
 
