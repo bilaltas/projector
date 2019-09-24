@@ -27,11 +27,10 @@ echo ""
 echo "== Site Info ============"
 echo ""
 echo "Local Development Domain: $DOMAIN"
-echo "Project Directory: $PROJECTDIR"
+echo "WP Version: $WP_VERSION"
 echo ""
 echo "Project Name: $SLUG"
 echo "Short Name: $PREFIX"
-echo "WP Version: $WP_VERSION"
 echo ""
 
 if [[ $MODE == install-starter ]]; then
