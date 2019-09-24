@@ -31,7 +31,6 @@ echo "EXPORTING STARTED"
 
 
 # Ask for the target domain
-read -ep "Target domain (www.domainname.com): " targetdomain
 while [[ -z "$targetdomain" ]]; do
 
 	read -ep "Target domain (www.domainname.com): " targetdomain
@@ -42,7 +41,6 @@ done
 
 
 # Ask for the target protocol
-read -ep "Target protocol (http | https): " targetprotocol
 while [[ $targetprotocol != http ]] && [[ $targetprotocol != https ]]; do
 
 	read -ep "Target protocol (http | https): " targetprotocol

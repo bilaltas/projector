@@ -134,10 +134,13 @@ if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]]; then
 
 
 		# List the projects available (Not colored: ls -d *)
-		for i in $(ls -d */); do echo -e ${BLUE}${i%%/}${RESET}; done
+		if [[ $ACTION != clone ]] && [[ $ACTION != ssh-fix ]]; then
+
+			for i in $(ls -d */); do echo -e ${BLUE}${i%%/}${RESET}; done
+
+		fi
 
 		# Ask for the project name
-		read -ep "Project name (site-name): " SLUG
 		while [[ -z $SLUG ]]; do
 			read -ep "Project name (site-name): " SLUG
 		done

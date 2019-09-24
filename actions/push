@@ -73,7 +73,6 @@ fi
 
 
 	# Ask for the commit message
-	read -ep "Commit Message: " COMMIT_MESSAGE
 	while [[ -z "$COMMIT_MESSAGE" ]]; do
 
 		read -ep "Commit Message: " COMMIT_MESSAGE
