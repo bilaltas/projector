@@ -713,20 +713,19 @@ rep=$(docker ps -q &>/dev/null)
 status=$?
 if [[ "$status" != "0" ]]; then
 
-    echo 'Docker is opening...'
+    printf 'Docker is opening ...'
     open /Applications/Docker.app
+	echo -e " ${GREEN}done${RESET}"
 
 
+	printf 'Docker is starting ...'
     while [[ "$status" != "0" ]]; do
 
-        echo 'Docker is starting...'
         sleep 3
-
         rep=$(docker ps -q &>/dev/null)
         status=$?
 
     done
-
-    echo -e "${GREEN}Docker connected${RESET}"
+    echo -e " ${GREEN}done${RESET}"
 
 fi
