@@ -121,22 +121,6 @@ function update_environment {
 
 }
 
-function self_update {
-
-	(
-		cd "$BUILDERDIR"
-
-		# Builder updates
-		echo "Updating the builder..."
-		git pull
-		git reset --hard
-		git pull
-		echo -e "Builder update complete ... ${GREEN}done${RESET}"
-
-	)
-
-}
-
 function docker_compose {
 
 	if [[ -f "$PROJECTDIR/.env" ]]; then
@@ -161,17 +145,17 @@ function run_server_if_not_running {
 	if [[ $CONTAINEREXISTS == "yes" ]] && [[ $CONTAINERRUNNING == "no" ]]; then
 
 
-		echo "Services not running. Starting..."
+		printf "Services not running. Starting ..."
 		docker_compose up -d --no-recreate wpcli db
 
 		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
 			CONTAINERRUNNING="yes"
-			echo -e "Services restarted ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		else
 
-			echo -e "${RED}Services could not be started.${RESET}"
+			echo -e " ${RED}Services could not be started${RESET}"
 
 		fi
 
@@ -243,9 +227,8 @@ function db_backup {
 		REAL_IP=$IP
 
 
-		# Get data
-		source "$BUILDERDIR/sample.env"
-		source "$PROJECTDIR/.env"
+		# Get environmental data
+		get_env_data
 
 
 		# Re-assign the real IP
@@ -263,7 +246,7 @@ function db_backup {
 		update_environment
 
 
-		# Update the current local IP on builder
+		# Update the current local IP
 		sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "$PROJECTDIR/.env";
 
 
@@ -363,9 +346,7 @@ function search_replace {
 
 	else
 
-
-		echo -e "${GREEN}Values are the same. ${RESET}"
-
+		echo -e "${GREEN}Domains are the same. ${RESET}"
 
 	fi
 
@@ -399,7 +380,7 @@ function db_url_update {
 
 	else
 
-		echo "No need to do DB replacements."
+		echo "URLs are the same. No need to do DB replacements."
 
 	fi
 
@@ -424,21 +405,31 @@ function move_import_files {
 
 
 	# If no "import" folder added yet
-	if [[ ! -d "$PROJECTDIR/import" ]]; then
+	while [[ ! -d "$PROJECTDIR/import" ]]; do
 
 		echo -e "${BLUE}Please move your 'import/' folder to the '$PROJECTDIR/' folder and hit enter${RESET}"
 		read IMPORT
-		while [[ ! -d "$PROJECTDIR/import" ]]; do
 
-			echo -e "${BLUE}Please move your 'import/' folder to the '$PROJECTDIR/' folder and hit enter${RESET}"
-			read IMPORT
-
-		done
-
-	fi
+	done
 	echo -e "'import' folder detected ... ${GREEN}done${RESET}"
 
-	# IMPORT FOLDER NOW EXISTS
+
+	# DB check
+	if [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
+
+
+		read -ep "Your import folder doesn't have any DB file. Would you like to continue without DB importing? (type 'yes' to confirm): " confirm
+		if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
+
+		fi
+
+
+	fi
+
+
 
 
 	# Prepare the backup folder
@@ -448,62 +439,67 @@ function move_import_files {
 		echo -e "${BLUE}FULL SITE BACKUP DETECTED${RESET}"
 
 
-		echo -e "WP core files are being removed..."
+		printf -e "WP core files are being removed ..."
 		(
 			cd "$PROJECTDIR/import"
 			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
 		)
-		echo -e "WP core files removed ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 
 		if [[ -f "$PROJECTDIR/import/wp-content/mysql.sql" ]]; then
 
-			echo -e "Moving the DB file..."
+			printf "Moving the DB file ..."
 			mv "$PROJECTDIR/import/wp-content/mysql.sql" "$PROJECTDIR/import/mysql.sql"
-			echo -e "DB file moved ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		fi
 
 
 		if [[ -f "$PROJECTDIR/import/wp-content/advanced-cache.php" ]]; then
 
+			printf "'wp-content/advanced-cache.php' file removing ..."
 			rm -rf "$PROJECTDIR/import/wp-content/advanced-cache.php"
-			echo -e "'wp-content/advanced-cache.php' file removed ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		fi
 
 
 		if [[ -d "$PROJECTDIR/import/wp-content/cache" ]] || [[ -d "$PROJECTDIR/import/wp-content/uploads/cache" ]]; then
 
+			printf "'cache' folders removing ..."
 			rm -rf "$PROJECTDIR/import/wp-content/cache"
 			rm -rf "$PROJECTDIR/import/wp-content/uploads/cache"
-			echo -e "'cache' folders removed ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		fi
 
 
 		if [[ -d "$PROJECTDIR/import/wp-content/mu-plugins" ]]; then
 
+			printf "'mu-plugins' folder removing ..."
 			rm -rf "$PROJECTDIR/import/wp-content/mu-plugins"
-			echo -e "'mu-plugins' folder removed ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		fi
 
 
 		if [[ -d "$PROJECTDIR/import/wp-content/plugins/hyperdb" ]]; then
 
+			printf "'hyperdb' plugin removing ..."
 			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb"
 			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1"
 			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1-1"
-			echo -e "'hyperdb' plugin removed ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		fi
 
 
 		if [[ -d "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl" ]]; then
 
+			printf "'really-simple-ssl' plugin removing ..."
 			rm -rf "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl"
-			echo -e "'really-simple-ssl' plugin removed ... ${GREEN}done${RESET}"
+			echo -e " ${GREEN}done${RESET}"
 
 		fi
 
@@ -531,20 +527,17 @@ function move_import_files {
 	# Move the SQL file
 	if [[ -f "$PROJECTDIR/import/db.sql" ]]; then
 
+		printf "SQL file moving ..."
 		rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
 		mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
-		echo -e "SQL file moved ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 	elif [[ -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
+		printf "SQL file moving ..."
 		rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
 		mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
-		echo -e "SQL file moved ... ${GREEN}done${RESET}"
-
-	else
-
-		echo -e "${RED}'db.sql' or 'mysql.sql' file does not exist in '$BASEDIR/site/import/' folder.${RESET}"
-		exit
+		echo -e " ${GREEN}done${RESET}"
 
 	fi
 
@@ -552,7 +545,9 @@ function move_import_files {
 	# Remove existing MySQL files if exists
 	if [[ $INSTALLED != "yes" ]] && [[ -d "$PROJECTDIR/database/mysql" ]]; then
 
+		printf "Existing DB files removing ..."
 		rm -rf "$PROJECTDIR/database/mysql"
+		echo -e " ${GREEN}done${RESET}"
 
 	fi
 
@@ -560,10 +555,11 @@ function move_import_files {
 	# Move the wp-content folder
 	if [[ -d "$PROJECTDIR/import/wp-content" ]]; then
 
+		printf "'wp-content' folder moving in place ..."
 		rm -rf "$PROJECTDIR/wp/tmp_wp-content"
 		rm -rf "$PROJECTDIR/wp/wp-content"
 		mv "$PROJECTDIR/import/wp-content" "$PROJECTDIR/wp/wp-content"
-		echo -e "'wp-content' folder moved in place ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 	fi
 
@@ -571,8 +567,9 @@ function move_import_files {
 	# Remove the import folder if successful
 	if [[ ! -d "$PROJECTDIR/import/wp-content" ]] && [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
+		printf "'import' folder removing ..."
 		rm -rf "$PROJECTDIR/import"
-		echo -e "'import' folder removed ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 
 	else
