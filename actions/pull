@@ -118,7 +118,7 @@ DB_SUM2=$(md5 -r "$DB_FILE")
 if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
-	echo -e "${BLUE}DB changed.${RESET}"
+	echo -e "${BLUE}DB changed${RESET}"
 
 
 	# If installed
@@ -140,9 +140,9 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 	else
 
 
-		echo "Old data removing..."
+		printf "Old data removing ..."
 		rm -rf "$PROJECTDIR/database/mysql"
-		echo -e "Remove old data ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 
 		echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
