@@ -285,7 +285,11 @@ fi
 
 
 # Save the initial DB backup
-db_backup
+if [[ $MODE == install-starter ]]; then
+
+	db_backup
+
+fi
 
 
 
