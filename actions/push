@@ -26,17 +26,14 @@ fi
 
 
 # Save the DB backup
-if [[ $OPTION1 != --nodb ]]; then
+if [[ $OPTION1 != --files ]]; then
 
 	db_backup
 
 fi
 
-
-
-
 # Early exit if only db backup requested
-[[ $OPTION1 == --db ]] && exit || sleep 0
+[[ $OPTION1 == --dbdump ]] && exit || sleep 0
 
 
 
@@ -59,11 +56,34 @@ fi
 
 
 
+	if [[ $OPTION1 == --files ]]; then
 
-	# Stage all the changes
-	echo "Staging all the changes..."
-	git add -A .
-	echo -e "Stage all the changes ... ${GREEN}done${RESET}"
+
+		# Stage all the changes
+		printf "Staging the file changes ..."
+		git add -A "$PROJECTDIR/wp"
+		echo -e " ${GREEN}done${RESET}"
+
+
+	elif [[ $OPTION1 == --db ]]; then
+
+
+		# Stage all the changes
+		printf "Staging the DB changes ..."
+		git add -A "$PROJECTDIR/database"
+		echo -e " ${GREEN}done${RESET}"
+
+
+	else
+
+
+		# Stage all the changes
+		echo "Staging all the changes ..."
+		git add -A .
+		echo -e " ${GREEN}done${RESET}"
+
+
+	fi
 
 
 
