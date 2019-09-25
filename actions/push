@@ -26,7 +26,11 @@ fi
 
 
 # Save the DB backup
-db_backup
+if [[ $OPTION1 != --nodb ]]; then
+
+	db_backup
+
+fi
 
 
 

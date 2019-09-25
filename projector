@@ -63,6 +63,7 @@ if [[ -z $ACTION ]]; then
 	echo -e "${BLUE}push${RESET}             Push the latest local changes to Git"
 	echo -e "   Options:"
 	echo -e "     --db               Only creates the DB backup"
+	echo -e "     --nodb             Push without latest DB backup"
 	echo -e ""
 	echo -e "${BLUE}start${RESET}            Run the server and Node JS of an installed project"
 	echo -e "   Options:"
