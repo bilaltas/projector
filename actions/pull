@@ -181,8 +181,3 @@ if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
 	permission_update "$PROJECTDIR"
 
 fi
-
-
-
-
-echo -e "${GREEN}PULLING COMPLETE${RESET}"
