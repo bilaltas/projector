@@ -135,9 +135,9 @@ fi
 
 	else
 
-		# # Do a git pull
-		# unset OPTION1
-		# source "$BUILDERDIR/actions/pull"
+		# Do a git pull
+		unset OPTION1
+		source "$BUILDERDIR/actions/pull"
 		echo -e "${RED}Please check the conflicts on Visual Studio Code${RESET}"
 
 	fi
