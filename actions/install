@@ -134,7 +134,7 @@ if grep -q "${DOMAIN}" /etc/hosts; then
 	echo -e " ${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
 	exit
 fi
-echo -e " ${GREEN}Available${RESET}"
+echo -e " ${GREEN}available${RESET}"
 
 
 
