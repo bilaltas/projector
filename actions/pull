@@ -100,8 +100,15 @@ else
 
 
 			echo "Checking the latest remote changes..."
-			git pull
-			echo -e "Git pull ... ${GREEN}done${RESET}"
+			if git pull;then
+
+				echo -e "Git pull ... ${GREEN}done${RESET}"
+
+			else
+
+				echo -e "Git pull ... ${RED}not done${RESET}"
+			
+			fi
 		)
 
 
@@ -127,7 +134,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 		read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
 		if [[ $confirm == no ]] || [[  $confirm == n ]]; then
 
-			echo -e "${GREEN}Pulling complete without replacing the DB${RESET}"
+			echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
 			exit
 
 		fi
