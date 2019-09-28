@@ -127,24 +127,25 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 	echo -e "${BLUE}DB changed${RESET}"
 
-	
-	if [[ -z $OPTION1 ]]; then
-
-
-		read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
-		if [[ $confirm == no ]] || [[  $confirm == n ]]; then
-
-			echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
-			exit
-
-		fi
-
-
-	fi
-
 
 	# If installed
 	if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
+
+
+		# If not hard pull, confirm before changing DB
+		if [[ -z $OPTION1 ]]; then
+
+
+			read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
+			if [[ $confirm == no ]] || [[  $confirm == n ]]; then
+
+				echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
+				exit
+
+			fi
+
+
+		fi
 
 
 		# Import the DB
