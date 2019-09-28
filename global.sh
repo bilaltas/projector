@@ -251,11 +251,18 @@ function db_backup {
 
 
 		# Save the DB backup
-		echo "Backing up the DB..."
+		printf "Backing up the DB ..."
 		DB_FILE_NAME=wordpress_data.sql
-		wp db export $DB_FILE_NAME
-		mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
-		#echo -e "DB Backup saved in '$PROJECTDIR/database/dump/${DB_FILE_NAME}' ... ${GREEN}done${RESET}"
+		if wp db export $DB_FILE_NAME --quiet; then
+
+			mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
+			echo -e " ${GREEN}done${RESET}"
+
+		else
+
+			echo -e " ${RED}error${RESET}"
+
+		fi
 
 
 	else
@@ -280,14 +287,18 @@ function db_import {
 		cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
 
 
-		# Delete all the tables
-		echo "Resetting DB..."
-		wp db reset --yes
-
-
 		# Import the DB
-		echo "Importing DB..."
-		wp db import "wordpress_data.sql"
+		printf "Importing DB ..."
+		wp db reset --yes --quiet
+		if wp db import "wordpress_data.sql" --quiet; then
+
+			echo -e " ${GREEN}done${RESET}"
+
+		else
+
+			echo -e " ${RED}error${RESET}"
+
+		fi
 
 
 		# Delete the file from WP area
