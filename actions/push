@@ -129,6 +129,17 @@ fi
 
 	# Push the changes
 	echo "Pushing the changes..."
-	git push
+	if git push;then
+
+		echo -e "${GREEN}PUSHING COMPLETE${RESET}"
+
+	else
+
+		# # Do a git pull
+		# unset OPTION1
+		# source "$BUILDERDIR/actions/pull"
+		echo -e "${RED}Please check the conflicts on Visual Studio Code${RESET}"
+
+	fi
 
 )
