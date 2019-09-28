@@ -182,20 +182,37 @@ if [[ -d "$PROJECTDIR" ]]; then
 	get_env_data
 
 
+	printf "Project status ..."
 	if [[ $IP != "127.0.0.1" ]]; then
 
+
 		INSTALLED="yes"
-		echo "Project Status:"
-		echo -e "${GREEN}PROJECT INSTALLED${RESET}"
+		echo -e " ${GREEN}installed${RESET}"
+
+
+		# Check if the local IP available
+		printf "IP($IP) status ..."
+		if ! curl --max-time 3 --output /dev/null --silent --head --fail "$IP"; then
+
+			sudo ifconfig lo0 alias $IP up
+			echo -e " ${BLUE}made available${RESET}"
+
+		else
+
+			echo -e " ${GREEN}available${RESET}"
+
+		fi
+		#exit
+
 
 	else
 
 
+		echo -e " ${BLUE}not installed${RESET}"
+
+
 		# Create and Update environment files
 		update_environment
-
-		echo "Project Status:"
-		echo -e "${BLUE}PROJECT NOT INSTALLED${RESET}"
 
 
 		# If not installed, containers should be removed
@@ -213,27 +230,31 @@ if [[ -d "$PROJECTDIR" ]]; then
 
 
 	# Check if services are running
+	printf "Containers status ..."
 	if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` ]]; then
 
+
 		CONTAINEREXISTS="yes"
-		echo -e "${GREEN}CONTAINER EXISTS${RESET}"
+		echo -e " ${GREEN}exist${RESET}"
 
 
 		# Check if services are running
+		printf "Containers running status ..."
 		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
 			CONTAINERRUNNING="yes"
-			echo -e "${GREEN}CONTAINER RUNNING${RESET}"
+			echo -e " ${GREEN}running${RESET}"
 
 		else
 
-			echo -e "${BLUE}CONTAINER NOT RUNNING${RESET}"
+			echo -e " ${BLUE}not running${RESET}"
 
 		fi # If not running
 
+
 	else
 
-		echo -e "${BLUE}CONTAINER NOT EXISTS${RESET}"
+		echo -e " ${BLUE}not exists${RESET}"
 
 	fi # If not exist
 

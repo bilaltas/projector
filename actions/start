@@ -47,13 +47,6 @@ fi
 
 
 
-# Open that IP slot
-sudo ifconfig lo0 alias $IP up
-echo -e "'${IP}' is now available ... ${GREEN}done${RESET}"
-
-
-
-
 # Run the server
 run_server_if_not_running
 
@@ -78,8 +71,8 @@ echo ""
 echo ""
 echo "== Site Info ===================="
 echo ""
-echo "Admin Page: http://${DOMAIN}"
-echo "IP: ${IP}"
+echo "Local URL: http://${DOMAIN}"
+echo "Local IP: ${IP}"
 echo ""
 echo "================================="
 echo ""
