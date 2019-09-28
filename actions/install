@@ -148,13 +148,13 @@ while [[ $COUNTER -lt 120 ]]; do
 
 	printf "Checking '${IP}' availability ..."
 	if grep -q "${IP}" /etc/hosts; then
-		echo -e " ${BLUE}Not Available${RESET}"
+		echo -e " ${BLUE}not available${RESET}"
 	else
 
 		if curl --max-time 3 --output /dev/null --silent --head --fail "${IP}"; then
-			echo -e " ${RED}Not Available${RESET}"
+			echo -e " ${RED}not available${RESET}"
 		else
-			echo -e " ${GREEN}Available${RESET}"
+			echo -e " ${GREEN}available${RESET}"
 			break
 		fi
 
