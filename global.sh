@@ -426,7 +426,7 @@ function move_import_files {
 
 
 	# DB check
-	if [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
+	if [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]] && [[ ! -f "$PROJECTDIR/import/wp-content/mysql.sql" ]]; then
 
 
 		read -ep "Your import folder doesn't have any DB file. Would you like to continue without DB importing? (type 'yes' to confirm): " confirm
