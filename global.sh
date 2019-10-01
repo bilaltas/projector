@@ -450,7 +450,7 @@ function move_import_files {
 		echo -e "${BLUE}FULL SITE BACKUP DETECTED${RESET}"
 
 
-		printf -e "WP core files are being removed ..."
+		printf "WP core files are being removed ..."
 		(
 			cd "$PROJECTDIR/import"
 			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
