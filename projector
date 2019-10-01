@@ -139,7 +139,7 @@ if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]]; then
 
 
 		# List the projects available (Not colored: ls -d *)
-		if [[ $ACTION != clone ]] && [[ $ACTION != ssh-fix ]]; then
+		if [[ $ACTION != clone ]] && [[ $ACTION != starter ]] && [[ $ACTION != ssh-fix ]]; then
 
 			for i in $(ls -d */); do echo -e ${BLUE}${i%%/}${RESET}; done
 
