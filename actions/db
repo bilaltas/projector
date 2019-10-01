@@ -1,0 +1,74 @@
+#!/bin/bash
+
+
+
+
+# Check if the folder not exists
+if [[ ! -d "$PROJECTDIR" ]]; then
+
+	echo -e "${RED}Project doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if installed
+if [[ $INSTALLED != "yes" ]]; then
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if container exists
+if [[ $CONTAINEREXISTS != "yes" ]]; then
+
+	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Import the DB
+if [[ $OPTION1 == --import ]]; then
+
+
+	read -ep "Are you sure you want to replace all the changes you might have done in DB? (yes | no): " confirm
+	if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+		echo -e "${RED}Not confirmed.${RESET}"
+		exit
+
+	fi
+
+
+	# Import the DB
+	db_import "$PROJECTDIR/database/dump/wordpress_data.sql"
+
+
+	# Ask the registered URL and do the replacements
+	db_url_update
+
+
+	# Rewrite Flush
+	wp rewrite flush --hard
+
+
+fi
+
+
+
+
+# Export the DB
+if [[ $OPTION1 == --export ]]; then
+
+	db_backup
+
+fi

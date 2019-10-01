@@ -26,7 +26,7 @@ fi
 
 
 # Check if git exist
-if [[ ! -d "$PROJECTDIR/.git" ]] && [[ $OPTION1 != --dbdump ]]; then
+if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 	echo -e "${RED}Project doesn't have any git repository.${RESET}"
 	exit
@@ -55,9 +55,6 @@ if [[ $OPTION1 != --files ]]; then
 	db_backup
 
 fi
-
-# Early exit if only db backup requested
-[[ $OPTION1 == --dbdump ]] && exit || sleep 0
 
 
 

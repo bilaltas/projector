@@ -65,7 +65,6 @@ if [[ -z $ACTION ]]; then
 	echo -e "     --files            Only push the file changes"
 	echo -e "     --db               Only push the DB changes"
 	echo -e "     --all              Push all the file and DB changes"
-	echo -e "     --dbdump           Only creates the DB backup"
 	echo -e ""
 	echo -e "${BLUE}start${RESET}            Run the server and Node JS of an installed project"
 	echo -e "   Options:"
@@ -83,6 +82,11 @@ if [[ -z $ACTION ]]; then
 	echo -e "     --all              Permission fix on .git folder, site folder, and Docker container"
 	echo -e ""
 	echo -e "${BLUE}ssh-fix${RESET}          If you get permission errors while connecting to test server, do this"
+	echo -e ""
+	echo -e "${BLUE}db${RESET}               Run the server and Node JS of an installed project"
+	echo -e "   Options:"
+	echo -e "     --export           Export the DB into 'database/dump/' folder"
+	echo -e "     --import           Import the DB file in 'database/dump/wordpress_data.sql'"
 	echo -e ""
 	echo -e "${BLUE}phpmyadmin${RESET}       Start the phpMyAdmin service and open in a browser"
 	echo -e "   Options:"
@@ -110,7 +114,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]] && [[ $ACTION != phpmyadmin ]] && [[ $ACTION != ssh-fix ]]; then
+if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]] && [[ $ACTION != db ]] && [[ $ACTION != phpmyadmin ]] && [[ $ACTION != ssh-fix ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit
