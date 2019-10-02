@@ -167,12 +167,12 @@ done
 
 # Update the environment file (.env) with the available IP
 sedreplace "s/IP=127.0.0.1/IP=${IP}/g" "$PROJECTDIR/.env";
-echo -e "'${IP}' changed as '${IP}' on .env file ... ${GREEN}done${RESET}"
+echo -e "Local IP(${IP}) added into the .env file ... ${GREEN}done${RESET}"
 
 
 # Open that IP slot
 sudo ifconfig lo0 alias $IP up
-echo -e "'${IP}' is now available to build server ... ${GREEN}done${RESET}"
+echo -e "Local IP(${IP}) is now available to build server ... ${GREEN}done${RESET}"
 
 
 
