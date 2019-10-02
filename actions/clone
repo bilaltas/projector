@@ -35,7 +35,7 @@ echo -e "Cloning '$SLUG' project ... ${GREEN}done${RESET}"
 
 
 # START THE INSTALLATION
-read -ep "Project has been clonned but not installed. Would you like to install it? (Press 'enter' or type 'no')" confirm
+read -ep "Project has been clonned but not installed. Would you like to install it? (Press 'enter' or type 'no'): " confirm
 if [[ $confirm != "no" ]]; then
 
 	# Get environmental data
