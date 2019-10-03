@@ -125,7 +125,7 @@ fi
 
 
 # If it's under current folder (Projects/project-name)
-if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]]; then
+if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]] && [[ $ACTION != ssh-fix ]]; then
 
 
 	# Get project name from args
@@ -179,7 +179,7 @@ CONTAINERRUNNING="no"
 
 
 # Installation Check
-if [[ -d "$PROJECTDIR" ]]; then
+if [[ -d "$PROJECTDIR" ]] && [[ $ACTION != ssh-fix ]]; then
 
 
 	# Get environmental data
@@ -273,7 +273,7 @@ if [[ -d "$PROJECTDIR" ]]; then
 	fi
 
 
-fi # If project folder exists
+fi # If project folder exists and not ssh-fix
 
 
 
