@@ -28,8 +28,16 @@ fi
 
 
 # Clone the repo
-git clone "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" "$PROJECTDIR"
-echo -e "Cloning '$SLUG' project ... ${GREEN}done${RESET}"
+if git clone "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" "$PROJECTDIR"; then
+
+	echo -e "Cloning '$SLUG' project ... ${GREEN}done${RESET}"
+
+else
+
+	echo -e "Cloning '$SLUG' project ... ${RED}failed${RESET}"
+	exit
+
+fi
 
 
 
