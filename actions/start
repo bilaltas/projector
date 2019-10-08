@@ -25,58 +25,58 @@ if [[ $INSTALLED != "yes" ]]; then
 
 	else
 
-		echo -e "${RED}Not confirmed.${RESET}"
+		echo -e "${RED}Continue without installing the project.${RESET}"
+
+	fi
+
+
+else
+
+
+	# Check if container exists
+	if [[ $CONTAINEREXISTS != "yes" ]]; then
+
+		echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
 		exit
 
 	fi
 
 
+
+
+	# Run the server
+	run_server_if_not_running
+
+
+
+
+	# Check MySQL to be ready
+	wait_for_mysql
+
+
+
+
+	# Pull the changes and start (optionally --hard)
+	source "$BUILDERDIR/actions/pull"
+
+
+
+
+	# PRINT THE SITE INFO
+	echo -e "${GREEN}Site is up!${RESET}"
+	echo ""
+	echo ""
+	echo "== Site Info ===================="
+	echo ""
+	echo "Local URL: http://${DOMAIN}"
+	echo "Local IP: ${IP}"
+	echo ""
+	echo "================================="
+	echo ""
+	echo ""
+
+
 fi
-
-
-
-
-# Check if container exists
-if [[ $CONTAINEREXISTS != "yes" ]]; then
-
-	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
-	exit
-
-fi
-
-
-
-
-# Run the server
-run_server_if_not_running
-
-
-
-
-# Check MySQL to be ready
-wait_for_mysql
-
-
-
-
-# Pull the changes and start (optionally --hard)
-source "$BUILDERDIR/actions/pull"
-
-
-
-
-# PRINT THE SITE INFO
-echo -e "${GREEN}Site is up!${RESET}"
-echo ""
-echo ""
-echo "== Site Info ===================="
-echo ""
-echo "Local URL: http://${DOMAIN}"
-echo "Local IP: ${IP}"
-echo ""
-echo "================================="
-echo ""
-echo ""
 
 
 
