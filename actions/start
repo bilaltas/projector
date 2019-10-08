@@ -18,7 +18,7 @@ fi
 if [[ $INSTALLED != "yes" ]]; then
 
 
-	read -ep "Project is not installed. Would you like to install it first? (yes | no)" confirm
+	read -ep "Project is not installed. Would you like to install it first? (yes | no): " confirm
 	if [[ $confirm == "yes" ]] || [[ $confirm == "y" ]]; then
 
 		source "$BUILDERDIR/actions/install"
