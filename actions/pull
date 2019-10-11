@@ -184,8 +184,4 @@ fi
 
 
 # Permission fix needed
-if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
-
-	permission_update "$PROJECTDIR"
-
-fi
+permission_update "$PROJECTDIR"
