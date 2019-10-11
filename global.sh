@@ -46,6 +46,7 @@ function get_env_data {
 	# Get .env in project folder, if exists
 	if [[ -f "$PROJECTDIR/.env" ]]; then
 
+		sudo chmod +X "$PROJECTDIR/.env"
 		source "$PROJECTDIR/.env"
 		SLUG=$PROJECTNAME
 
