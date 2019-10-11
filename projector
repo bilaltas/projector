@@ -2,6 +2,7 @@
 
 
 # Get the functions
+sudo chmod +x "$BUILDERDIR/global.sh"
 source "$BUILDERDIR/global.sh"
 
 
