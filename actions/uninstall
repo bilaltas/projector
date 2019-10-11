@@ -14,6 +14,17 @@ fi
 
 
 
+read -ep "Are you sure you want to uninstall the '$SLUG' project? (yes | no): " confirm
+if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+	echo -e "${RED}Not confirmed.${RESET}"
+	exit
+
+fi
+
+
+
+
 # Check if installed
 if [[ $INSTALLED != "yes" ]]; then
 
