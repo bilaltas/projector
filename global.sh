@@ -102,7 +102,7 @@ function update_environment {
 	# Make the local.env live
 	sudo rm -f "$PROJECT_ENV"
 	sudo cp "$LOCAL_ENV" "$PROJECT_ENV"
-	sudo chmod +x "$PROJECT_ENV"
+	sudo chmod +rwX "$PROJECT_ENV"
 	#echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
 
 
