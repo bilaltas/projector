@@ -71,8 +71,8 @@ function update_environment {
 	LOCAL_ENV="$PROJECTDIR/local.env"
 
 	# Create the .env file from the template (local.env)
-	rm -f "$LOCAL_ENV"
-	cp "$SAMPLE_ENV" "$LOCAL_ENV"
+	sudo rm -f "$LOCAL_ENV"
+	sudo cp "$SAMPLE_ENV" "$LOCAL_ENV"
 	#echo -e "local.env file created ... ${GREEN}done${RESET}"
 
 
@@ -100,8 +100,8 @@ function update_environment {
 
 
 	# Make the local.env live
-	rm -f "$PROJECT_ENV"
-	cp "$LOCAL_ENV" "$PROJECT_ENV"
+	sudo rm -f "$PROJECT_ENV"
+	sudo cp "$LOCAL_ENV" "$PROJECT_ENV"
 	#echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
 
 
