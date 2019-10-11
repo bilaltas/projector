@@ -13,7 +13,7 @@ fi
 
 
 # Check the git repository
-if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
+if sudo git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
 
 	echo -e "${RED}Remote repository already exists for '$SLUG' project.${RESET}"
 	exit
@@ -183,7 +183,7 @@ source "$PROJECTDIR/.env"
 
 # Download the template
 sudo rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+sudo git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 sudo rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/.git"
 echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
 

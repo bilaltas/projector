@@ -71,7 +71,7 @@ fi
 
 		# Stage all the changes
 		printf "Staging the file changes ..."
-		git add -A "$PROJECTDIR/wp"
+		sudo git add -A "$PROJECTDIR/wp"
 		echo -e " ${GREEN}done${RESET}"
 
 
@@ -80,7 +80,7 @@ fi
 
 		# Stage all the changes
 		printf "Staging the DB changes ..."
-		git add -A "$PROJECTDIR/database"
+		sudo git add -A "$PROJECTDIR/database"
 		echo -e " ${GREEN}done${RESET}"
 
 
@@ -89,7 +89,7 @@ fi
 
 		# Stage all the changes
 		echo "Staging all the changes ..."
-		git add -A .
+		sudo git add -A .
 		echo -e " ${GREEN}done${RESET}"
 
 
@@ -100,7 +100,7 @@ fi
 
 	# Show the git status
 	echo "Showing the git status..."
-	git status
+	sudo git status
 	echo -e "Show the git status ... ${GREEN}done${RESET}"
 
 
@@ -118,7 +118,7 @@ fi
 
 	# Commit the changes
 	echo "Committing the changes..."
-	git commit -m "$COMMIT_MESSAGE"
+	sudo git commit -m "$COMMIT_MESSAGE"
 	echo -e "Commit the changes ... ${GREEN}done${RESET}"
 
 
@@ -126,7 +126,7 @@ fi
 
 	# Push the changes
 	echo "Pushing the changes..."
-	if git push;then
+	if sudo git push;then
 
 		echo -e "${GREEN}PUSHING COMPLETE${RESET}"
 

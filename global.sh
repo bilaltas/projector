@@ -128,7 +128,7 @@ function docker_compose {
 
 		(
 			cd "$PROJECTDIR"
-			command sudo docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
+			sudo docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
 		)
 	
 	else

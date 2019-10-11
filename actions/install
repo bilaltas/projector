@@ -303,7 +303,7 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 		# Check the git repository
-		if git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
+		if sudo git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
 
 			echo -e "${RED}Remote repository already exists for '$SLUG' project.${RESET}"
 
@@ -319,22 +319,22 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 				# Initiate Git
-				git init
+				sudo git init
 				echo -e "Initiate Git ... ${GREEN}done${RESET}"
 
 
 				# Stage all the changes
-				git add -A .
+				sudo git add -A .
 				echo -e "Stage all the changes ... ${GREEN}done${RESET}"
 
 
 				# Show the git status
-				git status
+				sudo git status
 				echo -e "Show the git status ... ${GREEN}done${RESET}"
 
 
 				# Commit the changes
-				git commit -m "Initial commit"
+				sudo git commit -m "Initial commit"
 				echo -e "Commit the changes ... ${GREEN}done${RESET}"
 
 
@@ -359,12 +359,12 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 				# Add the origin
-				git remote add origin "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git"
+				sudo git remote add origin "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git"
 				echo -e "Add the origin ... ${GREEN}done${RESET}"
 
 
 				# Push the changes
-				git push -u origin --all
+				sudo git push -u origin --all
 				echo -e "Push the files ... ${GREEN}done${RESET}"
 
 
