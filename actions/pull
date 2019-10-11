@@ -84,13 +84,13 @@ else
 
 
 				echo "Hard reset..."
-				git fetch
-				git reset --hard origin/master
+				sudo git fetch
+				sudo git reset --hard origin/master
 
 				if [[ $INSTALLED != "yes" ]]; then
-					git clean -dfx
+					sudo git clean -dfx
 				else
-					git clean -df
+					sudo git clean -df
 				fi
 
 				echo -e "Hard reset ... ${GREEN}done${RESET}"
@@ -100,7 +100,7 @@ else
 
 
 			echo "Checking the latest remote changes..."
-			if git pull;then
+			if sudo git pull;then
 
 				echo -e "Git pull ... ${GREEN}done${RESET}"
 
