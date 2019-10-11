@@ -111,8 +111,8 @@ function update_environment {
 
 
 	# Add the PROJECT_DIR and BUILDER_DIR to .env file
-	echo "PROJECT_DIR=$PROJECT_DIR" >> "$PROJECT_ENV"
-	echo "BUILDER_DIR=$BUILDER_DIR" >> "$PROJECT_ENV"
+	sudo echo "PROJECT_DIR=$PROJECT_DIR" >> "$PROJECT_ENV"
+	sudo echo "BUILDER_DIR=$BUILDER_DIR" >> "$PROJECT_ENV"
 	#echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
 
 
