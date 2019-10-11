@@ -102,7 +102,6 @@ function update_environment {
 	# Make the local.env live
 	sudo rm -f "$PROJECT_ENV"
 	sudo cp "$LOCAL_ENV" "$PROJECT_ENV"
-	sudo chmod +rwX "$PROJECT_ENV"
 	#echo -e "local.env copied as .env ... ${GREEN}done${RESET}"
 
 
@@ -112,6 +111,7 @@ function update_environment {
 
 
 	# Add the PROJECT_DIR and BUILDER_DIR to .env file
+	sudo chmod +rwX "$PROJECT_ENV"
 	sudo echo "PROJECT_DIR=$PROJECT_DIR" >> "$PROJECT_ENV"
 	sudo echo "BUILDER_DIR=$BUILDER_DIR" >> "$PROJECT_ENV"
 	#echo -e "Add project and builder directories to the .env file ... ${GREEN}done${RESET}"
