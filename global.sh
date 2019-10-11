@@ -18,11 +18,11 @@ function sedreplace {
 
 	if [[ $OS == "MacOS" ]]; then
 
-		sed -i "" "$1" "$2";
+		sudo sed -i "" "$1" "$2";
 
 	else
 
-		sed -i "$1" "$2";
+		sudo sed -i "$1" "$2";
 
 	fi
 
