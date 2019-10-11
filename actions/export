@@ -81,7 +81,7 @@ wp db export "live.sql"
 
 # Revert the DB
 wp db import "tmp_wordpress_data.sql"
-rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
+sudo rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
 
 
 # Check the replaced backup file
@@ -96,7 +96,7 @@ fi
 
 
 # Remove existing "export" folder
-rm -rf "$PROJECTDIR/export"
+sudo rm -rf "$PROJECTDIR/export"
 
 
 
@@ -120,13 +120,13 @@ cp -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG" "$PROJECTDIR/export/$SLUG"
 
 
 # Delete 'node_modules' folder if exists
-rm -rf "$PROJECTDIR/export/$SLUG/node_modules"
+sudo rm -rf "$PROJECTDIR/export/$SLUG/node_modules"
 
 
 
 
 # Delete 'package-lock.json' file if exists
-rm -rf "$PROJECTDIR/export/$SLUG/package-lock.json"
+sudo rm -rf "$PROJECTDIR/export/$SLUG/package-lock.json"
 
 
 
@@ -143,7 +143,7 @@ echo -e "'$SLUG.zip' theme file created ... ${GREEN}done${RESET}"
 
 
 # Remove the theme folder
-rm -rf "$PROJECTDIR/export/$SLUG"
+sudo rm -rf "$PROJECTDIR/export/$SLUG"
 echo -e "Theme folder removed ... ${GREEN}done${RESET}"
 
 

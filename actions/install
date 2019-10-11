@@ -207,7 +207,7 @@ if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | gre
 
 
 	# Delete the .env file
-	rm -rf "$PROJECTDIR/.env"
+	sudo rm -rf "$PROJECTDIR/.env"
 
 
 	echo -e "${RED}Services could not be started. Restart Docker and try installing again.${RESET}"

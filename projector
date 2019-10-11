@@ -267,7 +267,7 @@ if [[ -d "$PROJECTDIR" ]] && [[ $ACTION != ssh-fix ]]; then
 	# Remove the .env file again if not installed
 	if [[ $INSTALLED == "no" ]]; then
 
-		rm -rf "$PROJECTDIR/.env"
+		sudo rm -rf "$PROJECTDIR/.env"
 		echo -e ".env file removed ... ${GREEN}done${RESET}"
 
 	fi

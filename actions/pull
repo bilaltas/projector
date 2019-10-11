@@ -164,7 +164,7 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
 		printf "Old data removing ..."
-		rm -rf "$PROJECTDIR/database/mysql"
+		sudo rm -rf "$PROJECTDIR/database/mysql"
 		echo -e " ${GREEN}done${RESET}"
 
 

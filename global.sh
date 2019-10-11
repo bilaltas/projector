@@ -311,7 +311,7 @@ function db_import {
 
 
 		# Delete the file from WP area
-		rm -rf "$PROJECTDIR/wp/wordpress_data.sql"
+		sudo rm -rf "$PROJECTDIR/wp/wordpress_data.sql"
 
 
 	else
@@ -462,7 +462,7 @@ function move_import_files {
 		printf "WP core files are being removed ..."
 		(
 			cd "$PROJECTDIR/import"
-			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec rm -rf '{}' \;
+			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec sudo rm -rf '{}' \;
 		)
 		echo -e " ${GREEN}done${RESET}"
 
@@ -479,7 +479,7 @@ function move_import_files {
 		if [[ -f "$PROJECTDIR/import/wp-content/advanced-cache.php" ]]; then
 
 			printf "'wp-content/advanced-cache.php' file removing ..."
-			rm -rf "$PROJECTDIR/import/wp-content/advanced-cache.php"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/advanced-cache.php"
 			echo -e " ${GREEN}done${RESET}"
 
 		fi
@@ -488,8 +488,8 @@ function move_import_files {
 		if [[ -d "$PROJECTDIR/import/wp-content/cache" ]] || [[ -d "$PROJECTDIR/import/wp-content/uploads/cache" ]]; then
 
 			printf "'cache' folders removing ..."
-			rm -rf "$PROJECTDIR/import/wp-content/cache"
-			rm -rf "$PROJECTDIR/import/wp-content/uploads/cache"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/cache"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/uploads/cache"
 			echo -e " ${GREEN}done${RESET}"
 
 		fi
@@ -498,7 +498,7 @@ function move_import_files {
 		if [[ -d "$PROJECTDIR/import/wp-content/mu-plugins" ]]; then
 
 			printf "'mu-plugins' folder removing ..."
-			rm -rf "$PROJECTDIR/import/wp-content/mu-plugins"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/mu-plugins"
 			echo -e " ${GREEN}done${RESET}"
 
 		fi
@@ -507,9 +507,9 @@ function move_import_files {
 		if [[ -d "$PROJECTDIR/import/wp-content/plugins/hyperdb" ]]; then
 
 			printf "'hyperdb' plugin removing ..."
-			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb"
-			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1"
-			rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1-1"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/plugins/hyperdb-1-1"
 			echo -e " ${GREEN}done${RESET}"
 
 		fi
@@ -518,7 +518,7 @@ function move_import_files {
 		if [[ -d "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl" ]]; then
 
 			printf "'really-simple-ssl' plugin removing ..."
-			rm -rf "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl"
+			sudo rm -rf "$PROJECTDIR/import/wp-content/plugins/really-simple-ssl"
 			echo -e " ${GREEN}done${RESET}"
 
 		fi
@@ -548,14 +548,14 @@ function move_import_files {
 	if [[ -f "$PROJECTDIR/import/db.sql" ]]; then
 
 		printf "SQL file moving ..."
-		rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
+		sudo rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
 		mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
 		echo -e " ${GREEN}done${RESET}"
 
 	elif [[ -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
 		printf "SQL file moving ..."
-		rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
+		sudo rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
 		mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
 		echo -e " ${GREEN}done${RESET}"
 
@@ -566,7 +566,7 @@ function move_import_files {
 	if [[ $INSTALLED != "yes" ]] && [[ -d "$PROJECTDIR/database/mysql" ]]; then
 
 		printf "Existing DB files removing ..."
-		rm -rf "$PROJECTDIR/database/mysql"
+		sudo rm -rf "$PROJECTDIR/database/mysql"
 		echo -e " ${GREEN}done${RESET}"
 
 	fi
@@ -576,8 +576,8 @@ function move_import_files {
 	if [[ -d "$PROJECTDIR/import/wp-content" ]]; then
 
 		printf "'wp-content' folder moving in place ..."
-		rm -rf "$PROJECTDIR/wp/tmp_wp-content"
-		rm -rf "$PROJECTDIR/wp/wp-content"
+		sudo rm -rf "$PROJECTDIR/wp/tmp_wp-content"
+		sudo rm -rf "$PROJECTDIR/wp/wp-content"
 		mv "$PROJECTDIR/import/wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e " ${GREEN}done${RESET}"
 
@@ -588,7 +588,7 @@ function move_import_files {
 	if [[ ! -d "$PROJECTDIR/import/wp-content" ]] && [[ ! -f "$PROJECTDIR/import/db.sql" ]] && [[ ! -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
 		printf "'import' folder removing ..."
-		rm -rf "$PROJECTDIR/import"
+		sudo rm -rf "$PROJECTDIR/import"
 		echo -e " ${GREEN}done${RESET}"
 
 
@@ -609,7 +609,7 @@ function make_temporary {
 	if [[ -d "$PROJECTDIR/wp/wp-content" ]]; then
 
 		printf "'wp-content' folder is being temporary ..."
-		rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
+		sudo rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
 		mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
 		echo -e " ${GREEN}done${RESET}"
 
@@ -625,7 +625,7 @@ function make_permanent {
 	if [[ -d "$BUILDERDIR/temp/${SLUG}_wp-content" ]]; then
 
 		printf "'wp-content' folder is being permenant ..."
-		rm -rf "$PROJECTDIR/wp/wp-content"
+		sudo rm -rf "$PROJECTDIR/wp/wp-content"
 		mv "$BUILDERDIR/temp/${SLUG}_wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e " ${GREEN}done${RESET}"
 
