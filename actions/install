@@ -92,7 +92,7 @@ fi
 
 
 # Put the new gitignore
-cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
+sudo cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
 
 
 

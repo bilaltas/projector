@@ -108,13 +108,13 @@ mkdir -p "$PROJECTDIR/export"
 
 
 # Move the SQL file
-mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
+sudo mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
 
 
 
 
 # Copy the theme folder
-cp -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG" "$PROJECTDIR/export/$SLUG"
+sudo cp -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG" "$PROJECTDIR/export/$SLUG"
 
 
 

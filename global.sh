@@ -264,7 +264,7 @@ function db_backup {
 		DB_FILE_NAME=wordpress_data.sql
 		if wp db export $DB_FILE_NAME --quiet; then
 
-			mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
+			sudo mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
 			echo -e " ${GREEN}done${RESET}"
 
 		else
@@ -293,7 +293,7 @@ function db_import {
 
 
 		# Move to the WP area
-		cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
+		sudo cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
 
 
 		# Import the DB
@@ -470,7 +470,7 @@ function move_import_files {
 		if [[ -f "$PROJECTDIR/import/wp-content/mysql.sql" ]]; then
 
 			printf "Moving the DB file ..."
-			mv "$PROJECTDIR/import/wp-content/mysql.sql" "$PROJECTDIR/import/mysql.sql"
+			sudo mv "$PROJECTDIR/import/wp-content/mysql.sql" "$PROJECTDIR/import/mysql.sql"
 			echo -e " ${GREEN}done${RESET}"
 
 		fi
@@ -549,14 +549,14 @@ function move_import_files {
 
 		printf "SQL file moving ..."
 		sudo rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
-		mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
+		sudo mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
 		echo -e " ${GREEN}done${RESET}"
 
 	elif [[ -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
 		printf "SQL file moving ..."
 		sudo rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
-		mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
+		sudo mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
 		echo -e " ${GREEN}done${RESET}"
 
 	fi
@@ -578,7 +578,7 @@ function move_import_files {
 		printf "'wp-content' folder moving in place ..."
 		sudo rm -rf "$PROJECTDIR/wp/tmp_wp-content"
 		sudo rm -rf "$PROJECTDIR/wp/wp-content"
-		mv "$PROJECTDIR/import/wp-content" "$PROJECTDIR/wp/wp-content"
+		sudo mv "$PROJECTDIR/import/wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e " ${GREEN}done${RESET}"
 
 	fi
@@ -610,7 +610,7 @@ function make_temporary {
 
 		printf "'wp-content' folder is being temporary ..."
 		sudo rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
-		mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
+		sudo mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
 		echo -e " ${GREEN}done${RESET}"
 
 	fi
@@ -626,7 +626,7 @@ function make_permanent {
 
 		printf "'wp-content' folder is being permenant ..."
 		sudo rm -rf "$PROJECTDIR/wp/wp-content"
-		mv "$BUILDERDIR/temp/${SLUG}_wp-content" "$PROJECTDIR/wp/wp-content"
+		sudo mv "$BUILDERDIR/temp/${SLUG}_wp-content" "$PROJECTDIR/wp/wp-content"
 		echo -e " ${GREEN}done${RESET}"
 
 	fi
