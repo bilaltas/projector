@@ -182,12 +182,18 @@ function git_permission_update {
 
 	#printf "Fixing git permissions in ($1) ..."
 	sudo chmod -R g+rwX "$1"
-	find "$1" -type d -exec chmod g+s '{}' +
+	printf "."
+
+	sudo find "$1" -type d -exec chmod g+s '{}' +
+	printf "."
 	#echo -e " ${GREEN}done${RESET}"
 
 }
 
 function permission_update {
+
+
+	printf "Fixing file permissions in ($1) ..."
 
 	# Git permission update
 	if [[ -d "$1/.git" ]]; then
@@ -196,13 +202,15 @@ function permission_update {
 
 	fi
 
-
-	printf "Fixing file permissions in ($1) ..."
 	#sudo chown -R $(logname):staff $1
-	find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
+	sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
+	printf "."
+
 	# sudo chmod -R a=rwx $1
-	find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
-	find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+	sudo find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
+	printf "."
+
+	sudo find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
 	echo -e " ${GREEN}done${RESET}"
 
 }
