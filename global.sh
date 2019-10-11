@@ -650,7 +650,7 @@ function install_npm {
 			echo "NPM packages are installing..."
 			(
 				cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-				npm run build
+				sudo npm run build
 			)
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 
@@ -667,7 +667,7 @@ function install_npm {
 			echo "GULP is running..."
 			(
 				cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-				npm start
+				sudo npm start
 			)
 
 
