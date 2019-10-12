@@ -45,6 +45,7 @@ fi
 # Site folder permission update
 if [[ $DO == site ]]; then
 
-	permission_update "$PROJECTDIR"
+	git_permission_update "$PROJECTDIR/.git"
+	permission_update "$PROJECTDIR/wp/wp-content"
 
 fi
