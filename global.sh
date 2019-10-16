@@ -146,17 +146,17 @@ function run_server_if_not_running {
 	if [[ $CONTAINEREXISTS == "yes" ]] && [[ $CONTAINERRUNNING == "no" ]]; then
 
 
-		printf "Services not running. Starting ..."
+		echo -e "Services not running. Starting ..."
 		docker_compose up -d --no-recreate wpcli db
 
 		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
 			CONTAINERRUNNING="yes"
-			echo -e " ${GREEN}done${RESET}"
+			echo -e "Services started ... ${GREEN}done${RESET}"
 
 		else
 
-			echo -e " ${RED}Services could not be started${RESET}"
+			echo -e "${RED}Services could not be started${RESET}"
 
 		fi
 
