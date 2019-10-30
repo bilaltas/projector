@@ -220,7 +220,7 @@ if [[ -d "$PROJECTDIR" ]] && [[ $ACTION != ssh-fix ]]; then
 
 
 		# Create and Update environment files
-		# update_environment
+		update_environment
 
 
 		# # If not installed, containers should be removed
