@@ -217,6 +217,12 @@ echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 
 
 
+# Permission fix
+permission_update "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+
+
+
+
 # Install NPM packages
 echo "NPM packages are installing..."
 (
