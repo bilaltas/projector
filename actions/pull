@@ -186,4 +186,3 @@ fi
 # Permission fix needed
 git_permission_update "$PROJECTDIR/.git"
 permission_update "$PROJECTDIR/wp/wp-content/themes"
-permission_update "$PROJECTDIR/wp/wp-content/plugins"
