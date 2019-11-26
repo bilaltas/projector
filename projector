@@ -96,6 +96,8 @@ if [[ -z $ACTION ]]; then
 	echo -e "  ${BLUE}ssh-fix${RESET}          If you get permission errors while connecting to test server, do this"
 	echo -e "  "
 	echo -e "  ${BLUE}export${RESET}           Exports the theme folder zip and DB for a live site"
+	echo -e "     Options:"
+	echo -e "       --importable       Creates importable export"
 	echo -e "  "
 	echo -e "  "
 	echo -e "================================="

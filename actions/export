@@ -29,6 +29,16 @@ echo "EXPORTING STARTED"
 
 
 
+# Importable option
+if [[ $OPTION1 == --importable ]]; then
+
+	targetdomain=$DOMAIN
+	targetprotocol="http"
+
+fi
+
+
+
 
 # Ask for the target domain
 while [[ -z "$targetdomain" ]]; do
@@ -50,7 +60,77 @@ done
 
 
 
+## CREATE FOLDERS:
+# Remove existing "export" folder
+sudo rm -rf "$PROJECTDIR/export"
+
+
+# Create the export folder
+sudo mkdir -p "$PROJECTDIR/export"
+
+
+# If importable
+if [[ $OPTION1 == --importable ]]; then
+
+	sudo mkdir -p "$PROJECTDIR/export/import"
+
+fi
+
+
+
+
+## FOLDER WORKS:
+# Copy the wp-content folder
+printf "Copying the 'wp-content' folder ..."
+sudo cp -rf "$PROJECTDIR/wp/wp-content" "$PROJECTDIR/export/wp-content"
+echo -e " ${GREEN}done${RESET}"
+
+
+# Delete 'node_modules' folder if exists
+printf "Removing the 'node_modules' folder ..."
+sudo rm -rf "$PROJECTDIR/export/wp-content/themes/$SLUG/node_modules"
+echo -e " ${GREEN}done${RESET}"
+
+
+# Delete 'package-lock.json' file if exists
+printf "Removing the 'package-lock.json' file ..."
+sudo rm -rf "$PROJECTDIR/export/wp-content/themes/$SLUG/package-lock.json"
+echo -e " ${GREEN}done${RESET}"
+
+
+# Importable option
+if [[ $OPTION1 == --importable ]]; then
+
+	printf "Moving the 'wp-content' folder ..."
+	sudo mv "$PROJECTDIR/export/wp-content" "$PROJECTDIR/export/import/wp-content"
+	echo -e " ${GREEN}done${RESET}"
+
+else
+
+
+	# Zip the folder
+	echo -e "Zipping the wp-content folder..."
+	(
+		cd "$PROJECTDIR/export"
+		zip -r -X "wp-content.zip" "wp-content"
+	)
+	echo -e "'wp-content.zip' theme file created ... ${GREEN}done${RESET}"
+
+
+	# Remove the folder
+	printf "Removing the 'wp-content' folder ..."
+	sudo rm -rf "$PROJECTDIR/export/wp-content"
+	echo -e " ${GREEN}done${RESET}"
+
+
+fi
+
+
+
+
+## DB WORKS:
 # Backup the current DB
+echo "Backing up the DB ..."
 wp db export "tmp_wordpress_data.sql"
 
 
@@ -64,87 +144,51 @@ fi
 
 
 
+# Importable option
+if [[ $OPTION1 == --importable ]]; then
 
-# Do the replacements
-echo -e "Replacement 1 starting... '${BLUE}http://${DOMAIN}${RESET}' -> '${BLUE}${targetprotocol}://${targetdomain}${RESET}'"
-wp search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
-echo -e "Replacement 1 ... ${GREEN}done${RESET}"
+	printf "Moving the DB file ..."
+	sudo mv "$PROJECTDIR/wp/tmp_wordpress_data.sql" "$PROJECTDIR/export/import/db.sql"
+	echo -e " ${GREEN}done${RESET}"
 
-echo -e "Replacement 2 starting... '${BLUE}${DOMAIN}${RESET}' -> '${BLUE}${targetdomain}${RESET}'"
-wp search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
-echo -e "Replacement 2 ... ${GREEN}done${RESET}"
-
-
-# Backup after replacements
-wp db export "live.sql"
+else
 
 
-# Revert the DB
-wp db import "tmp_wordpress_data.sql"
-sudo rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
+	# Do the replacements
+	echo -e "Replacement 1 starting... '${BLUE}http://${DOMAIN}${RESET}' -> '${BLUE}${targetprotocol}://${targetdomain}${RESET}'"
+	wp search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
+	echo -e "Replacement 1 ... ${GREEN}done${RESET}"
+
+	echo -e "Replacement 2 starting... '${BLUE}${DOMAIN}${RESET}' -> '${BLUE}${targetdomain}${RESET}'"
+	wp search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
+	echo -e "Replacement 2 ... ${GREEN}done${RESET}"
 
 
-# Check the replaced backup file
-if [[ ! -f "$PROJECTDIR/wp/live.sql" ]]; then
+	# Backup after replacements
+	wp db export "live.sql"
 
-	echo -e "${RED}CHANGED SQL FILE NOT FOUND.${RESET}"
-	exit
+
+	# Revert the DB
+	wp db import "tmp_wordpress_data.sql"
+	sudo rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
+
+
+	# Check the replaced backup file
+	if [[ ! -f "$PROJECTDIR/wp/live.sql" ]]; then
+
+		echo -e "${RED}CHANGED SQL FILE NOT FOUND.${RESET}"
+		exit
+
+	fi
+
+
+	# Move the SQL file
+	printf "Moving the DB file ..."
+	sudo mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
+	echo -e " ${GREEN}done${RESET}"
+
 
 fi
-
-
-
-
-# Remove existing "export" folder
-sudo rm -rf "$PROJECTDIR/export"
-
-
-
-
-# Create the export folder
-mkdir -p "$PROJECTDIR/export"
-
-
-
-
-# Move the SQL file
-sudo mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
-
-
-
-
-# Copy the theme folder
-sudo cp -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG" "$PROJECTDIR/export/$SLUG"
-
-
-
-
-# Delete 'node_modules' folder if exists
-sudo rm -rf "$PROJECTDIR/export/$SLUG/node_modules"
-
-
-
-
-# Delete 'package-lock.json' file if exists
-sudo rm -rf "$PROJECTDIR/export/$SLUG/package-lock.json"
-
-
-
-
-# Zip the folder
-echo -e "Zipping the theme folder..."
-(
-	cd "$PROJECTDIR/export"
-	zip -r -X "$SLUG.zip" "$SLUG"
-)
-echo -e "'$SLUG.zip' theme file created ... ${GREEN}done${RESET}"
-
-
-
-
-# Remove the theme folder
-sudo rm -rf "$PROJECTDIR/export/$SLUG"
-echo -e "Theme folder removed ... ${GREEN}done${RESET}"
 
 
 
