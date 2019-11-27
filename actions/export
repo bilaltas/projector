@@ -29,6 +29,7 @@ echo "EXPORTING STARTED"
 
 
 
+
 # Importable option
 if [[ $OPTION1 == --importable ]]; then
 
@@ -77,6 +78,10 @@ if [[ $OPTION1 == --importable ]]; then
 fi
 
 
+# Permission fix on 'export' folder
+permission_update "$PROJECTDIR/export"
+
+
 
 
 ## FOLDER WORKS:
@@ -108,19 +113,19 @@ if [[ $OPTION1 == --importable ]]; then
 else
 
 
-	# Zip the folder
-	echo -e "Zipping the wp-content folder..."
-	(
-		cd "$PROJECTDIR/export"
-		zip -r -X "wp-content.zip" "wp-content"
-	)
-	echo -e "'wp-content.zip' theme file created ... ${GREEN}done${RESET}"
+	# # Zip the folder
+	# echo -e "Zipping the wp-content folder..."
+	# (
+	# 	cd "$PROJECTDIR/export"
+	# 	zip -r -X "wp-content.zip" "wp-content"
+	# )
+	# echo -e "'wp-content.zip' theme file created ... ${GREEN}done${RESET}"
 
 
-	# Remove the folder
-	printf "Removing the 'wp-content' folder ..."
-	sudo rm -rf "$PROJECTDIR/export/wp-content"
-	echo -e " ${GREEN}done${RESET}"
+	# # Remove the folder
+	# printf "Removing the 'wp-content' folder ..."
+	# sudo rm -rf "$PROJECTDIR/export/wp-content"
+	# echo -e " ${GREEN}done${RESET}"
 
 
 fi
