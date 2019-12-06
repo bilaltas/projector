@@ -70,7 +70,7 @@ wp rewrite structure "${POST_PERMALINK}"
 wp theme activate $SLUG
 
 # Delete the default themes
-wp theme delete twentysixteen twentyseventeen twentynineteen
+wp theme delete twentysixteen twentyseventeen twentynineteen twentytwenty
 
 # Delete the default plugins
 wp plugin delete akismet hello
