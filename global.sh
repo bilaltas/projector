@@ -227,7 +227,7 @@ function permission_update {
 
 function wp {
 
-	docker_compose exec wpcli wp --allow-root "$@"
+	docker_compose exec wpcli wp --allow-root --skip-plugins --skip-themes --skip-packages "$@"
 
 }
 
