@@ -231,6 +231,12 @@ function wp {
 
 }
 
+function wp_no_extra {
+
+	docker_compose exec wpcli wp --skip-plugins --skip-themes --skip-packages --allow-root "$@"
+
+}
+
 function db_backup {
 
 
@@ -255,7 +261,7 @@ function db_backup {
 
 		# Checking the WP version
 		printf "Checking the WP version ..."
-		WP_VERSION="$(wp --skip-plugins --skip-themes --skip-packages core version)"
+		WP_VERSION="$(wp_no_extra core version)"
 		WP_VERSION=${WP_VERSION%?}
 		echo -e " ${GREEN}${WP_VERSION}${RESET}"
 
@@ -271,7 +277,7 @@ function db_backup {
 		# Save the DB backup
 		printf "Backing up the DB ..."
 		DB_FILE_NAME=wordpress_data.sql
-		if wp --skip-plugins --skip-themes --skip-packages db export $DB_FILE_NAME --quiet; then
+		if wp db export $DB_FILE_NAME --quiet; then
 
 			sudo mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
 			echo -e " ${GREEN}done${RESET}"
@@ -307,8 +313,8 @@ function db_import {
 
 		# Import the DB
 		printf "Importing DB ..."
-		wp --skip-plugins --skip-themes --skip-packages db reset --yes --quiet
-		if wp db import "wordpress_data.sql" --quiet; then
+		wp_no_extra db reset --yes --quiet
+		if wp_no_extra db import "wordpress_data.sql" --quiet; then
 
 			echo -e " ${GREEN}done${RESET}"
 
@@ -354,7 +360,7 @@ function search_replace {
 
 	# Force HTTP
 	echo -e "Http forcing..."
-	wp --skip-plugins --skip-themes --skip-packages search-replace "https://${FIND_DOMAIN}" "http://${FIND_DOMAIN}" --recurse-objects --report-changed-only --all-tables
+	wp_no_extra search-replace "https://${FIND_DOMAIN}" "http://${FIND_DOMAIN}" --recurse-objects --report-changed-only --all-tables
 	echo -e "Http force ... ${GREEN}done${RESET}"
 
 
@@ -364,7 +370,7 @@ function search_replace {
 
 		# Domain change
 		echo -e "Domain changing..."
-		wp --skip-plugins --skip-themes --skip-packages search-replace "${FIND_DOMAIN}" "${REPLACE_DOMAIN}" --recurse-objects --report-changed-only --all-tables
+		wp_no_extra search-replace "${FIND_DOMAIN}" "${REPLACE_DOMAIN}" --recurse-objects --report-changed-only --all-tables
 		echo -e "Domain change ... ${GREEN}done${RESET}"
 
 		# Email corrections !!! TO-DO
