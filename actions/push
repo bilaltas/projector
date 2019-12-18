@@ -36,6 +36,13 @@ fi
 
 
 
+# Pull the changes and start
+echo "Pulling the latest remote changes first..."
+source "$BUILDERDIR/actions/pull"
+
+
+
+
 # Ask for the push type
 if [[ -z $OPTION1 ]]; then
 

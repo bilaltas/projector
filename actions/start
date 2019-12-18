@@ -56,7 +56,8 @@ else
 
 
 
-	# Pull the changes and start (optionally --hard)
+	# Pull the changes and start
+	echo "Pulling the latest remote changes..."
 	source "$BUILDERDIR/actions/pull"
 
 
