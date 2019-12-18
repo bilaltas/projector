@@ -277,7 +277,7 @@ function db_backup {
 		# Save the DB backup
 		printf "Backing up the DB ..."
 		DB_FILE_NAME=wordpress_data.sql
-		if wp db export $DB_FILE_NAME --quiet; then
+		if wp_no_extra db export $DB_FILE_NAME --quiet; then
 
 			sudo mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
 			echo -e " ${GREEN}done${RESET}"
@@ -402,7 +402,7 @@ function db_url_update {
 
 
 	echo -e "Checking registered domain name..."
-	OLD_DOMAIN="$(wp option get siteurl)"
+	OLD_DOMAIN="$(wp_no_extra option get siteurl)"
 	OLD_DOMAIN=${OLD_DOMAIN%?}
 	echo -e "Registered domain name: ${GREEN}${OLD_DOMAIN}${RESET}"
 

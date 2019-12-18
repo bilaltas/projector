@@ -136,7 +136,7 @@ fi
 ## DB WORKS:
 # Backup the current DB
 echo "Backing up the DB ..."
-wp db export "tmp_wordpress_data.sql"
+wp_no_extra db export "tmp_wordpress_data.sql"
 
 
 # Check the initial backup file
@@ -161,20 +161,20 @@ else
 
 	# Do the replacements
 	echo -e "Replacement 1 starting... '${BLUE}http://${DOMAIN}${RESET}' -> '${BLUE}${targetprotocol}://${targetdomain}${RESET}'"
-	wp search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
+	wp_no_extra search-replace "http://${DOMAIN}" "${targetprotocol}://${targetdomain}" --recurse-objects --report-changed-only --all-tables
 	echo -e "Replacement 1 ... ${GREEN}done${RESET}"
 
 	echo -e "Replacement 2 starting... '${BLUE}${DOMAIN}${RESET}' -> '${BLUE}${targetdomain}${RESET}'"
-	wp search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
+	wp_no_extra search-replace "${DOMAIN}" "${targetdomain}" --recurse-objects --report-changed-only --all-tables
 	echo -e "Replacement 2 ... ${GREEN}done${RESET}"
 
 
 	# Backup after replacements
-	wp db export "live.sql"
+	wp_no_extra db export "live.sql"
 
 
 	# Revert the DB
-	wp db import "tmp_wordpress_data.sql"
+	wp_no_extra db import "tmp_wordpress_data.sql"
 	sudo rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
 
 
