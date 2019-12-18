@@ -57,6 +57,7 @@ else
 
 
 	# Pull the changes and start
+	PERMISSIONFIX="no"
 	source "$BUILDERDIR/actions/pull"
 
 

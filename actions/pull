@@ -184,5 +184,9 @@ fi
 
 
 # Permission fix needed
-git_permission_update "$PROJECTDIR/.git"
-permission_update "$PROJECTDIR/wp/wp-content"
+if [[ $PERMISSIONFIX != "no" ]]; then
+
+	git_permission_update "$PROJECTDIR/.git"
+	permission_update "$PROJECTDIR/wp/wp-content"
+
+fi
