@@ -205,6 +205,13 @@ function permission_update {
 	fi
 
 
+	# For the main folder
+	chown $(logname):staff "$1"
+	printf "."
+	chmod g+rwX "$1"
+	printf "."
+
+
 	#sudo chown -R $(logname):staff $1
 	sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
 	printf "."

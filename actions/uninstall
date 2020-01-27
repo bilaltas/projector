@@ -13,12 +13,17 @@ fi
 
 
 
+if [[ -z $confirm ]] || [[ $confirm != "yes" ]]; then
 
-read -ep "Are you sure you want to uninstall the '$SLUG' project? (yes | no): " confirm
-if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
 
-	echo -e "${RED}Not confirmed.${RESET}"
-	exit
+	read -ep "Are you sure you want to uninstall the '$SLUG' project? (yes | no): " confirm
+	if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+		echo -e "${RED}Not confirmed.${RESET}"
+		exit
+
+	fi
+
 
 fi
 
@@ -103,6 +108,14 @@ if [[ $OPTION1 == --remove ]]; then
 
 
 fi
+
+
+
+
+# DEFAULT PROJECT STATUSES
+INSTALLED="no"
+CONTAINEREXISTS="no"
+CONTAINERRUNNING="no"
 
 
 
