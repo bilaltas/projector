@@ -205,7 +205,7 @@ fi
 
 
 # Was installed?
-if [[ $OPTION1 == --hard ]] && [[ $was_installed == "yes" ]]; then
+if [[ $OPTION1 == --hard ]] && [[ $was_installed == "yes" ]] && [[ $INSTALLED != "yes" ]]; then
 
 	source "$BUILDERDIR/actions/install"
 
