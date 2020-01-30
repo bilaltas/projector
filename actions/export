@@ -110,7 +110,7 @@ if [[ $OPTION1 == --importable ]]; then
 	sudo mv "$PROJECTDIR/export/wp-content" "$PROJECTDIR/export/import/wp-content"
 	echo -e " ${GREEN}done${RESET}"
 
-else
+# else
 
 
 	# # Zip the folder
