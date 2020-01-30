@@ -205,11 +205,11 @@ function permission_update {
 	fi
 
 
-	# For the main folder
-	chown $(logname):staff "$1"
-	printf "."
-	chmod g+rwX "$1"
-	printf "."
+	# # For the main folder
+	# chown $(logname):staff "$1"
+	# printf "."
+	# chmod g+rwX "$1"
+	# printf "."
 
 
 	#sudo chown -R $(logname):staff $1
