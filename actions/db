@@ -40,11 +40,15 @@ fi
 if [[ $OPTION1 == --import ]]; then
 
 
-	read -ep "Are you sure you want to replace all the changes you might have done in DB? (yes | no): " confirm
-	if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+	if [[ -z $confirm ]]; then
 
-		echo -e "${RED}Not confirmed.${RESET}"
-		exit
+		read -ep "Are you sure you want to replace all the changes you might have done in DB? (yes | no): " confirm
+		if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
+
+		fi
 
 	fi
 

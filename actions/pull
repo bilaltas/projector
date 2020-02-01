@@ -17,112 +17,77 @@ fi
 # Hard pull confirmation
 if [[ $OPTION1 == --hard ]]; then
 
-	read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done. (yes | no): " confirm
 
-	
-	# Uninstall first
-	if [[ $INSTALLED == "yes" ]]; then
+	if [[ -z $confirm ]]; then
 
-		was_installed=$INSTALLED
-		confirm=yes
-		source "$BUILDERDIR/actions/uninstall"
+		read -ep "Are you sure you want to get latest changes from Git? This will replace all the changes you might have done including the DB changes. (yes | no): " confirm
+		if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
+
+		fi
 
 	fi
 
+	
+	# Hard reset
+	echo "Hard reset files..."
+	sudo git fetch
+	sudo git reset --hard origin/master
+
+	if [[ $INSTALLED != "yes" ]]; then
+		sudo git clean -dfx
+	else
+		sudo git clean -df
+	fi
+
+	echo -e "Hard reset files ... ${GREEN}done${RESET}"
+
+
+	# Import the DB
+	OPTION1=--import
+	source "$BUILDERDIR/actions/db"
+
+
+	echo -e "Hard reset ... ${GREEN}done${RESET}"
+	exit
+
+
 fi
+
+
 
 
 # Import confirmation
 if [[ $OPTION1 == --import ]]; then
 
-	read -ep "Are you sure you want to replace all the changes you might have done? (yes | no): " confirm
-
-fi
 
 
+	if [[ -z $confirm ]]; then
 
+		read -ep "Are you sure you want to replace all the changes you might have done including the DB changes? (yes | no): " confirm
+		if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
 
-if [[ $OPTION1 == --hard ]] || [[ $OPTION1 == --import ]]; then
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
 
-
-	# Confirmation check
-	if [[ $confirm != "yes" ]] && [[ $confirm != "y" ]]; then
-
-		echo -e "${RED}Not confirmed.${RESET}"
-		exit
+		fi
 
 	fi
-
-
-	# Create the current DB backup
-	if [[ -d "$PROJECTDIR/database/mysql" ]]; then
-
-		db_backup
-
-	fi
-
-fi
-
-
-
-
-# DETECT DB CHANGES
-DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
-DB_SUM1=$(md5 -r "$DB_FILE")
-
-
-
-
-if [[ $OPTION1 == --import ]]; then
 
 
 	# Move import files
 	move_import_files
 
 
-else
+	# Import the DB again
+	OPTION1=--import
+	source "$BUILDERDIR/actions/db"
 
 
-	# Pulling latest changes from git
-	if [[ -d "$PROJECTDIR/.git" ]]; then
-
-
-		(
-			cd "$PROJECTDIR"
-
-			if [[ $OPTION1 == --hard ]]; then
-
-
-				echo "Hard reset..."
-				sudo git fetch
-				sudo git reset --hard origin/master
-
-				if [[ $INSTALLED != "yes" ]]; then
-					sudo git clean -dfx
-				else
-					sudo git clean -df
-				fi
-
-				echo -e "Hard reset ... ${GREEN}done${RESET}"
-
-
-			fi
-
-
-			echo "Checking the latest remote changes..."
-			if sudo git pull;then
-
-				echo -e "Git pull ... ${GREEN}done${RESET}"
-
-			else
-
-				echo -e "Git pull ... ${RED}not done${RESET}"
-			
-			fi
-		)
-
-
-	fi
+	echo -e "Importing ... ${GREEN}done${RESET}"
+	exit
 
 
 fi
@@ -130,22 +95,49 @@ fi
 
 
 
-# DETECT DB CHANGES
-DB_SUM2=$(md5 -r "$DB_FILE")
-if [[ $DB_SUM1 != $DB_SUM2 ]]; then
+# Check if git exist
+if [[ ! -d "$PROJECTDIR/.git" ]]; then
+
+	echo -e "${RED}Project doesn't have any git repository.${RESET}"
+	exit
+
+fi
 
 
-	echo -e "${BLUE}DB changed${RESET}"
 
 
-	# If installed
-	if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
+# Detect DB changes
+DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
+DB_SUM1=$(md5 -r "$DB_FILE")
 
 
-		# If not hard pull, confirm before changing DB
-		if [[ -z $OPTION1 ]]; then
+
+# Pulling latest changes from git
+echo "Checking the latest remote changes..."
+PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
+if [[ $PULL == "Already up to date." ]]; then
+
+	echo -e "Git pull ... ${BLUE}already up to date${RESET}"
+
+elif [[ $PULL ]]; then
+
+	echo -e "Git pull ... ${GREEN}done${RESET}"
 
 
+	# DETECT DB CHANGES
+	permission_update "$DB_FILE"
+	DB_SUM2=$(md5 -r "$DB_FILE")
+	if [[ $DB_SUM1 != $DB_SUM2 ]]; then
+
+
+		echo -e "${BLUE}DB changed${RESET}"
+
+
+		# If installed
+		if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
+
+
+			# Confirm before changing DB
 			read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
 			if [[ $confirm == no ]] || [[  $confirm == n ]]; then
 
@@ -155,58 +147,43 @@ if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 			fi
 
 
+			# Import the DB
+			OPTION1=--import
+			source "$BUILDERDIR/actions/db"
+
+
+		else
+
+
+			printf "Old data removing ..."
+			sudo rm -rf "$PROJECTDIR/database/mysql"
+			echo -e " ${GREEN}done${RESET}"
+
+
+			echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
+
+
 		fi
-
-
-		# Import the DB
-		db_import "$PROJECTDIR/database/dump/wordpress_data.sql"
-
-
-		# Ask the registered URL and do the replacements
-		db_url_update
-
-
-		# Rewrite Flush
-		wp rewrite flush --hard
 
 
 	else
 
+		echo -e "${BLUE}DB is identical.${RESET}"
 
-		printf "Old data removing ..."
-		sudo rm -rf "$PROJECTDIR/database/mysql"
-		echo -e " ${GREEN}done${RESET}"
+	fi
 
 
-		echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
+	# Permission fix needed
+	if [[ $PERMISSIONFIX != "no" ]]; then
 
+		git_permission_update "$PROJECTDIR/.git"
+		permission_update "$PROJECTDIR/wp/wp-content"
 
 	fi
 
 
 else
 
-	echo -e "${BLUE}DB is identical.${RESET}"
-
-fi
-
-
-
-
-# Permission fix needed
-if [[ $PERMISSIONFIX != "no" ]]; then
-
-	git_permission_update "$PROJECTDIR/.git"
-	permission_update "$PROJECTDIR/wp/wp-content"
-
-fi
-
-
-
-
-# Was installed?
-if [[ $OPTION1 == --hard ]] && [[ $was_installed == "yes" ]] && [[ $INSTALLED != "yes" ]]; then
-
-	source "$BUILDERDIR/actions/install"
+	echo -e "Git pull ... ${RED}not done${RESET}"
 
 fi
