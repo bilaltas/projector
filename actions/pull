@@ -36,6 +36,7 @@ if [[ $OPTION1 == --hard ]]; then
 	sudo git fetch
 	sudo git reset --hard origin/master
 
+
 	if [[ $INSTALLED != "yes" ]]; then
 		
 		sudo git clean -dfx
@@ -50,11 +51,14 @@ if [[ $OPTION1 == --hard ]]; then
 		# Import the DB
 		OPTION1=--import
 		source "$BUILDERDIR/actions/db"
+		echo -e "Hard reset ... ${GREEN}done${RESET}"
 
 	fi
 
 
-	echo -e "Hard reset ... ${GREEN}done${RESET}"
+	# Permission Fix
+	git_permission_update "$PROJECTDIR/.git"
+	permission_update "$PROJECTDIR/wp/wp-content"
 	exit
 
 
