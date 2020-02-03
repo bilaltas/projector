@@ -37,17 +37,21 @@ if [[ $OPTION1 == --hard ]]; then
 	sudo git reset --hard origin/master
 
 	if [[ $INSTALLED != "yes" ]]; then
+		
 		sudo git clean -dfx
+		echo -e "Hard reset files ... ${GREEN}done${RESET}"
+
 	else
+
 		sudo git clean -df
+		echo -e "Hard reset files ... ${GREEN}done${RESET}"
+
+
+		# Import the DB
+		OPTION1=--import
+		source "$BUILDERDIR/actions/db"
+
 	fi
-
-	echo -e "Hard reset files ... ${GREEN}done${RESET}"
-
-
-	# Import the DB
-	OPTION1=--import
-	source "$BUILDERDIR/actions/db"
 
 
 	echo -e "Hard reset ... ${GREEN}done${RESET}"
