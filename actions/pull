@@ -14,6 +14,57 @@ fi
 
 
 
+# Import confirmation
+if [[ $OPTION1 == --import ]]; then
+
+
+
+	if [[ -z $confirm ]]; then
+
+		read -ep "Are you sure you want to replace all the changes you might have done including the DB changes? (yes | no): " confirm
+		if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
+
+			echo -e "${RED}Not confirmed.${RESET}"
+			exit
+
+		fi
+
+	fi
+
+
+	# Move import files
+	move_import_files
+
+
+	# Import the DB again
+	if [[ $INSTALLED == "yes" ]]; then
+
+		OPTION1=--import
+		source "$BUILDERDIR/actions/db"
+
+	fi
+
+
+	echo -e "Importing ... ${GREEN}done${RESET}"
+	exit
+
+
+fi
+
+
+
+
+# Check if git exist
+if [[ ! -d "$PROJECTDIR/.git" ]]; then
+
+	echo -e "${RED}Project doesn't have any git repository.${RESET}"
+	exit
+
+fi
+
+
+
+
 # Hard pull confirmation
 if [[ $OPTION1 == --hard ]]; then
 
@@ -61,53 +112,6 @@ if [[ $OPTION1 == --hard ]]; then
 	permission_update "$PROJECTDIR/wp/wp-content"
 	exit
 
-
-fi
-
-
-
-
-# Import confirmation
-if [[ $OPTION1 == --import ]]; then
-
-
-
-	if [[ -z $confirm ]]; then
-
-		read -ep "Are you sure you want to replace all the changes you might have done including the DB changes? (yes | no): " confirm
-		if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
-
-			echo -e "${RED}Not confirmed.${RESET}"
-			exit
-
-		fi
-
-	fi
-
-
-	# Move import files
-	move_import_files
-
-
-	# Import the DB again
-	OPTION1=--import
-	source "$BUILDERDIR/actions/db"
-
-
-	echo -e "Importing ... ${GREEN}done${RESET}"
-	exit
-
-
-fi
-
-
-
-
-# Check if git exist
-if [[ ! -d "$PROJECTDIR/.git" ]]; then
-
-	echo -e "${RED}Project doesn't have any git repository.${RESET}"
-	exit
 
 fi
 

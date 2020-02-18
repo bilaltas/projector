@@ -65,14 +65,14 @@ if [[ $OPTION1 == --import ]]; then
 	wp rewrite flush --hard
 
 
-fi
-
-
-
-
 # Export the DB
-if [[ $OPTION1 == --export ]]; then
+elif [[ $OPTION1 == --export ]]; then
 
 	db_backup
+
+else
+
+	echo -e "${RED}No action selected.(--import or --export)${RESET}"
+	exit
 
 fi
