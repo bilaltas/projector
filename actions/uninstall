@@ -54,8 +54,15 @@ update_environment
 
 ## UNINSTALLATION:
 
-# Save a DB backup first
-db_backup
+# Optional: Do not get backup
+if [[ $OPTION1 != --nobackup ]]; then
+
+
+	# Save a DB backup first
+	db_backup
+
+
+fi
 
 
 

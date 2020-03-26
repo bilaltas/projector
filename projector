@@ -53,6 +53,7 @@ if [[ -z $ACTION ]]; then
 	echo -e "  ${BLUE}uninstall${RESET}        Uninstall a project that already installed"
 	echo -e "     Options:"
 	echo -e "       --remove           Removes the project folder after uninstallation"
+	echo -e "       --nobackup         Does not export the database before uninstallation"
 	echo -e "  "
 	echo -e "  ${BLUE}pull${RESET}             Pull the latest changes from Git"
 	echo -e "     Options:"
