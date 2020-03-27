@@ -298,85 +298,33 @@ fi
 if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
-	read -ep "Would you like to create new this project to Git? (Press 'enter' or type 'no'): " gitconfirm
-	if [[ $gitconfirm != no ]]; then
+	# Initiate git
+	(
+
+		# Open the site directory
+		cd "$PROJECTDIR"
+		echo -e "Open the site directory ... ${GREEN}done${RESET}"
 
 
-		# Check the git repository
-		if sudo git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
-
-			echo -e "${RED}Remote repository already exists for '$SLUG' project.${RESET}"
-
-		else
+		# Initiate Git
+		sudo git init
+		echo -e "Initiate Git ... ${GREEN}done${RESET}"
 
 
-			# Initiate git
-			(
-
-				# Open the site directory
-				cd "$PROJECTDIR"
-				echo -e "Open the site directory ... ${GREEN}done${RESET}"
+		# Stage all the changes
+		sudo git add -A .
+		echo -e "Stage all the changes ... ${GREEN}done${RESET}"
 
 
-				# Initiate Git
-				sudo git init
-				echo -e "Initiate Git ... ${GREEN}done${RESET}"
+		# Commit the changes
+		sudo git commit -m "Initial commit"
+		echo -e "Commit the changes ... ${GREEN}done${RESET}"
 
 
-				# Stage all the changes
-				sudo git add -A .
-				echo -e "Stage all the changes ... ${GREEN}done${RESET}"
+		# Update .git permissions
+		permission_update ".git"
 
-
-				# Show the git status
-				sudo git status
-				echo -e "Show the git status ... ${GREEN}done${RESET}"
-
-
-				# Commit the changes
-				sudo git commit -m "Initial commit"
-				echo -e "Commit the changes ... ${GREEN}done${RESET}"
-
-
-				echo 'Twelve12 Bitbucket Password:'
-				read -s password  # -s flag hides password text
-
-				read -ep "Would you like to retype the password? (Press 'enter' or type 'yes'): " retypepass
-				if [[ $retypepass == "yes" ]]; then
-
-					echo 'Twelve12 Bitbucket Password:'
-					read -s password  # -s flag hides password text
-
-				fi
-
-
-				# Create a private repo
-				curl POST -v -u twelve12com:$password  -H "Content-Type: application/json" \
-			"https://api.bitbucket.org/2.0/repositories/twelve12com/$SLUG" \
-			-d '{"scm": "git", "is_private": "true", "fork_policy": "no_public_forks" }'
-				echo ""
-				echo -e "Create a private repo ... ${GREEN}done${RESET}"
-
-
-				# Add the origin
-				sudo git remote add origin "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git"
-				echo -e "Add the origin ... ${GREEN}done${RESET}"
-
-
-				# Push the changes
-				sudo git push -u origin --all
-				echo -e "Push the files ... ${GREEN}done${RESET}"
-
-
-				# Update .git permissions
-				permission_update ".git"
-
-			)
-
-		fi
-
-
-	fi
+	)
 
 fi
 

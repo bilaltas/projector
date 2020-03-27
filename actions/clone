@@ -12,8 +12,17 @@ fi
 
 
 
+# Get the git URL
+read -ep "Git repo URL (https://yourusername@example.com/username/reponame.git): " GIT_REPO
+while [[ -z $GIT_REPO ]]; do
+	read -ep "Git repo URL (https://yourusername@example.com/username/reponame.git): " GIT_REPO
+done
+
+
+
+
 # Test the git URL
-if sudo git ls-remote "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" HEAD &>/dev/null; then
+if sudo git ls-remote "$GIT_REPO" HEAD &>/dev/null; then
 
 	echo -e "${GREEN}Repository found, clone starting for '$SLUG' project.${RESET}"
 
@@ -28,7 +37,7 @@ fi
 
 
 # Clone the repo
-if sudo git clone "https://twelve12com@bitbucket.org/twelve12com/$SLUG.git" "$PROJECTDIR"; then
+if sudo git clone "$GIT_REPO" "$PROJECTDIR"; then
 
 	echo -e "Cloning '$SLUG' project ... ${GREEN}done${RESET}"
 
