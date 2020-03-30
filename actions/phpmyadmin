@@ -65,5 +65,6 @@ docker_compose up -d phpmyadmin
 echo -e "PhpMyAdmin is starting ... ${GREEN}done${RESET}"
 
 
-echo -e "${GREEN}PhpMyAdmin is opening (http://$DOMAIN:8000)${RESET}"
+echo -e "${GREEN}PhpMyAdmin is opening... (http://$DOMAIN:8000)${RESET}"
+sleep 2
 open "http://$DOMAIN:8000"
