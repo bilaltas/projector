@@ -71,7 +71,7 @@ read -ep "Website Tagline (${DESC}): " desc
 [[ ! -z "$desc" ]] && DESC=$desc || echo "Using '${DESC}'"
 
 
-read -ep "Plugins that need to be installed (${PLUGINS}): " plugins
+read -ep "Plugins that need to be installed (Just press 'enter' to install these recommended plugins: ${PLUGINS}): " plugins
 [[ ! -z "$plugins" ]] && PLUGINS=$plugins || echo "Using '${PLUGINS}'"
 
 
