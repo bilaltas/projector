@@ -120,6 +120,8 @@ if [[ -z $ACTION ]]; then
 fi
 
 
+
+
 # If unknown answer
 if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]] && [[ $ACTION != db ]] && [[ $ACTION != phpmyadmin ]] && [[ $ACTION != ssh-fix ]]; then
 
@@ -131,156 +133,234 @@ fi
 
 
 
-# If it's under current folder (Projects/project-name)
-if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]] && [[ $ACTION != ssh-fix ]]; then
+# If not ssh-fix action
+if [[ $ACTION != ssh-fix ]]; then
 
 
-	# Get project name from args
-	if [[ ! -z $2 ]]; then
-
-		SLUG=$2
+	# If it's under current folder (Projects/project-name)
+	if [[ -z $SLUG ]] && [[ -z "$PROJECTDIR" ]]; then
 
 
-		# Options
-		OPTION1=$3
-		OPTION2=$4
+		# Get project name from args
+		if [[ ! -z $2 ]]; then
+
+			SLUG=$2
 
 
-	else
+			# Options
+			OPTION1=$3
+			OPTION2=$4
 
 
-		# List the projects available (Not colored: ls -d *)
-		if [[ $ACTION != clone ]] && [[ $ACTION != starter ]] && [[ $ACTION != ssh-fix ]]; then
+		else
 
-			for i in $(ls -d */); do echo -e ${BLUE}${i%%/}${RESET}; done
+
+			# List the projects available (Not colored: ls -d *)
+			if [[ $ACTION != clone ]] && [[ $ACTION != starter ]] && [[ $ACTION != ssh-fix ]]; then
+
+				for i in $(ls -d */); do echo -e ${BLUE}${i%%/}${RESET}; done
+
+			fi
+
+			# Ask for the project name
+			while [[ -z $SLUG ]]; do
+				read -ep "Project name (site-name): " SLUG
+			done
+
 
 		fi
 
-		# Ask for the project name
-		while [[ -z $SLUG ]]; do
-			read -ep "Project name (site-name): " SLUG
-		done
+
+		# Remove slash at the end
+		SLUG=${SLUG%/}
+
+
+		# Project info
+		PROJECTNAME=$SLUG
+		PROJECTDIR="$BASEDIR/$SLUG"
 
 
 	fi
 
 
-	# Remove slash at the end
-	SLUG=${SLUG%/}
 
 
-	# Project info
-	PROJECTNAME=$SLUG
-	PROJECTDIR="$BASEDIR/$SLUG"
+	# FIND CURRENT OS
+	OS="Unknown"
+	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+			OS="Linux"
+	elif [[ "$OSTYPE" == "darwin"* ]]; then
+			OS="MacOS"
+	elif [[ "$OSTYPE" == "cygwin" ]]; then
+			# POSIX compatibility layer and Linux environment emulation for Windows
+			OS="cygwin"
+	elif [[ "$OSTYPE" == "msys" ]]; then
+			# Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+			OS="msys"
+	elif [[ "$OSTYPE" == "win32" ]]; then
+			OS="Win32"
+	elif [[ "$OSTYPE" == "freebsd"* ]]; then
+			OS="FreeBSD"
+	fi
+	#echo "Operating System: ${OS}"
 
 
-fi
+
+
+	# CHECK IF OS SUPPORTED
+	if [[ $OS != "MacOS" ]]; then
+
+		echo -e "${RED}Projector only works on Mac OS systems yet.${RESET}"
+		exit
+
+	fi
 
 
 
 
-# DEFAULT PROJECT STATUSES
-INSTALLED="no"
-CONTAINEREXISTS="no"
-CONTAINERRUNNING="no"
+	# CHECK IF DOCKER INSTALLED
+	if [[ ! -d "/Applications/Docker.app" ]]; then
+
+		echo -e "${RED}Docker is not installed to your computer. Please install and try again.${RESET}"
+		exit
+
+	fi
 
 
-# Installation Check
-if [[ -d "$PROJECTDIR" ]] && [[ $ACTION != ssh-fix ]]; then
 
 
-	# Get environmental data
-	get_env_data
+	# CHECK DOCKER WHETHER OR NOT RUNNING
+	rep=$(docker ps -q &>/dev/null)
+	status=$?
+	if [[ "$status" != "0" ]]; then
+
+		printf 'Docker is opening ...'
+		open /Applications/Docker.app
+		echo -e " ${GREEN}done${RESET}"
 
 
-	printf "Project status ..."
-	if [[ $IP != "127.0.0.1" ]]; then
+		printf 'Docker is starting ...'
+		while [[ "$status" != "0" ]]; do
+
+			sleep 3
+			rep=$(docker ps -q &>/dev/null)
+			status=$?
+
+		done
+		echo -e " ${GREEN}done${RESET}"
+
+	fi
 
 
-		INSTALLED="yes"
-		echo -e " ${GREEN}installed${RESET}"
 
 
-		# Check if the local IP available
-		printf "IP($IP) status ..."
-		if ! curl --max-time 3 --output /dev/null --silent --head --fail "$IP"; then
+	# DEFAULT PROJECT STATUSES
+	INSTALLED="no"
+	CONTAINEREXISTS="no"
+	CONTAINERRUNNING="no"
 
-			sudo ifconfig lo0 alias $IP up
-			echo -e " ${BLUE}made available${RESET}"
+
+
+
+	# Installation Check
+	if [[ -d "$PROJECTDIR" ]]; then
+
+
+		# Get environmental data
+		get_env_data
+
+
+		printf "Project status ..."
+		if [[ $IP != "127.0.0.1" ]]; then
+
+
+			INSTALLED="yes"
+			echo -e " ${GREEN}installed${RESET}"
+
+
+			# Check if the local IP available
+			printf "IP($IP) status ..."
+			if ! curl --max-time 3 --output /dev/null --silent --head --fail "$IP"; then
+
+				sudo ifconfig lo0 alias $IP up
+				echo -e " ${BLUE}made available${RESET}"
+
+			else
+
+				echo -e " ${GREEN}available${RESET}"
+
+			fi
+			#exit
+
 
 		else
 
-			echo -e " ${GREEN}available${RESET}"
 
-		fi
-		#exit
+			echo -e " ${BLUE}not installed${RESET}"
 
 
-	else
+			# Create and Update environment files
+			update_environment
 
 
-		echo -e " ${BLUE}not installed${RESET}"
+			# # If not installed, containers should be removed
+			# if [[ ! -z `docker_compose ps -q wpcli` ]] || [[ ! -z `docker_compose ps -q db` ]]; then
+
+			# 	echo -e "${BLUE}Cleaning up...${RESET}"
+			# 	docker_compose down -v --rmi local --remove-orphans
+			# 	echo -e "Cleaning up ... ${GREEN}done${RESET}"
+
+			# fi
 
 
-		# Create and Update environment files
-		update_environment
+		fi # If already installed
 
-
-		# # If not installed, containers should be removed
-		# if [[ ! -z `docker_compose ps -q wpcli` ]] || [[ ! -z `docker_compose ps -q db` ]]; then
-
-		# 	echo -e "${BLUE}Cleaning up...${RESET}"
-		# 	docker_compose down -v --rmi local --remove-orphans
-		# 	echo -e "Cleaning up ... ${GREEN}done${RESET}"
-
-		# fi
-
-
-	fi # If already installed
-
-
-
-	# Check if services are running
-	printf "Containers status ..."
-	if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` ]]; then
-
-
-		CONTAINEREXISTS="yes"
-		echo -e " ${GREEN}exist${RESET}"
 
 
 		# Check if services are running
-		printf "Containers running status ..."
-		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+		printf "Containers status ..."
+		if [[ ! -z `docker_compose ps -q wpcli` ]] && [[ ! -z `docker_compose ps -q db` ]]; then
 
-			CONTAINERRUNNING="yes"
-			echo -e " ${GREEN}running${RESET}"
+
+			CONTAINEREXISTS="yes"
+			echo -e " ${GREEN}exist${RESET}"
+
+
+			# Check if services are running
+			printf "Containers running status ..."
+			if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+				CONTAINERRUNNING="yes"
+				echo -e " ${GREEN}running${RESET}"
+
+			else
+
+				echo -e " ${BLUE}not running${RESET}"
+
+			fi # If not running
+
 
 		else
 
-			echo -e " ${BLUE}not running${RESET}"
+			echo -e " ${BLUE}not exists${RESET}"
 
-		fi # If not running
-
-
-	else
-
-		echo -e " ${BLUE}not exists${RESET}"
-
-	fi # If not exist
+		fi # If not exist
 
 
 
-	# Remove the .env file again if not installed
-	if [[ $INSTALLED == "no" ]] && [[ -f "$PROJECTDIR/.env" ]]; then
+		# Remove the .env file again if not installed
+		if [[ $INSTALLED == "no" ]] && [[ -f "$PROJECTDIR/.env" ]]; then
 
-		sudo rm -rf "$PROJECTDIR/.env"
-		echo -e ".env file removed ... ${GREEN}done${RESET}"
+			sudo rm -rf "$PROJECTDIR/.env"
+			echo -e ".env file removed ... ${GREEN}done${RESET}"
 
-	fi
+		fi
 
 
-fi # If project folder exists and not ssh-fix
+	fi # If project folder exists and not ssh-fix
+
+
+fi # If not ssh-fix action
 
 
 
