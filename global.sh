@@ -14,6 +14,39 @@ BASEDIR="$(pwd)"
 
 
 
+# FIND CURRENT OS
+OS="Unknown"
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		OS="Linux"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+		OS="MacOS"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+		# POSIX compatibility layer and Linux environment emulation for Windows
+		OS="cygwin"
+elif [[ "$OSTYPE" == "msys" ]]; then
+		# Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+		OS="msys"
+elif [[ "$OSTYPE" == "win32" ]]; then
+		OS="Win32"
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+		OS="FreeBSD"
+fi
+#echo "Operating System: ${OS}"
+
+
+
+
+# CHECK IF OS SUPPORTED
+if [[ $OS != "MacOS" ]]; then
+
+	echo -e "${RED}Projector only works on Mac OS systems yet.${RESET}"
+	exit
+
+fi
+
+
+
+
 function sedreplace {
 
 	if [[ $OS == "MacOS" ]]; then
