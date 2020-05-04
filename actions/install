@@ -322,18 +322,14 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 		# Update .git permissions
-		permission_update ".git"
+		permission_update "$PROJECTDIR/.git"
 
 	)
 
-fi
 
+else
 
-
-
-# Fix the site git permissions
-if [[ -d "$PROJECTDIR/.git" ]]; then
-
+	# Fix the site git permissions
 	git_permission_update "$PROJECTDIR/.git"
 
 fi
