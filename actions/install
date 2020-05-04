@@ -294,7 +294,7 @@ fi
 
 
 
-# Ask for the git initialization
+# Git initialization
 if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 

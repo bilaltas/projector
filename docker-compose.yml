@@ -1,61 +1,69 @@
-version: '3'
+version: "3"
 
 services:
-  wpcli:
-    image: wordpress:${WP_VERSION}
-    container_name: "${PREFIX}_wpcli"
-    restart: "always"
-    depends_on:
-      - db
-    user: root
-    ports:
-      - $IP:80:80
-    volumes:
-      - "$BUILDER_DIR/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:cached"
-      - "$PROJECT_DIR/wp:/var/www/html:cached"
-      - "$PROJECT_DIR/wp/wp-content/themes:/var/www/html/wp-content/themes:consistent"
-      - "$PROJECT_DIR/logs:/var/log/apache2:cached"
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpress_data
-      WORDPRESS_DB_USER: root
-      WORDPRESS_DB_PASSWORD: password
-      WORDPRESS_TABLE_PREFIX: ${DB_PREFIX}
+    wpcli:
+        image: wordpress:${WP_VERSION}
+        container_name: "${PREFIX}_wpcli"
+        restart: "always"
+        depends_on:
+            - db
+        ports:
+            - $IP:80:80
+        env_file: "$PROJECT_DIR/.env"
+        volumes:
+            - "$BUILDER_DIR/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:cached"
+            - "$PROJECT_DIR/wp:/var/www/html:cached"
+            - "$PROJECT_DIR/wp/wp-content/themes:/var/www/html/wp-content/themes:consistent"
+            - "$PROJECT_DIR/logs:/var/log/apache2:cached"
+        environment:
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_NAME: wordpress_data
+            WORDPRESS_DB_USER: root
+            WORDPRESS_DB_PASSWORD: password
+            WORDPRESS_TABLE_PREFIX: ${DB_PREFIX}
+        networks:
+            - wp-network
 
-  db:
-    image: mysql:8
-    container_name: "${PREFIX}_mysql"
-    user: root
-    restart: "always"
-    ports:
-      - ${IP}:3306:3306
-    command: [
-      '--default_authentication_plugin=mysql_native_password',
-      '--character-set-server=utf8mb4',
-      '--collation-server=utf8mb4_unicode_ci'
-    ]
-    volumes:
-      - "$PROJECT_DIR/database/dump:/docker-entrypoint-initdb.d:cached"
-      - "$PROJECT_DIR/database/mysql:/var/lib/mysql:cached"
-    environment:
-      MYSQL_DATABASE: wordpress_data
-      MYSQL_ROOT_PASSWORD: password
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 5s
-      retries: 10
+    db:
+        image: mysql:latest
+        container_name: "${PREFIX}_mysql"
+        restart: "always"
+        command:
+            [
+                "--default_authentication_plugin=mysql_native_password",
+                "--character-set-server=utf8mb4",
+                "--collation-server=utf8mb4_unicode_ci",
+            ]
+        volumes:
+            - "$PROJECT_DIR/database/dump:/docker-entrypoint-initdb.d:cached"
+            - "$PROJECT_DIR/database/mysql:/var/lib/mysql:cached"
+        environment:
+            MYSQL_DATABASE: wordpress_data
+            MYSQL_USER: root
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: password
+        networks:
+            - wp-network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: "${PREFIX}_phpmyadmin"
-    restart: "no"
-    depends_on:
-        - db
-    ports:
-        - $IP:8000:80
-    environment:
-        MYSQL_USER: root
-        MYSQL_PASSWORD: password
-        MYSQL_ROOT_PASSWORD: password
-        PMA_USER: root
-        PMA_PASSWORD: password
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: "${PREFIX}_phpmyadmin"
+        restart: "no"
+        depends_on:
+            - db
+        ports:
+            - $IP:8000:80
+        environment:
+            MYSQL_USER: root
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: password
+            PMA_USER: root
+            PMA_PASSWORD: password
+        networks:
+            - wp-network
+
+volumes:
+    persistent:
+networks:
+    wp-network:
+        driver: bridge
