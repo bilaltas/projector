@@ -39,9 +39,11 @@ services:
             - "$PROJECT_DIR/database/mysql:/var/lib/mysql:cached"
         environment:
             MYSQL_DATABASE: wordpress_data
-            MYSQL_USER: root
-            MYSQL_PASSWORD: password
             MYSQL_ROOT_PASSWORD: password
+        # healthcheck:
+        #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        #     timeout: 5s
+        #     retries: 10
         networks:
             - wp-network
 
