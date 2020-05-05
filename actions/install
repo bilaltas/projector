@@ -19,6 +19,14 @@ if [[ $INSTALLED == "yes" ]]; then
 fi
 
 
+# Pre-confirm
+if [[ $OPTION1 == -y ]] || [[ $OPTION2 == -y ]]; then
+
+	confirm=yes
+
+fi
+
+
 
 
 # Confirm the information

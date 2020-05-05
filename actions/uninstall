@@ -12,6 +12,14 @@ if [[ ! -d "$PROJECTDIR" ]]; then
 fi
 
 
+# Pre-confirm
+if [[ $OPTION1 == -y ]] || [[ $OPTION2 == -y ]]; then
+
+	confirm=yes
+
+fi
+
+
 
 if [[ -z $confirm ]] || [[ $confirm != "yes" ]]; then
 
