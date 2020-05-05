@@ -9,7 +9,6 @@ services:
             - db
         ports:
             - $IP:80:80
-        #env_file: "$PROJECT_DIR/.env"
         volumes:
             - "$BUILDER_DIR/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:cached"
             - "$PROJECT_DIR/wp:/var/www/html:cached"
