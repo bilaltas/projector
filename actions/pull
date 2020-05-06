@@ -85,7 +85,7 @@ if [[ $OPTION1 == --hard ]]; then
 	# Hard reset
 	echo "Hard reset files..."
 	sudo git fetch
-	sudo git reset --hard origin/master
+	sudo git reset --hard
 
 
 	if [[ $INSTALLED != "yes" ]]; then
@@ -118,6 +118,17 @@ fi
 
 
 
+# Detect remote
+if ! sudo git ls-remote --exit-code &> /dev/null; then
+
+	echo -e "${BLUE}Pull skipped. No remote added.${RESET}"
+	exit
+
+fi
+
+
+
+
 # Detect DB changes
 DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
 DB_SUM1=$(md5 -r "$DB_FILE")
@@ -126,7 +137,7 @@ DB_SUM1=$(md5 -r "$DB_FILE")
 
 # Pulling latest changes from git
 echo "Checking the latest remote changes..."
-PULL=$(sudo git --work-tree="$PROJECTDIR" pull origin master)
+PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
 if [[ $PULL == "Already up to date." ]]; then
 
 	echo -e "Git pull ... ${BLUE}already up to date${RESET}"

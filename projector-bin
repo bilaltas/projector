@@ -11,7 +11,7 @@ if [[ -f "$BUILDERDIR/projector" ]]; then
 	# Check update
 	(
 		cd "$BUILDERDIR"
-		git pull origin master
+		git pull
 	)
 
 
