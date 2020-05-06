@@ -2,6 +2,10 @@ version: "3"
 
 services:
     wpcli:
+        # build:
+        #     context: .
+        #     args:
+        #         WORDPRESS_VERSION: ${WP_VERSION}
         image: wordpress:${WP_VERSION}
         container_name: "${PREFIX}_wpcli"
         restart: "always"
@@ -39,10 +43,10 @@ services:
         environment:
             MYSQL_DATABASE: wordpress_data
             MYSQL_ROOT_PASSWORD: password
-        # healthcheck:
-        #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-        #     timeout: 5s
-        #     retries: 10
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            timeout: 5s
+            retries: 10
         networks:
             - wp-network
 
