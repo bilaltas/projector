@@ -131,19 +131,30 @@ fi
 
 
 
-	# Push the changes
-	echo "Pushing the changes..."
-	if sudo git push;then
+	# Detect remote
+	if sudo git ls-remote --exit-code &> /dev/null; then
+	
+	
+		# Push the changes
+		echo "Pushing the changes..."
+		if sudo git push;then
 
-		echo -e "${GREEN}PUSHING COMPLETE${RESET}"
+			echo -e "${GREEN}PUSHING COMPLETE${RESET}"
 
+		else
+
+			# Do a git pull
+			unset OPTION1
+			source "$BUILDERDIR/actions/pull"
+			echo -e "${RED}Please check the conflicts on Visual Studio Code${RESET}"
+
+		fi
+
+	
 	else
 
-		# Do a git pull
-		unset OPTION1
-		source "$BUILDERDIR/actions/pull"
-		echo -e "${RED}Please check the conflicts on Visual Studio Code${RESET}"
-
+		echo -e "${BLUE}Push skipped. No remote added.${RESET}"
+	
 	fi
 
 )
