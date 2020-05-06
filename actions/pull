@@ -119,94 +119,94 @@ fi
 
 
 # Detect remote
-if ! sudo git ls-remote --exit-code &> /dev/null; then
-
-	echo -e "${BLUE}Pull skipped. No remote added.${RESET}"
-	exit
-
-fi
+if sudo git ls-remote --exit-code &> /dev/null; then
 
 
-
-
-# Detect DB changes
-DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
-DB_SUM1=$(md5 -r "$DB_FILE")
+	# Detect DB changes
+	DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
+	DB_SUM1=$(md5 -r "$DB_FILE")
 
 
 
-# Pulling latest changes from git
-echo "Checking the latest remote changes..."
-PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
-if [[ $PULL == "Already up to date." ]]; then
+	# Pulling latest changes from git
+	echo "Checking the latest remote changes..."
+	PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
+	if [[ $PULL == "Already up to date." ]]; then
 
-	echo -e "Git pull ... ${BLUE}already up to date${RESET}"
+		echo -e "Git pull ... ${BLUE}already up to date${RESET}"
 
-elif [[ $PULL ]]; then
+	elif [[ $PULL ]]; then
 
-	echo -e "Git pull ... ${GREEN}done${RESET}"
-
-
-	# DETECT DB CHANGES
-	permission_update "$DB_FILE"
-	DB_SUM2=$(md5 -r "$DB_FILE")
-	if [[ $DB_SUM1 != $DB_SUM2 ]]; then
+		echo -e "Git pull ... ${GREEN}done${RESET}"
 
 
-		echo -e "${BLUE}DB changed${RESET}"
+		# DETECT DB CHANGES
+		permission_update "$DB_FILE"
+		DB_SUM2=$(md5 -r "$DB_FILE")
+		if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
 
-		# If installed
-		if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
+			echo -e "${BLUE}DB changed${RESET}"
 
 
-			# Confirm before changing DB
-			read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
-			if [[ $confirm == no ]] || [[  $confirm == n ]]; then
+			# If installed
+			if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
 
-				echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
-				exit
+
+				# Confirm before changing DB
+				read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
+				if [[ $confirm == no ]] || [[  $confirm == n ]]; then
+
+					echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
+					exit
+
+				fi
+
+
+				# Import the DB
+				OPTION1=--import
+				source "$BUILDERDIR/actions/db"
+
+
+			else
+
+
+				printf "Old data removing ..."
+				sudo rm -rf "$PROJECTDIR/database/mysql"
+				echo -e " ${GREEN}done${RESET}"
+
+
+				echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
+
 
 			fi
 
 
-			# Import the DB
-			OPTION1=--import
-			source "$BUILDERDIR/actions/db"
-
-
 		else
 
+			echo -e "${BLUE}DB is identical.${RESET}"
 
-			printf "Old data removing ..."
-			sudo rm -rf "$PROJECTDIR/database/mysql"
-			echo -e " ${GREEN}done${RESET}"
+		fi
 
 
-			echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
+		# Permission fix needed
+		if [[ $PERMISSIONFIX != "no" ]]; then
 
+			git_permission_update "$PROJECTDIR/.git"
+			permission_update "$PROJECTDIR/wp/wp-content"
 
 		fi
 
 
 	else
 
-		echo -e "${BLUE}DB is identical.${RESET}"
-
-	fi
-
-
-	# Permission fix needed
-	if [[ $PERMISSIONFIX != "no" ]]; then
-
-		git_permission_update "$PROJECTDIR/.git"
-		permission_update "$PROJECTDIR/wp/wp-content"
+		echo -e "Git pull ... ${RED}not done${RESET}"
 
 	fi
 
 
 else
 
-	echo -e "Git pull ... ${RED}not done${RESET}"
+	echo -e "${BLUE}Pull skipped. No remote added.${RESET}"
 
 fi
