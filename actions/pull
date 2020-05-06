@@ -126,7 +126,7 @@ DB_SUM1=$(md5 -r "$DB_FILE")
 
 # Pulling latest changes from git
 echo "Checking the latest remote changes..."
-PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
+PULL=$(sudo git --work-tree="$PROJECTDIR" pull origin master)
 if [[ $PULL == "Already up to date." ]]; then
 
 	echo -e "Git pull ... ${BLUE}already up to date${RESET}"
