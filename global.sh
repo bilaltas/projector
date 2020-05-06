@@ -180,7 +180,7 @@ function run_server_if_not_running {
 
 
 		echo -e "Services not running. Starting ..."
-		docker_compose up -d --no-recreate wpcli db
+		docker_compose up -d --force-recreate wpcli db
 
 		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
