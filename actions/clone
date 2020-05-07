@@ -22,7 +22,7 @@ done
 
 
 # Test the git URL
-if sudo git ls-remote "$GIT_REPO" HEAD &>/dev/null; then
+if sudo git remote get-url --all origin &> /dev/null; then
 
 	echo -e "${GREEN}Repository found, clone starting for '$SLUG' project.${RESET}"
 

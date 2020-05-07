@@ -119,7 +119,7 @@ fi
 
 
 # Detect remote
-if sudo git ls-remote --exit-code &> /dev/null; then
+if sudo git remote get-url --all origin &> /dev/null; then
 
 
 	# Detect DB changes
