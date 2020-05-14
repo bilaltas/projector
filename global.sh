@@ -80,6 +80,13 @@ function get_env_data {
 	if [[ -f "$PROJECTDIR/.env" ]]; then
 
 		source "$PROJECTDIR/.env"
+
+	fi
+
+
+	# If no slug specified
+	if [[ -z $SLUG ]] || [[ $SLUG == "site-name" ]]; then
+
 		SLUG=$PROJECTNAME
 
 	fi
