@@ -107,10 +107,9 @@ if [[ $OPTION1 == --hard ]]; then
 	fi
 
 
-	# Permission Fix
-	git_permission_update "$PROJECTDIR/.git"
-	permission_update "$PROJECTDIR/wp/wp-content"
-	exit
+	# # Permission Fix
+	# git_permission_update "$PROJECTDIR/.git"
+	# permission_update "$PROJECTDIR/wp/wp-content"
 
 
 fi
