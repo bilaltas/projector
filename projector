@@ -123,7 +123,7 @@ fi
 
 
 # If unknown answer
-if [[ $ACTION != starter ]] && [[ $ACTION != clone ]] && [[ $ACTION != install ]] && [[ $ACTION != uninstall ]] && [[ $ACTION != start ]] && [[ $ACTION != stop ]] && [[ $ACTION != pull ]] && [[ $ACTION != push ]] && [[ $ACTION != permission-fix ]] && [[ $ACTION != export ]] && [[ $ACTION != db ]] && [[ $ACTION != phpmyadmin ]] && [[ $ACTION != ssh-fix ]]; then
+if [[ ! -f "$BUILDERDIR/actions/$ACTION" ]]; then
 
 	echo -e "${RED}Wrong action.${RESET}"
 	exit
