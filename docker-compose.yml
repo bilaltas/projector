@@ -1,4 +1,4 @@
-version: "3"
+version: "2.1"
 
 services:
     wpcli:
@@ -10,7 +10,8 @@ services:
         container_name: "${PREFIX}_wpcli"
         restart: "always"
         depends_on:
-            - db
+            db:
+                condition: service_healthy
         ports:
             - $IP:80:80
         volumes:
@@ -39,7 +40,7 @@ services:
             ]
         volumes:
             - "$PROJECT_DIR/database/dump:/docker-entrypoint-initdb.d:cached"
-            - "$PROJECT_DIR/database/mysql:/var/lib/mysql:cached"
+            - "$PROJECT_DIR/database/mysql:/var/lib/mysql:consistent"
         environment:
             MYSQL_DATABASE: wordpress_data
             MYSQL_ROOT_PASSWORD: password
