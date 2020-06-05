@@ -77,7 +77,7 @@ fi
 
 # Close the server
 echo "Server is closing..."
-docker_compose down -v --rmi local --remove-orphans
+docker_compose down --volumes --remove-orphans
 
 
 
