@@ -474,7 +474,7 @@ function wait_for_mysql {
 
 	# Check MySQL to be ready
 	printf "MySQL is being ready ..."
-	while ! docker_compose exec db mysqladmin --user=root --password=password --host "$IP" ping --silent &> /dev/null ; do
+	while ! docker_compose exec db mysqladmin ping --host "$IP" --user=root --password=password --silent &> /dev/null ; do
 		printf "."
 		sleep 3
 	done

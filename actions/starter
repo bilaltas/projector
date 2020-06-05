@@ -156,6 +156,7 @@ fi
 if [[ ! -d "$PROJECTDIR" ]]; then
 
 	mkdir "$PROJECTDIR"
+	echo -e "Project folder has been created ... ${GREEN}done${RESET}"
 
 fi
 
@@ -212,19 +213,8 @@ permission_update "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 
 
 
-# Install NPM packages
-echo "NPM packages are installing..."
-(
-	cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-	npm install
-)
-echo -e "NPM packages installed ... ${GREEN}done${RESET}"
-
-
-
-
-# Build the style.css
-echo "'style.css' is being built..."
+# Install NPM packages and build the style.css
+echo "NPM packages are installing and 'style.css' is being built..."
 (
 	cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 	npm run build

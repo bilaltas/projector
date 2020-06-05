@@ -7,8 +7,19 @@ source "$BUILDERDIR/global.sh"
 
 
 
+# Chech if local.env exist at the beginning
+LOCALENVEXISTSATBEGINNING="no"
+if [[ -f "$BASEDIR/local.env" ]]; then
+
+	LOCALENVEXISTSATBEGINNING="yes"
+
+fi
+
+
+
+
 # Check if current folder is a project folder (project-name/)
-if [[ -f "$BASEDIR/local.env" ]] || [[ -f "$BASEDIR/.env" ]]; then
+if [[ $LOCALENVEXISTSATBEGINNING == "yes" ]] || [[ -f "$BASEDIR/.env" ]] || [[ -d "$BASEDIR/.git" ]]; then
 
 
 	# Extract the project name from BASEDIR
@@ -315,11 +326,26 @@ if [[ $ACTION != ssh-fix ]]; then
 
 
 
-		# Remove the .env file again if not installed
-		if [[ $INSTALLED == "no" ]] && [[ -f "$PROJECTDIR/.env" ]]; then
+		if [[ $INSTALLED == "no" ]]; then
 
-			sudo rm -rf "$PROJECTDIR/.env"
-			echo -e ".env file removed ... ${GREEN}done${RESET}"
+
+			# Remove the .env file again if not installed
+			if [[ -f "$PROJECTDIR/.env" ]]; then
+
+				sudo rm -rf "$PROJECTDIR/.env"
+				echo -e ".env file removed ... ${GREEN}done${RESET}"
+
+			fi
+
+
+			# Remove the local.env file again if not installed
+			if [[ $LOCALENVEXISTSATBEGINNING == "no" ]] && [[ -f "$PROJECTDIR/local.env" ]]; then
+
+				sudo rm -rf "$PROJECTDIR/local.env"
+				echo -e "local.env file removed ... ${GREEN}done${RESET}"
+
+			fi
+
 
 		fi
 
@@ -328,6 +354,25 @@ if [[ $ACTION != ssh-fix ]]; then
 
 
 fi # If not ssh-fix action
+
+
+
+
+# #echo "IP: $IP"
+# MYSQLPINGOUTPUT=`docker_compose exec db mysqladmin ping --host=$IP --user=root --password=password --silent`
+# MYSQLPINGOUTPUT=${MYSQLPINGOUTPUT##*$'\n'}
+# echo "'${MYSQLPINGOUTPUT}'"
+
+# if [[ $MYSQLPINGOUTPUT == "mysqladmin: [Warning] Using a password on the command line interface can be insecure." ]]; then
+
+# 	echo "NO"
+
+# else 
+
+# 	echo "YES"
+
+# fi
+# exit
 
 
 

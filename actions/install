@@ -189,8 +189,7 @@ echo -e "Local IP(${IP}) is now available to build server ... ${GREEN}done${RESE
 echo "Server is building..."
 docker_compose rm
 docker_compose pull
-docker_compose build --no-cache
-docker_compose up -d --force-recreate wpcli db
+docker_compose up -d --build --force-recreate wpcli db
 
 
 
