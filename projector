@@ -310,8 +310,14 @@ if [[ $ACTION != ssh-fix ]]; then
 			printf "Containers running status ..."
 			if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
+
 				CONTAINERRUNNING="yes"
 				echo -e " ${GREEN}running${RESET}"
+
+
+				# Check if WPCLI exists
+				docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+
 
 			else
 
@@ -356,25 +362,6 @@ if [[ $ACTION != ssh-fix ]]; then
 
 
 fi # If not ssh-fix action
-
-
-
-
-# #echo "IP: $IP"
-# MYSQLPINGOUTPUT=`docker_compose exec db mysqladmin ping --host=$IP --user=root --password=password --silent`
-# MYSQLPINGOUTPUT=${MYSQLPINGOUTPUT##*$'\n'}
-# echo "'${MYSQLPINGOUTPUT}'"
-
-# if [[ $MYSQLPINGOUTPUT == "mysqladmin: [Warning] Using a password on the command line interface can be insecure." ]]; then
-
-# 	echo "NO"
-
-# else 
-
-# 	echo "YES"
-
-# fi
-# exit
 
 
 

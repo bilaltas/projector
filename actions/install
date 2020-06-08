@@ -225,9 +225,7 @@ fi # If not running
 
 
 # Install WP-CLI
-printf "Installing WP-CLI ..."
-source "$BUILDERDIR/config/wp-cli-install.sh"
-echo -e " ${GREEN}done${RESET}"
+source "$BUILDERDIR/actions/install-wpcli"
 
 
 

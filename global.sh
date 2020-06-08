@@ -194,6 +194,10 @@ function run_server_if_not_running {
 			CONTAINERRUNNING="yes"
 			echo -e "Services started ... ${GREEN}done${RESET}"
 
+
+			# Check if WPCLI exists
+			docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+
 		else
 
 			echo -e "${RED}Services could not be started${RESET}"

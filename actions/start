@@ -88,6 +88,12 @@ docker_compose up -d --force-recreate
 
 
 
+# Check if WPCLI exists
+docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+
+
+
+
 # Install NPM for Gulp
 if [[ $OPTION1 != --nonode ]]; then
 
