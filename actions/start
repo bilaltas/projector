@@ -83,7 +83,7 @@ fi
 
 
 # Restart the server
-docker_compose up -d --force-recreate
+docker_compose up -d --force-recreate --remove-orphans wpcli db
 
 
 
