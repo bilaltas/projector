@@ -12,6 +12,15 @@ if [[ ! -d "$PROJECTDIR" ]]; then
 fi
 
 
+# Check if the folder is not a project folder
+if [[ ! -f "$PROJECTDIR/.env" ]] && [[ ! -f "$PROJECTDIR/local.env" ]]; then
+
+	echo -e "${RED}This is not a project folder.${RESET}"
+	exit
+
+fi
+
+
 # Pre-confirm
 if [[ $OPTION1 == -y ]] || [[ $OPTION2 == -y ]]; then
 
