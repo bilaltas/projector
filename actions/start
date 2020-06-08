@@ -82,6 +82,12 @@ fi
 
 
 
+# Restart the server
+docker_compose up -d --force-recreate
+
+
+
+
 # Install NPM for Gulp
 if [[ $OPTION1 != --nonode ]]; then
 
