@@ -263,11 +263,11 @@ if [[ $ACTION != ssh-fix ]]; then
 			if ! curl --max-time 3 --output /dev/null --silent --head --fail "$IP"; then
 
 				sudo ifconfig lo0 alias $IP up
-				echo -e " ${BLUE}made available${RESET}"
+				echo -e " ${BLUE}activated${RESET}"
 
 			else
 
-				echo -e " ${GREEN}available${RESET}"
+				echo -e " ${GREEN}active${RESET}"
 
 			fi
 			#exit
