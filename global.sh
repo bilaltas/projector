@@ -179,6 +179,57 @@ function docker_compose {
 
 }
 
+function revert_installation {
+
+
+	echo -e "${RED}Could not installed. Reverting, please wait...${RESET}"
+
+
+	# Update the temporary files
+	if [[ $MODE != install-starter ]]; then
+
+		make_permanent
+
+	fi
+
+
+	# Uninstall the server
+	docker_compose down -v --rmi local --remove-orphans
+
+
+	# Delete the .env file
+	sudo rm -rf "$PROJECTDIR/.env"
+
+
+	echo -e "${RED}Services could not be started. Restart Docker and try installing again.${RESET}"
+	exit
+
+
+}
+
+function run_server {
+
+
+	docker_compose up -d --force-recreate --remove-orphans wpcli db
+
+	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+		CONTAINERRUNNING="yes"
+		echo -e "Services started ... ${GREEN}done${RESET}"
+
+
+		# Check if WPCLI exists
+		docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+
+	else
+
+		echo -e "${RED}Services could not be started${RESET}"
+
+	fi
+
+
+}
+
 function run_server_if_not_running {
 
 
@@ -187,22 +238,7 @@ function run_server_if_not_running {
 
 
 		echo -e "Services not running. Starting ..."
-		docker_compose up -d --force-recreate wpcli db
-
-		if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
-
-			CONTAINERRUNNING="yes"
-			echo -e "Services started ... ${GREEN}done${RESET}"
-
-
-			# Check if WPCLI exists
-			docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
-
-		else
-
-			echo -e "${RED}Services could not be started${RESET}"
-
-		fi
+		run_server
 
 
 	fi # If not running
@@ -473,20 +509,6 @@ function db_url_update {
 
 }
 
-function wait_for_mysql {
-
-
-	# Check MySQL to be ready
-	printf "MySQL is being ready ..."
-	while ! docker_compose exec db mysqladmin ping --host "$IP" --user=root --password=password --silent &> /dev/null ; do
-		printf "."
-		sleep 3
-	done
-	echo -e " ${GREEN}done${RESET}"
-
-
-}
-
 function move_import_files {
 
 
@@ -700,7 +722,7 @@ function make_permanent {
 
 }
 
-function install_npm {
+function run_npm_start {
 
 
 	# If package.json exist in theme folder
@@ -716,7 +738,7 @@ function install_npm {
 			echo "NPM packages are installing..."
 			(
 				cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-				sudo npm run build
+				sudo npm install
 			)
 			echo -e "NPM packages installed ... ${GREEN}done${RESET}"
 

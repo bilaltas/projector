@@ -195,29 +195,7 @@ docker_compose up -d --build --force-recreate --remove-orphans wpcli db
 # Check if services are running
 if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
-
-	echo -e "${RED}Could not installed. Reverting, please wait...${RESET}"
-
-
-	# Update the temporary files
-	if [[ $MODE != install-starter ]]; then
-
-		make_permanent
-
-	fi
-
-
-	# Uninstall the server
-	docker_compose down -v --rmi local --remove-orphans
-
-
-	# Delete the .env file
-	sudo rm -rf "$PROJECTDIR/.env"
-
-
-	echo -e "${RED}Services could not be started. Restart Docker and try installing again.${RESET}"
-	exit
-
+	revert_installation
 
 fi # If not running
 
@@ -226,6 +204,16 @@ fi # If not running
 
 # Install WP-CLI
 source "$BUILDERDIR/actions/install-wpcli"
+
+
+
+
+# Check if WPCLI installed
+if docker_compose exec wpcli [ ! -f "/usr/local/bin/wp" ]; then
+
+	revert_installation
+
+fi
 
 
 
@@ -241,8 +229,6 @@ echo -e " ${GREEN}done${RESET}"
 
 
 
-# Check MySQL to be ready
-wait_for_mysql
 INSTALLED="yes"
 CONTAINEREXISTS="yes"
 CONTAINERRUNNING="yes"

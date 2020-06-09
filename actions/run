@@ -23,10 +23,6 @@ if [[ $INSTALLED != "yes" ]]; then
 
 		source "$BUILDERDIR/actions/install"
 
-	else
-
-		echo -e "${RED}Continue without installing the project.${RESET}"
-
 	fi
 
 
@@ -46,18 +42,21 @@ fi
 
 
 
-# Run server if not running
-run_server_if_not_running
+# Restart the server
+run_server
 
 
 
 
-# Pull the changes and start
-PERMISSIONFIX="no"
-source "$BUILDERDIR/actions/pull"
-
-
-
-
-# Install NPM packages and run "npm start"
-run_npm_start
+# PRINT THE SITE INFO
+echo -e "${GREEN}Site is up!${RESET}"
+echo ""
+echo ""
+echo "== Site Info ===================="
+echo ""
+echo "Local URL: http://${DOMAIN}"
+echo "Local IP: ${IP}"
+echo ""
+echo "================================="
+echo ""
+echo ""
