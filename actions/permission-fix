@@ -12,7 +12,7 @@ fi
 # Server permission update
 if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --server ]]; then
 
-	server_permission_update "/var/www/html"
+	# server_permission_update "/var/www/html"
 
 fi
 
