@@ -93,13 +93,13 @@ echo -e " ${GREEN}done${RESET}"
 
 # Delete 'node_modules' folder if exists
 printf "Removing the 'node_modules' folder ..."
-sudo rm -rf "$PROJECTDIR/export/wp-content/themes/$SLUG/node_modules"
+sudo rm -rf "$PROJECTDIR/export/wp-content/themes/$ACTIVE_THEME/node_modules"
 echo -e " ${GREEN}done${RESET}"
 
 
 # Delete 'package-lock.json' file if exists
 printf "Removing the 'package-lock.json' file ..."
-sudo rm -rf "$PROJECTDIR/export/wp-content/themes/$SLUG/package-lock.json"
+sudo rm -rf "$PROJECTDIR/export/wp-content/themes/$ACTIVE_THEME/package-lock.json"
 echo -e " ${GREEN}done${RESET}"
 
 
