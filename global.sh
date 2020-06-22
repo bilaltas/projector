@@ -121,7 +121,7 @@ function update_environment {
 	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" "$LOCAL_ENV";
 
 	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" "$LOCAL_ENV";
-	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$SLUG/g" "$LOCAL_ENV";
+	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$ACTIVE_THEME/g" "$LOCAL_ENV";
 	sedreplace "s/DB_PREFIX=wp_/DB_PREFIX=$DB_PREFIX/g" "$LOCAL_ENV";
 
 	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" "$LOCAL_ENV";
