@@ -48,7 +48,7 @@ fi
 
 
 # Stop phpMyAdmin service
-if [[ $OPTION1 == --stop ]]; then
+if [[ $OPTION1 == --stop ]] || [[ $OPTION2 == --stop ]]; then
 
 	echo "phpMyAdmin is stopping..."
 	docker_compose stop phpmyadmin

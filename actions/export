@@ -31,7 +31,7 @@ echo "EXPORTING STARTED"
 
 
 # Importable option
-if [[ $OPTION1 == --importable ]]; then
+if [[ $OPTION1 == --importable ]] || [[ $OPTION2 == --importable ]]; then
 
 	targetdomain=$DOMAIN
 	targetprotocol="http"
@@ -71,7 +71,7 @@ sudo mkdir -p "$PROJECTDIR/export"
 
 
 # If importable
-if [[ $OPTION1 == --importable ]]; then
+if [[ $OPTION1 == --importable ]] || [[ $OPTION2 == --importable ]]; then
 
 	sudo mkdir -p "$PROJECTDIR/export/import"
 
@@ -104,7 +104,7 @@ echo -e " ${GREEN}done${RESET}"
 
 
 # Importable option
-if [[ $OPTION1 == --importable ]]; then
+if [[ $OPTION1 == --importable ]] || [[ $OPTION2 == --importable ]]; then
 
 	printf "Moving the 'wp-content' folder ..."
 	sudo mv "$PROJECTDIR/export/wp-content" "$PROJECTDIR/export/import/wp-content"
@@ -150,7 +150,7 @@ fi
 
 
 # Importable option
-if [[ $OPTION1 == --importable ]]; then
+if [[ $OPTION1 == --importable ]] || [[ $OPTION2 == --importable ]]; then
 
 	printf "Moving the DB file ..."
 	sudo mv "$PROJECTDIR/wp/tmp_wordpress_data.sql" "$PROJECTDIR/export/import/db.sql"

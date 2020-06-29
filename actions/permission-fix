@@ -26,7 +26,7 @@ fi
 
 
 # Site folder permission update
-if [[ -z $OPTION1 ]]; then
+if [[ -z $OPTION1 ]] && [[ -z $OPTION2 ]]; then
 
 	git_permission_update "$PROJECTDIR/.git"
 	permission_update "$PROJECTDIR/wp/wp-content"
