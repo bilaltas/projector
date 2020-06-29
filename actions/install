@@ -296,30 +296,30 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
 
 		# Initiate Git
-		sudo git init
+		git init
 		echo -e "Initiate Git ... ${GREEN}done${RESET}"
 
 
 		# Stage all the changes
-		sudo git add -A .
+		git add -A .
 		echo -e "Stage all the changes ... ${GREEN}done${RESET}"
 
 
 		# Commit the changes
-		sudo git commit -m "Initial commit"
+		git commit -m "Initial commit"
 		echo -e "Commit the changes ... ${GREEN}done${RESET}"
 
 
-		# Update .git permissions
-		permission_update "$PROJECTDIR/.git"
+		# # Update .git permissions
+		# permission_update "$PROJECTDIR/.git"
 
 	)
 
 
-else
+# else
 
-	# Fix the site git permissions
-	git_permission_update "$PROJECTDIR/.git"
+# 	# Fix the site git permissions
+# 	git_permission_update "$PROJECTDIR/.git"
 
 fi
 

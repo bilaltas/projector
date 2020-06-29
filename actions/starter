@@ -39,8 +39,9 @@ fi
 
 
 
-# Update the slug
+# Update the slug and theme folder name
 SLUG=$PROJECTNAME
+ACTIVE_THEME=$PROJECTNAME
 
 
 
