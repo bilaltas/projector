@@ -72,7 +72,7 @@ update_environment
 ## UNINSTALLATION:
 
 # Optional: Do not get backup
-if [[ $OPTION1 != --nobackup ]]; then
+if [[ $OPTION1 != --nobackup ]] && [[ $OPTION2 != --nobackup ]]; then
 
 
 	# Save a DB backup first
@@ -123,7 +123,7 @@ echo -e ".env file removed from the project ... ${GREEN}done${RESET}"
 
 
 # Optional: Remove the folder
-if [[ $OPTION1 == --remove ]]; then
+if [[ $OPTION1 == --remove ]] || [[ $OPTION2 == --remove ]]; then
 
 
 	echo -e "Project folder removing..."
