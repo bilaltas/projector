@@ -126,9 +126,9 @@ echo -e ".env file removed from the project ... ${GREEN}done${RESET}"
 if [[ $OPTION1 == --remove ]] || [[ $OPTION2 == --remove ]]; then
 
 
-	echo -e "Project folder removing..."
+	printf "Project folder removing ..."
 	sudo rm -rf "$PROJECTDIR"
-	echo -e "Project folder removed ... ${GREEN}done${RESET}"
+	echo -e " ${GREEN}done${RESET}"
 
 
 fi
