@@ -14,17 +14,6 @@ fi
 
 
 
-# Check if installed
-if [[ $INSTALLED != "yes" ]]; then
-
-	echo -e "${RED}Project is not installed.${RESET}"
-	exit
-
-fi
-
-
-
-
 # Check if git exist
 if [[ ! -d "$PROJECTDIR/.git" ]]; then
 
@@ -58,6 +47,17 @@ fi
 
 # Save the DB backup
 if [[ $OPTION1 != --files ]] && [[ $OPTION2 != --files ]]; then
+
+
+	# Check if installed
+	if [[ $INSTALLED != "yes" ]]; then
+
+		echo -e "${RED}Project is not installed to be able to push DB changes.${RESET}"
+		exit
+
+	fi
+
+
 
 	db_backup
 
