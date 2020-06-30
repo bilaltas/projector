@@ -13,9 +13,9 @@ fi
 
 
 # Get the git URL
-read -ep "Git repo URL (https://yourusername@example.com/username/reponame.git): " GIT_REPO
+read -ep "Git repo URL (https://example.com/username/reponame.git): " GIT_REPO
 while [[ -z $GIT_REPO ]]; do
-	read -ep "Git repo URL (https://yourusername@example.com/username/reponame.git): " GIT_REPO
+	read -ep "Git repo URL (https://example.com/username/reponame.git): " GIT_REPO
 done
 
 
