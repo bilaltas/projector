@@ -72,7 +72,7 @@ update_environment
 ## UNINSTALLATION:
 
 # Optional: Do not get backup
-if [[ $OPTION1 != --nobackup ]] && [[ $OPTION2 != --nobackup ]]; then
+if [[ $OPTION1 != --nobackup ]] && [[ $OPTION2 != --nobackup ]] && [[ $OPTION1 != --remove ]] && [[ $OPTION2 != --remove ]]; then
 
 
 	# Save a DB backup first
