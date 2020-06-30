@@ -35,19 +35,18 @@ fi
 
 
 
-# Check if container exists
-if [[ $CONTAINEREXISTS != "yes" ]]; then
+# # Check if container exists
+# if [[ $CONTAINEREXISTS != "yes" ]]; then
 
-	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
-	exit
+# 	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
 
-fi
-
+# fi
 
 
 
-# Run server if not running
-run_server_if_not_running
+
+# # Run server if not running
+# run_server_if_not_running
 
 
 
