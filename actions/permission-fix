@@ -25,10 +25,38 @@ if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --permission ]]; then
 fi
 
 
+# node_modules permission update
+if [[ $OPTION1 == --node ]] || [[ $OPTION2 == --node ]]; then
+
+	if [[ -d "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules" ]]; then
+
+		printf "Fixing file permissions on 'node_modules' folder ..."
+		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1)  "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
+		echo -e " ${GREEN}done${RESET}"
+
+	else
+
+		echo "'node_modules' folder not found."
+
+	fi
+
+fi
+
+
 # Site folder permission update
 if [[ -z $OPTION1 ]] && [[ -z $OPTION2 ]]; then
 
+
 	git_permission_update "$PROJECTDIR/.git"
 	permission_update "$PROJECTDIR/wp/wp-content"
+
+	if [[ -d "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules" ]]; then
+
+		printf "Fixing file permissions on 'node_modules' folder ..."
+		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1)  "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
+		echo -e " ${GREEN}done${RESET}"
+
+	fi
+
 
 fi
