@@ -99,18 +99,20 @@ sudo bash "$BUILDERDIR/config/etc-hosts.sh" -remove $DOMAIN
 
 
 # Delete the DB files
+printf "Removing MySQL files ..."
 sudo rm -rf "$PROJECTDIR/database/mysql"
-echo -e "MySQL files removed ... ${GREEN}done${RESET}"
+echo -e " ${GREEN}done${RESET}"
 
 
 
 
 # Remove WP core files
+printf "Removing WP core files ..."
 (
 	cd "$PROJECTDIR/wp"
 	find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec sudo rm -rf '{}' \;
 )
-echo -e "WP core files removed ... ${GREEN}done${RESET}"
+echo -e " ${GREEN}done${RESET}"
 
 
 
@@ -126,7 +128,7 @@ echo -e ".env file removed from the project ... ${GREEN}done${RESET}"
 if [[ $OPTION1 == --remove ]] || [[ $OPTION2 == --remove ]]; then
 
 
-	printf "Project folder removing ..."
+	printf "Removing project folder ..."
 	sudo rm -rf "$PROJECTDIR"
 	echo -e " ${GREEN}done${RESET}"
 
