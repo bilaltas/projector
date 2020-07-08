@@ -7,5 +7,6 @@
 /wp/*
 !/wp/wp-content
 /wp/wp-content/cache
+/import
 /export
 .DS_Store
