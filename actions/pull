@@ -98,12 +98,6 @@ if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
 		sudo git clean -df
 		echo -e "Hard reset files ... ${GREEN}done${RESET}"
 
-
-		# Import the DB !!! Is this necessary?
-		OPTION1=--import
-		source "$BUILDERDIR/actions/db"
-		echo -e "Hard reset ... ${GREEN}done${RESET}"
-
 	fi
 
 
