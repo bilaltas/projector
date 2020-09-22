@@ -309,17 +309,18 @@ if [[ ! -d "$PROJECTDIR/.git" ]]; then
 		git commit -m "Initial commit"
 		echo -e "Commit the changes ... ${GREEN}done${RESET}"
 
-
-		# # Update .git permissions
-		# permission_update "$PROJECTDIR/.git"
-
 	)
 
 
-# else
+fi
 
-# 	# Fix the site git permissions
-# 	git_permission_update "$PROJECTDIR/.git"
+
+
+
+# Fix the site git permissions
+if [[ -d "$PROJECTDIR/.git" ]]; then
+
+	git_permission_update "$PROJECTDIR/.git"
 
 fi
 
@@ -347,8 +348,6 @@ echo ""
 echo "================================="
 echo ""
 echo ""
-
-
 
 
 echo -e "Installing '$SLUG' project ... ${GREEN}done${RESET}"
