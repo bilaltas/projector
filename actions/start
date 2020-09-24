@@ -51,5 +51,15 @@ fi
 
 
 
+# Fix the site git permissions
+if [[ -d "$PROJECTDIR/.git" ]]; then
+
+	git_permission_update "$PROJECTDIR/.git"
+
+fi
+
+
+
+
 # Install NPM packages and run "npm start"
 run_npm_start
