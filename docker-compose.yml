@@ -29,7 +29,7 @@ services:
             - wp-network
 
     db:
-        image: mysql:latest
+        image: mysql:5.7
         container_name: "${PREFIX}_mysql"
         restart: "always"
         command:
