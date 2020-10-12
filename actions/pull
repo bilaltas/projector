@@ -103,7 +103,7 @@ if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
 
 	# # Permission Fix
 	# git_permission_update "$PROJECTDIR/.git"
-	# permission_update "$PROJECTDIR/wp/wp-content"
+	# file_permission_update "$PROJECTDIR/wp/wp-content"
 
 
 fi
@@ -134,7 +134,7 @@ if sudo git remote get-url --all origin &> /dev/null; then
 
 
 		# DETECT DB CHANGES
-		permission_update "$DB_FILE"
+		file_permission_update "$DB_FILE"
 		DB_SUM2=$(md5 -r "$DB_FILE")
 		if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
@@ -186,7 +186,7 @@ if sudo git remote get-url --all origin &> /dev/null; then
 		if [[ $PERMISSIONFIX != "no" ]]; then
 
 			git_permission_update "$PROJECTDIR/.git"
-			permission_update "$PROJECTDIR/wp/wp-content"
+			file_permission_update "$PROJECTDIR/wp/wp-content"
 
 		fi
 

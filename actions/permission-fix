@@ -1,44 +1,59 @@
 #!/bin/bash
 
 
-# Git permissions update
-if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --git ]]; then
+# node_modules permission update
+if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --node ]] || [[ $OPTION2 == --node ]]; then
 
-	git_permission_update "$PROJECTDIR/.git"
+
+	# Default folder
+	FOLDERTOFIX="$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
+
+	# Custom Directory Fix
+	if [[ $OPTION1 == --node ]] && [[ -d $OPTION2 ]]; then
+		FOLDERTOFIX=$OPTION2
+	fi
+
+
+	node_permission_update "$FOLDERTOFIX"
+
 
 fi
 
 
-# # Server permission update
-# if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --server ]]; then
+# Git permissions update
+if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --git ]] || [[ $OPTION2 == --git ]]; then
 
-# 	server_permission_update "/var/www/html"
 
-# fi
+	# Default folder
+	FOLDERTOFIX="$PROJECTDIR/.git"
+
+	# Custom Directory Fix
+	if [[ $OPTION1 == --node ]] && [[ -d $OPTION2 ]]; then
+		FOLDERTOFIX=$OPTION2
+	fi
+
+
+	git_permission_update "$FOLDERTOFIX"
+
+
+fi
 
 
 # Local file permission update
-if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --permission ]]; then
-
-	permission_update "$PROJECTDIR"
-
-fi
+if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --files ]] || [[ $OPTION2 == --files ]]; then
 
 
-# node_modules permission update
-if [[ $OPTION1 == --node ]] || [[ $OPTION2 == --node ]]; then
+	# Default folder
+	FOLDERTOFIX="$PROJECTDIR"
 
-	if [[ -d "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules" ]]; then
-
-		printf "Fixing file permissions on 'node_modules' folder ..."
-		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1)  "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
-		echo -e " ${GREEN}done${RESET}"
-
-	else
-
-		echo "'node_modules' folder not found."
-
+	# Custom Directory Fix
+	if [[ $OPTION1 == --node ]] && [[ -d $OPTION2 ]]; then
+		FOLDERTOFIX=$OPTION2
 	fi
+
+
+	file_permission_update "$FOLDERTOFIX"
+
 
 fi
 
@@ -46,17 +61,27 @@ fi
 # Site folder permission update
 if [[ -z $OPTION1 ]] && [[ -z $OPTION2 ]]; then
 
-
+	node_permission_update "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
 	git_permission_update "$PROJECTDIR/.git"
-	permission_update "$PROJECTDIR"
+	file_permission_update "$PROJECTDIR"
 
-	if [[ -d "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules" ]]; then
+fi
 
-		printf "Fixing file permissions on 'node_modules' folder ..."
-		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1)  "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
-		echo -e " ${GREEN}done${RESET}"
 
+# Server permission update
+if [[ $OPTION1 == --server ]] || [[ $OPTION2 == --server ]]; then
+
+
+	# Default folder
+	FOLDERTOFIX="/var/www/html"
+
+	# Custom Directory Fix
+	if [[ $OPTION1 == --node ]] && [[ -d $OPTION2 ]]; then
+		FOLDERTOFIX=$OPTION2
 	fi
+
+
+	server_permission_update "/var/www/html"
 
 
 fi

@@ -261,54 +261,87 @@ function server_permission_update {
 
 function git_permission_update {
 
-	#printf "Fixing git permissions in ($1) ..."
-	sudo chmod -R g+rwX "$1"
-	#printf "."
+	if [[ -d $1 ]]; then
 
-	sudo find "$1" -type d -exec chmod g+s '{}' +
-	#printf "."
-	#echo -e " ${GREEN}done${RESET}"
+		#printf "Fixing git permissions in ($1) ..."
+		sudo chmod -R g+rwX "$1"
+		#printf "."
 
-}
+		sudo find "$1" -type d -exec chmod g+s '{}' +
+		#printf "."
+		#echo -e " ${GREEN}done${RESET}"
 
-function permission_update {
+	else
 
-
-	printf "Fixing file permissions in ($1) ..."
-
-
-	# Git permission update
-	if [[ -d "$1/.git" ]]; then
-
-		git_permission_update "$1/.git"
+		echo "'$1' folder not found."
 
 	fi
 
+}
 
-	# # For the main folder
-	# chown $(logname):staff "$1"
-	# printf "."
-	# chmod g+rwX "$1"
-	# printf "."
+function node_permission_update {
+
+	if [[ -d $1 ]]; then
+
+		printf "Fixing node file permissions on '$1' folder ..."
+		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1) $1
+		echo -e " ${GREEN}done${RESET}"
+
+	else
+
+		echo "'$1' folder not found."
+
+	fi
+
+}
+
+function file_permission_update {
+
+	if [[ -d $1 ]]; then
 
 
-	#sudo chown -R $(logname):staff $1
-	sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
-	printf "."
-
-	
-	sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod g+rwX {} \;
+		printf "Fixing file permissions in ($1) ..."
 
 
-	# Folders
-	#sudo find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
-	#printf "."
+		# Git permission update
+		if [[ -d "$1/.git" ]]; then
 
-	# Files
-	#sudo find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+			git_permission_update "$1/.git"
+
+		fi
 
 
-	echo -e " ${GREEN}done${RESET}"
+		# # For the main folder
+		# chown $(logname):staff "$1"
+		# printf "."
+		# chmod g+rwX "$1"
+		# printf "."
+
+
+		#sudo chown -R $(logname):staff $1
+		sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
+		printf "."
+
+		
+		sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod g+rwX {} \;
+
+
+		# Folders
+		#sudo find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
+		#printf "."
+
+		# Files
+		#sudo find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+
+
+		echo -e " ${GREEN}done${RESET}"
+
+
+	else
+
+		echo "'$1' folder not found."
+
+	fi
 
 }
 

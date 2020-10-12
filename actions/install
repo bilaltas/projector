@@ -118,7 +118,7 @@ source "$PROJECTDIR/.env"
 
 
 # Update the permissions
-permission_update "$PROJECTDIR"
+file_permission_update "$PROJECTDIR"
 
 
 

@@ -210,7 +210,7 @@ echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 
 
 # Permission fix
-permission_update "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+file_permission_update "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 
 
 
@@ -227,7 +227,7 @@ echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
 
 
 # Update the permissions
-permission_update "$PROJECTDIR"
+file_permission_update "$PROJECTDIR"
 
 
 

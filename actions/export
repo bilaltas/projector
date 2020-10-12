@@ -79,7 +79,7 @@ fi
 
 
 # Permission fix on 'export' folder
-permission_update "$PROJECTDIR/export"
+file_permission_update "$PROJECTDIR/export"
 
 
 
@@ -199,7 +199,7 @@ fi
 
 
 # Permission fix on 'export' folder
-permission_update "$PROJECTDIR/export"
+file_permission_update "$PROJECTDIR/export"
 
 
 
