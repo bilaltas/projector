@@ -272,7 +272,7 @@ function run_server_if_not_running {
 function server_permission_update {
 
 
-	printf "Fixing server file permissions in ($1) ..."
+	printf "Fixing server file permissions in '$1' ..."
 	docker_compose exec wpcli chown -R www-data:www-data "$1"
 	# docker_compose exec wpcli chmod -R a=rwx $1
 	docker_compose exec wpcli find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
@@ -286,7 +286,7 @@ function git_permission_update {
 
 	if [[ -d $1 ]]; then
 
-		#printf "Fixing git permissions in ($1) ..."
+		#printf "Fixing git permissions in '$1' ..."
 		sudo chmod -R g+rwX "$1"
 		#printf "."
 
@@ -306,7 +306,7 @@ function node_permission_update {
 
 	if [[ -d $1 ]]; then
 
-		printf "Fixing node file permissions on '$1' folder ..."
+		printf "Fixing node file permissions in '$1' ..."
 		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1) $1
 		echo -e " ${GREEN}done${RESET}"
 
@@ -323,7 +323,7 @@ function file_permission_update {
 	if [[ -d $1 ]]; then
 
 
-		printf "Fixing file permissions in ($1) ..."
+		printf "Fixing file permissions in '$1' ..."
 
 
 		# Git permission update
