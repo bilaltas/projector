@@ -210,6 +210,29 @@ function revert_installation {
 function run_server {
 
 
+	docker_compose up -d --remove-orphans wpcli db
+
+	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+		CONTAINERRUNNING="yes"
+		echo -e "Services started ... ${GREEN}done${RESET}"
+
+
+		# Check if WPCLI exists
+		docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+
+	else
+
+		echo -e "${RED}Services could not be started${RESET}"
+
+	fi
+
+
+}
+
+function reset_server {
+
+
 	docker_compose up -d --force-recreate --remove-orphans wpcli db
 
 	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
