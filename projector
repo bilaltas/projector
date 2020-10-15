@@ -85,8 +85,6 @@ if [[ -z $ACTION ]]; then
 	echo -e "  "
 	echo -e "  ${BLUE}run${RESET}              Restart the containers to run the project"
 	echo -e "  "
-	echo -e "  ${BLUE}recreate-server${RESET}  Recreate the containers to run the project"
-	echo -e "  "
 	echo -e "  ${BLUE}stop${RESET}             Stop the servers of an installed project"
 	echo -e "  "
 	echo -e "  "

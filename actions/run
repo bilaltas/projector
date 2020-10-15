@@ -42,8 +42,8 @@ fi
 
 
 
-# Run the server
-run_server
+# Restart the server
+reset_server
 
 
 
