@@ -58,6 +58,9 @@ if [[ -z $ACTION ]]; then
 	echo -e "       --existing         In development: Start with an existing site"
 	echo -e "  "
 	echo -e "  ${BLUE}clone${RESET}            Clone a project from Git"
+	echo -e "     Options:"
+	echo -e "       <git_url>          Clone from a git URL (https://example.com/username/reponame.git)"
+	echo -e "       <projectname>      Clone from a Twelve12 project (project-name)"
 	echo -e "  "
 	echo -e "  ${BLUE}install${RESET}          Install a project that already clonned or created"
 	echo -e "  "
@@ -190,6 +193,23 @@ if [[ $ACTION != ssh-fix ]]; then
 
 		# Remove slash at the end
 		SLUG=${SLUG%/}
+
+
+		# URL check for git repo
+		regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+		if [[ $SLUG =~ $regex ]]; then
+
+			GIT_REPO=$SLUG
+
+			# Get repo name
+			basename=$(basename $SLUG)
+			SLUG=${basename%.*}
+
+		else
+
+			GIT_REPO="https://github.com/twelve12/${SLUG}.git"
+
+		fi
 
 
 		# Project info
