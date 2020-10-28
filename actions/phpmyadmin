@@ -39,7 +39,7 @@ fi
 # Check if container is running
 if [[ $CONTAINERRUNNING != "yes" ]]; then
 
-	echo -e "${RED}Cannot start phpMyAdmin because server is not running. Use 'projector start' command first.${RESET}"
+	echo -e "${RED}Cannot start phpMyAdmin because server is not running. Use 'projector run' command first.${RESET}"
 	exit
 
 fi
@@ -59,7 +59,7 @@ fi
 
 
 
-# Stop the server
+# Start the PhpMyAdmin container
 echo "PhpMyAdmin is starting..."
 docker_compose up -d --force-recreate phpmyadmin
 echo -e "PhpMyAdmin is starting ... ${GREEN}done${RESET}"

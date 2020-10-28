@@ -64,6 +64,8 @@ if [[ -z $ACTION ]]; then
 	echo -e "  "
 	echo -e "  ${BLUE}install${RESET}          Install a project that already clonned or created"
 	echo -e "  "
+	echo -e "  ${BLUE}open${RESET}             Open the development URL on default browser"
+	echo -e "  "
 	echo -e "  ${BLUE}uninstall${RESET}        Uninstall a project that already installed"
 	echo -e "     Options:"
 	echo -e "       --remove           Removes the project folder after uninstallation"

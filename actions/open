@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+
+
+# Check if the folder not exists
+if [[ ! -d "$PROJECTDIR" ]]; then
+
+	echo -e "${RED}Project doesn't exist.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if installed
+if [[ $INSTALLED != "yes" ]]; then
+
+	echo -e "${RED}Project is not installed.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if container exists
+if [[ $CONTAINEREXISTS != "yes" ]]; then
+
+	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Check if container is running
+if [[ $CONTAINERRUNNING != "yes" ]]; then
+
+	echo -e "${RED}Cannot open the site because server is not running. Use 'projector run' command first.${RESET}"
+	exit
+
+fi
+
+
+
+
+# Open the development URL
+echo -e "${GREEN}Development site is opening... (http://$DOMAIN)${RESET}"
+sleep 2
+open "http://$DOMAIN"

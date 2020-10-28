@@ -351,3 +351,9 @@ echo ""
 
 
 echo -e "Installing '$SLUG' project ... ${GREEN}done${RESET}"
+
+
+
+
+# Open the link in browser
+source "$BUILDERDIR/actions/open"
