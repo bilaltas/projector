@@ -320,7 +320,7 @@ function node_permission_update {
 
 function file_permission_update {
 
-	if [[ -d $1 ]]; then
+	if [[ -d $1 ]] || [[ -f $1 ]]; then
 
 
 		printf "Fixing file permissions in '$1' ..."
