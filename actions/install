@@ -235,6 +235,13 @@ CONTAINERRUNNING="yes"
 
 
 
+# Remove default URL config
+sedreplace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php";
+sedreplace "s/define('WP_HOME/\/\/define('WP_HOME/g" "$PROJECTDIR/wp/wp-config.php";
+
+
+
+
 # Import the DB
 OPTION1=--import
 source "$BUILDERDIR/actions/db"
