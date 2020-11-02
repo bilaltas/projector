@@ -81,7 +81,7 @@ if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
 
 	fi
 
-	
+
 	# Hard reset
 	echo "Hard reset files..."
 	sudo git fetch
@@ -89,7 +89,7 @@ if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
 
 
 	if [[ $INSTALLED != "yes" ]]; then
-		
+
 		sudo git clean -dfx
 		echo -e "Hard reset files ... ${GREEN}done${RESET}"
 
@@ -126,58 +126,84 @@ if sudo git remote get-url --all origin &> /dev/null; then
 	PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
 	if [[ $PULL == "Already up to date." ]]; then
 
+
 		echo -e "Git pull ... ${BLUE}already up to date${RESET}"
 
+
+		if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
+
+			# Import the DB
+			OPTION1=--import
+			source "$BUILDERDIR/actions/db"
+
+		fi
+
+
 	elif [[ $PULL ]]; then
+
 
 		echo -e "Git pull ... ${GREEN}done${RESET}"
 
 
-		# DETECT DB CHANGES
-		file_permission_update "$DB_FILE"
-		DB_SUM2=$(md5 -r "$DB_FILE")
-		if [[ $DB_SUM1 != $DB_SUM2 ]]; then
+		if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
 
 
-			echo -e "${BLUE}DB changed${RESET}"
+			# Import the DB
+			OPTION1=--import
+			source "$BUILDERDIR/actions/db"
 
 
-			# If installed
-			if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
+		else # Not --hard
 
 
-				# Confirm before changing DB
-				read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
-				if [[ $confirm == no ]] || [[  $confirm == n ]]; then
+			# DETECT DB CHANGES
+			file_permission_update "$DB_FILE"
+			DB_SUM2=$(md5 -r "$DB_FILE")
+			if [[ $DB_SUM1 != $DB_SUM2 ]]; then
 
-					echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
-					exit
+
+				echo -e "${BLUE}DB changed${RESET}"
+
+
+				# If installed
+				if [[ $INSTALLED == "yes" ]] && [[ $CONTAINEREXISTS == "yes" ]]; then
+
+
+					# Confirm before changing DB
+					read -ep "DB has been changed by the last commit. Would you like to continue replacing your local site data with the new one? (yes | no): " confirm
+					if [[ $confirm == no ]] || [[  $confirm == n ]]; then
+
+						echo -e "${BLUE}Pulling complete without replacing the DB${RESET}"
+						exit
+
+					fi
+
+
+					# Import the DB
+					OPTION1=--import
+					source "$BUILDERDIR/actions/db"
+
+
+				else
+
+
+					printf "Old data removing ..."
+					sudo rm -rf "$PROJECTDIR/database/mysql"
+					echo -e " ${GREEN}done${RESET}"
+
+
+					echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
+
 
 				fi
 
 
-				# Import the DB
-				OPTION1=--import
-				source "$BUILDERDIR/actions/db"
-
-
 			else
 
-
-				printf "Old data removing ..."
-				sudo rm -rf "$PROJECTDIR/database/mysql"
-				echo -e " ${GREEN}done${RESET}"
-
-
-				echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
-
+				echo -e "${BLUE}DB is identical.${RESET}"
 
 			fi
 
-
-		else
-
-			echo -e "${BLUE}DB is identical.${RESET}"
 
 		fi
 
@@ -194,6 +220,7 @@ if sudo git remote get-url --all origin &> /dev/null; then
 	else
 
 		echo -e "Git pull ... ${RED}not done${RESET}"
+		exit
 
 	fi
 
