@@ -202,25 +202,24 @@ fi # If not running
 
 
 
-# Install WP-CLI
-source "$BUILDERDIR/actions/install-wpcli"
+# # Install WP-CLI
+# source "$BUILDERDIR/actions/install-wpcli"
 
 
 
+# # Check if WPCLI installed
+# if docker_compose exec wpcli [ ! -f "/usr/local/bin/wp" ]; then
 
-# Check if WPCLI installed
-if docker_compose exec wpcli [ ! -f "/usr/local/bin/wp" ]; then
+# 	revert_installation
 
-	revert_installation
-
-fi
+# fi
 
 
 
 
 # Check files to be ready
-printf "Files are being ready ..."
-while [[ ! -f "$PROJECTDIR/wp/wp-config.php" ]]; do
+printf "Initializing Wordpress ..."
+while [[ ! -f "$PROJECTDIR/wp/.initialized" ]]; do
 	printf "."
 	sleep 3
 done
@@ -232,6 +231,13 @@ echo -e " ${GREEN}done${RESET}"
 INSTALLED="yes"
 CONTAINEREXISTS="yes"
 CONTAINERRUNNING="yes"
+
+
+
+
+# Import the DB
+OPTION1=--import
+source "$BUILDERDIR/actions/db"
 
 
 

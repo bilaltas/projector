@@ -2,74 +2,51 @@ version: "2.1"
 
 services:
     wpcli:
-        # build:
-        #     context: .
-        #     args:
-        #         WORDPRESS_VERSION: ${WP_VERSION}
-        image: wordpress:${WP_VERSION}
+        image: 'docker.io/bitnami/wordpress:${WP_VERSION}'
         container_name: "${PREFIX}_wpcli"
         restart: "always"
         depends_on:
             db:
                 condition: service_healthy
         ports:
-            - $IP:80:80
+            - $IP:80:8080
+            - $IP:443:8443
         volumes:
-            - "$BUILDER_DIR/config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:cached"
-            - "$PROJECT_DIR/wp:/var/www/html:cached"
-            - "$PROJECT_DIR/wp/wp-content/themes:/var/www/html/wp-content/themes:consistent"
-            - "$PROJECT_DIR/logs:/var/log/apache2:cached"
+            - "$PROJECT_DIR/wp:/bitnami/wordpress"
         environment:
-            WORDPRESS_DB_HOST: db
-            WORDPRESS_DB_NAME: wordpress_data
-            WORDPRESS_DB_USER: root
-            WORDPRESS_DB_PASSWORD: password
-            WORDPRESS_TABLE_PREFIX: ${DB_PREFIX}
-        networks:
-            - wp-network
+            - MARIADB_HOST=db
+            - MARIADB_PORT_NUMBER=3306
+            - ALLOW_EMPTY_PASSWORD=yes
+            - WORDPRESS_DATABASE_USER=wp_user
+            - WORDPRESS_DATABASE_NAME=wordpress_data
+            - WORDPRESS_TABLE_PREFIX=${DB_PREFIX}
+            - WORDPRESS_SKIP_INSTALL=yes
 
     db:
-        image: mysql:5.7.31
+        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
         container_name: "${PREFIX}_mysql"
         restart: "always"
-        command:
-            [
-                "--default_authentication_plugin=mysql_native_password",
-                "--character-set-server=utf8mb4",
-                "--collation-server=utf8mb4_unicode_ci",
-            ]
         volumes:
-            - "$PROJECT_DIR/database/dump:/docker-entrypoint-initdb.d:cached"
-            - "$PROJECT_DIR/database/mysql:/var/lib/mysql:consistent"
+            - "$PROJECT_DIR/database/mysql:/bitnami/wordpress"
         environment:
-            MYSQL_DATABASE: wordpress_data
-            MYSQL_ROOT_PASSWORD: password
+            - MARIADB_USER=wp_user
+            - MARIADB_DATABASE=wordpress_data
+            - ALLOW_EMPTY_PASSWORD=yes
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             timeout: 5s
             retries: 20
-        networks:
-            - wp-network
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
+        image: 'docker.io/bitnami/phpmyadmin:5-debian-10'
         container_name: "${PREFIX}_phpmyadmin"
         restart: "no"
         depends_on:
             - db
         ports:
-            - $IP:8000:80
+            - $IP:8000:8080
         environment:
-            MYSQL_USER: root
-            MYSQL_PASSWORD: password
-            MYSQL_ROOT_PASSWORD: password
-            PMA_USER: root
-            PMA_PASSWORD: password
-        networks:
-            - wp-network
-
-volumes:
-    persistent:
-networks:
-    wp-network:
-        driver: bridge
+            - PHPMYADMIN_ALLOW_ARBITRARY_SERVER=yes
+            - DATABASE_ALLOW_NO_PASSWORD=yes
+            - DATABASE_HOST=db
+            - DATABASE_PORT_NUMBER=3306

@@ -218,8 +218,8 @@ function run_server {
 		echo -e "Services started ... ${GREEN}done${RESET}"
 
 
-		# Check if WPCLI exists
-		docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+		# # Check if WPCLI exists
+		# docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
 
 	else
 
@@ -241,8 +241,8 @@ function reset_server {
 		echo -e "Services started ... ${GREEN}done${RESET}"
 
 
-		# Check if WPCLI exists
-		docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+		# # Check if WPCLI exists
+		# docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
 
 	else
 
@@ -420,7 +420,7 @@ function db_backup {
 		# Save the DB backup
 		printf "Backing up the DB ..."
 		DB_FILE_NAME=wordpress_data.sql
-		if wp_no_extra db export $DB_FILE_NAME --quiet; then
+		if wp_no_extra db export /bitnami/wordpress/$DB_FILE_NAME --quiet; then
 
 			sudo mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
 			echo -e " ${GREEN}done${RESET}"
@@ -457,7 +457,7 @@ function db_import {
 		# Import the DB
 		printf "Importing DB ..."
 		wp_no_extra db reset --yes --quiet
-		if wp_no_extra db import "wordpress_data.sql" --quiet; then
+		if wp_no_extra db import "/bitnami/wordpress/wordpress_data.sql" --quiet; then
 
 			echo -e " ${GREEN}done${RESET}"
 

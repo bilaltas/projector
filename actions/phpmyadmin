@@ -61,7 +61,7 @@ fi
 
 # Start the PhpMyAdmin container
 echo "PhpMyAdmin is starting..."
-docker_compose up -d --force-recreate phpmyadmin
+docker_compose up -d phpmyadmin
 echo -e "PhpMyAdmin is starting ... ${GREEN}done${RESET}"
 
 
