@@ -12,8 +12,8 @@ services:
             - $IP:80:8080
             - $IP:443:8443
         volumes:
-            - "$PROJECT_DIR/wp:/bitnami/wordpress:cached"
-            - "$PROJECT_DIR/wp/wp-content/themes:/bitnami/wordpress/wp-content/themes:consistent"
+            - "$BUILDER_DIR/config/php.ini:/opt/bitnami/php/lib/php.ini"
+            - "$PROJECT_DIR/wp:/bitnami/wordpress:consistent"
         environment:
             - MARIADB_HOST=db
             - MARIADB_PORT_NUMBER=3306
@@ -51,6 +51,3 @@ services:
             - DATABASE_ALLOW_NO_PASSWORD=yes
             - DATABASE_HOST=db
             - DATABASE_PORT_NUMBER=3306
-
-volumes:
-    persistent:
