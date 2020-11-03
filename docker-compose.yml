@@ -12,7 +12,7 @@ services:
             - $IP:80:8080
             - $IP:443:8443
         volumes:
-            - "$PROJECT_DIR/wp:/bitnami/wordpress"
+            - "$PROJECT_DIR/wp:/bitnami/wordpress:consistent"
         environment:
             - MARIADB_HOST=db
             - MARIADB_PORT_NUMBER=3306
@@ -27,7 +27,7 @@ services:
         container_name: "${PREFIX}_mysql"
         restart: "always"
         volumes:
-            - "$PROJECT_DIR/database/mysql:/bitnami/wordpress"
+            - "$PROJECT_DIR/database/mysql:/bitnami/wordpress:consistent"
         environment:
             - MARIADB_USER=wp_user
             - MARIADB_DATABASE=wordpress_data
