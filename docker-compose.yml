@@ -51,3 +51,6 @@ services:
             - DATABASE_ALLOW_NO_PASSWORD=yes
             - DATABASE_HOST=db
             - DATABASE_PORT_NUMBER=3306
+
+volumes:
+    persistent:
