@@ -35,22 +35,6 @@ fi
 
 
 
-# # Check if container exists
-# if [[ $CONTAINEREXISTS != "yes" ]]; then
-
-# 	echo -e "${RED}Containers not found. Please re-install the project.${RESET}"
-
-# fi
-
-
-
-
-# # Run server if not running
-# run_server_if_not_running
-
-
-
-
 # Fix the site git permissions
 if [[ -d "$PROJECTDIR/.git" ]]; then
 

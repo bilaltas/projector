@@ -28,7 +28,7 @@ services:
         container_name: "${PREFIX}_mysql"
         restart: "always"
         volumes:
-            - "$PROJECT_DIR/database/mysql:/bitnami/wordpress:consistent"
+            - "$PROJECT_DIR/database/mysql:/bitnami/mariadb:consistent"
         environment:
             - MARIADB_USER=wp_user
             - MARIADB_DATABASE=wordpress_data

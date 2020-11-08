@@ -139,8 +139,10 @@ fi
 # CHECK THE LOCAL DOMAIN AVAILABILITY
 printf "Checking '${DOMAIN}' availability ..."
 if grep -q "${DOMAIN}" /etc/hosts; then
+
 	echo -e " ${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
 	exit
+
 fi
 echo -e " ${GREEN}available${RESET}"
 
@@ -185,59 +187,8 @@ echo -e "Local IP(${IP}) is now available to build server ... ${GREEN}done${RESE
 
 
 
-# BUILD THE SERVER
-echo "Server is building..."
-docker_compose up -d --build --force-recreate --remove-orphans wpcli db
-
-
-
-
-# Check if services are running
-if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
-
-	revert_installation
-
-fi # If not running
-
-
-
-
-# # Install WP-CLI
-# source "$BUILDERDIR/actions/install-wpcli"
-
-
-
-# # Check if WPCLI installed
-# if docker_compose exec wpcli [ ! -f "/usr/local/bin/wp" ]; then
-
-# 	revert_installation
-
-# fi
-
-
-
-
-# Check files to be ready
-printf "Initializing Wordpress ..."
-while [[ ! -f "$PROJECTDIR/wp/.initialized" ]]; do
-	printf "."
-	sleep 3
-done
-echo -e " ${GREEN}done${RESET}"
-
-
-
-
-INSTALLED="yes"
-CONTAINEREXISTS="yes"
-CONTAINERRUNNING="yes"
-
-
-
-
-# Remove default URL config
-sedreplace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php";
-sedreplace "s/define('WP_HOME/\/\/define('WP_HOME/g" "$PROJECTDIR/wp/wp-config.php";
+# CREATE THE SERVER
+run_server "reinstall"
 
 
 
@@ -249,6 +200,16 @@ source "$BUILDERDIR/actions/db"
 
 
 
+# Check if services are running
+if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+	revert_installation
+
+fi
+
+
+
+
 # Add the host to the /etc/hosts file
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
 #sudo killall -HUP mDNSResponder
@@ -256,40 +217,23 @@ sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
 
 
 
-# Update the temporary files
-if [[ $MODE != install-starter ]]; then
-
-	make_permanent
-
-fi
-
-
-
-
-# Do the WP works if starter
+# Starter mode
 if [[ $MODE == install-starter ]]; then
 
+
+	# Do the WP works
 	source "$BUILDERDIR/config/wp.sh"
 
-fi
 
-
-
-
-# Ask the registered URL and do the replacements
-if [[ $MODE != install-starter ]]; then
-
-	db_url_update
-
-fi
-
-
-
-
-# Save the initial DB backup
-if [[ $MODE == install-starter ]]; then
-
+	# Save the initial DB backup
 	db_backup
+
+
+# Normal installation
+else
+
+	# Update the temporary files
+	make_permanent
 
 fi
 

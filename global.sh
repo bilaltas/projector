@@ -170,12 +170,26 @@ function docker_compose {
 			cd "$PROJECTDIR"
 			sudo docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
 		)
-	
+
 	else
 
 		echo -e "${RED}Cannot do any docker-compose command because project is not installed.${RESET}"
 
 	fi
+
+}
+
+function wait_for_wp_initialization {
+
+
+	# Check files to be ready
+	printf "Initializing Wordpress ..."
+	while [[ ! -f "$PROJECTDIR/wp/.initialized" ]]; do
+		printf "."
+		sleep 3
+	done
+	echo -e " ${GREEN}done${RESET}"
+
 
 }
 
@@ -210,39 +224,38 @@ function revert_installation {
 function run_server {
 
 
-	docker_compose up -d --remove-orphans wpcli db
+	if [[ -z $1 ]]; then
 
-	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
-
-		CONTAINERRUNNING="yes"
-		echo -e "Services started ... ${GREEN}done${RESET}"
-
-
-		# # Check if WPCLI exists
-		# docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+		echo "Server is starting..."
+		docker_compose up -d --remove-orphans wpcli db
 
 	else
 
-		echo -e "${RED}Services could not be started${RESET}"
+		echo "Server is being created..."
+		docker_compose up -d --force-recreate --remove-orphans wpcli db
 
 	fi
 
 
-}
-
-function reset_server {
-
-
-	docker_compose up -d --force-recreate --remove-orphans wpcli db
-
 	if [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] && [[ ! -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
-		CONTAINERRUNNING="yes"
+
 		echo -e "Services started ... ${GREEN}done${RESET}"
 
 
-		# # Check if WPCLI exists
-		# docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
+		# Wait for initialization
+		wait_for_wp_initialization
+
+
+		INSTALLED="yes"
+		CONTAINEREXISTS="yes"
+		CONTAINERRUNNING="yes"
+
+
+		# Remove default URL config
+		sedreplace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php";
+		sedreplace "s/define('WP_HOME/\/\/define('WP_HOME/g" "$PROJECTDIR/wp/wp-config.php";
+
 
 	else
 
@@ -260,7 +273,7 @@ function run_server_if_not_running {
 	if [[ $CONTAINEREXISTS == "yes" ]] && [[ $CONTAINERRUNNING == "no" ]]; then
 
 
-		echo -e "Services not running. Starting ..."
+		echo -e "Services not running."
 		run_server
 
 
@@ -345,7 +358,7 @@ function file_permission_update {
 		sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
 		printf "."
 
-		
+
 		sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod g+rwX {} \;
 
 
