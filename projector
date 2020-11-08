@@ -125,7 +125,7 @@ if [[ -z $ACTION ]]; then
 	echo -e "  "
 	echo -e "================================="
 	echo -e ""
-	
+
 	exit;
 	read -ep "Write the action type: " ACTION
 	if [[ -z $ACTION ]]; then
@@ -339,10 +339,6 @@ if [[ $ACTION != ssh-fix ]]; then
 
 				CONTAINERRUNNING="yes"
 				echo -e " ${GREEN}running${RESET}"
-
-
-				# # Check if WPCLI exists
-				# docker_compose exec wpcli [ -f "/usr/local/bin/wp" ] && sleep 0 || source "$BUILDERDIR/actions/install-wpcli"
 
 
 			else
