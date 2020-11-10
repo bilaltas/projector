@@ -121,6 +121,11 @@ if sudo git remote get-url --all origin &> /dev/null; then
 
 
 
+	# Resetting the output files first, not to get false conflicts
+	git checkout "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css" "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css.map"
+
+
+
 	# Pulling latest changes from git
 	echo "Checking the latest remote changes..."
 	PULL=$(sudo git --work-tree="$PROJECTDIR" pull)
@@ -142,9 +147,10 @@ if sudo git remote get-url --all origin &> /dev/null; then
 	elif [[ $PULL ]]; then
 
 
-		echo -e "Git pull ... ${GREEN}done${RESET}"
+		# echo -e "Git pull ... ${GREEN}done${RESET}"
 
 
+		# DETECT DB CHANGES
 		if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
 
 
@@ -156,7 +162,6 @@ if sudo git remote get-url --all origin &> /dev/null; then
 		else # Not --hard
 
 
-			# DETECT DB CHANGES
 			file_permission_update "$DB_FILE"
 			DB_SUM2=$(md5 -r "$DB_FILE")
 			if [[ $DB_SUM1 != $DB_SUM2 ]]; then
