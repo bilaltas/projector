@@ -230,6 +230,20 @@ if sudo git remote get-url --all origin &> /dev/null; then
 	fi
 
 
+
+	# Rebuild the CSS file
+	if [[ -d "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules/gulp" ]] && [[ -f "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/gulpfile.js" ]]; then
+
+		# RUN THE GULP
+		echo "Style file is rebuilding..."
+		(
+			cd "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME"
+			gulp build
+		)
+
+	fi
+
+
 else
 
 	echo -e "${BLUE}Pull skipped. No remote added.${RESET}"
