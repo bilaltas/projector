@@ -238,7 +238,7 @@ if sudo git remote get-url --all origin &> /dev/null; then
 		echo "Style file is rebuilding..."
 		(
 			cd "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME"
-			gulp build
+			npm run build
 		)
 
 	fi
