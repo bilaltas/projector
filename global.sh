@@ -127,14 +127,18 @@ function update_environment {
 	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" "$LOCAL_ENV";
 	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" "$LOCAL_ENV";
 	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "$LOCAL_ENV";
-	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" "$LOCAL_ENV";
-	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" "$LOCAL_ENV";
 
 	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" "$LOCAL_ENV";
 	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" "$LOCAL_ENV";
 	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" "$LOCAL_ENV";
 	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "$LOCAL_ENV";
 	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "$LOCAL_ENV";
+
+	sedreplace "s:TIMEZONE=\"America/Los_Angeles\":TIMEZONE=\"$TIMEZONE\":g" "$LOCAL_ENV";
+	sedreplace "s:POST_PERMALINK=\"/%category%/%postname%/\":POST_PERMALINK=\"$POST_PERMALINK\":g" "$LOCAL_ENV";
+
+	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" "$LOCAL_ENV";
+	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" "$LOCAL_ENV";
 
 	#echo -e "local.env file updated with the new info ... ${GREEN}done${RESET}"
 
