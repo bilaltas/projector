@@ -122,7 +122,11 @@ if sudo git remote get-url --all origin &> /dev/null; then
 
 
 	# Resetting the output files first, not to get false conflicts
-	git checkout "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css" "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css.map"
+	if [[ -f "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css" ]] && [[ -f "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css.map" ]] && [[ -f "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/gulpfile.js" ]] && [[ -d "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules/gulp" ]]; then
+
+		git checkout "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css" "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/style.css.map"
+
+	fi
 
 
 
