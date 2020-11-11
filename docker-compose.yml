@@ -14,7 +14,7 @@ services:
         volumes:
             - "$BUILDER_DIR/config/php.ini:/opt/bitnami/php/lib/php.ini"
             - "$PROJECT_DIR/wp:/bitnami/wordpress:consistent"
-			- "$PROJECT_DIR/logs:/opt/bitnami/apache/logs:cached"
+            - "$PROJECT_DIR/logs:/opt/bitnami/apache/logs:cached"
         environment:
             - MARIADB_HOST=db
             - MARIADB_PORT_NUMBER=3306
