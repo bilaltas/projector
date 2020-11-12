@@ -22,3 +22,4 @@ projector
 * Detect conflicts when pulling
 * Add ability to revert to any commit with DB
 * Add ability to work with branches
+* Better DB change handling
