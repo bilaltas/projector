@@ -20,5 +20,5 @@ projector
 ## Todo
 * Reduce the need of permission fix after clonning and pulling
 * Detect conflicts when pulling
-* Add ability to revert to any commit message
+* Add ability to revert to any commit with DB
 * Add ability to work with branches
