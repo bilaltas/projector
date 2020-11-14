@@ -210,7 +210,7 @@ source "$BUILDERDIR/actions/db"
 
 
 
-# Check if services are running
+# Check if services are still running
 if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
 
 	revert_installation
