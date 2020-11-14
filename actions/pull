@@ -250,6 +250,17 @@ if sudo git remote get-url --all origin &> /dev/null; then
 
 else
 
+
 	echo -e "${BLUE}Pull skipped. No remote added.${RESET}"
+
+
+	# DB import if no remote, when hard resetting
+	if [[ $OPTION1 == --hard ]] || [[ $OPTION2 == --hard ]]; then
+
+		OPTION1=--import
+		source "$BUILDERDIR/actions/db"
+
+	fi
+
 
 fi
