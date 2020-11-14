@@ -186,11 +186,19 @@ function docker_compose {
 function wait_for_wp_initialization {
 
 
-	# Check files to be ready
+	FILE="$PROJECTDIR/wp/.initialized"
+
+	if [[ $FILE ]]; then
+
+		FILE="$PROJECTDIR/wp/.restored"
+
+	fi
+
+
 	printf "Initializing Wordpress ..."
-	while [[ ! -f "$PROJECTDIR/wp/.initialized" ]]; do
+	while [[ ! -f $FILE ]]; do
 		printf "."
-		sleep 3
+		sleep 6
 	done
 	echo -e " ${GREEN}done${RESET}"
 

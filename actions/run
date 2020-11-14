@@ -42,6 +42,16 @@ fi
 
 
 
+# Restore file removal
+if [[ -f "$PROJECTDIR/wp/.restored" ]]; then
+
+	rm "$PROJECTDIR/wp/.restored"
+
+fi
+
+
+
+
 # Restart the server
 run_server "reinstall"
 

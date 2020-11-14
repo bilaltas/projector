@@ -6,8 +6,7 @@ services:
         container_name: "${PREFIX}_wpcli"
         restart: "always"
         depends_on:
-            db:
-                condition: service_healthy
+            - db
         ports:
             - $IP:80:8080
             - $IP:443:8443
@@ -34,10 +33,6 @@ services:
             - MARIADB_USER=wp_user
             - MARIADB_DATABASE=wordpress_data
             - ALLOW_EMPTY_PASSWORD=yes
-        healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-            timeout: 5s
-            retries: 20
 
     phpmyadmin:
         image: 'docker.io/bitnami/phpmyadmin:5-debian-10'
