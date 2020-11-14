@@ -193,6 +193,16 @@ run_server "reinstall"
 
 
 
+# Check if services are running
+if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+	revert_installation
+
+fi
+
+
+
+
 # Import the DB
 OPTION1=--import
 source "$BUILDERDIR/actions/db"
