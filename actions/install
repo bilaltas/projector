@@ -204,8 +204,12 @@ fi
 
 
 # Import the DB
-OPTION1=--import
-source "$BUILDERDIR/actions/db"
+if [[ -f "$PROJECTDIR/database/dump/wordpress_data.sql" ]]; then
+
+	OPTION1=--import
+	source "$BUILDERDIR/actions/db"
+
+fi
 
 
 
