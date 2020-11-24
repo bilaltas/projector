@@ -1,24 +1,8 @@
 #!/bin/bash
 
 
-if [[ ${DEVELOPER_EMAIL} != *@twelve12.com ]]; then
-
-	ADMIN_EMAIL=${DEVELOPER_EMAIL}
-	ADMIN_USERNAME=${DEVELOPER_USERNAME}
-	ADMIN_NAME=${DEVELOPER_NAME}
-	ADMIN_LAST_NAME=${DEVELOPER_LAST_NAME}
-	ADMIN_URL=${DEVELOPER_URL}
-
-else
-
-	ADMIN_EMAIL="webdesign@twelve12.com"
-	ADMIN_USERNAME="Twelve12"
-	ADMIN_NAME="Bill"
-	ADMIN_LAST_NAME="T."
-	ADMIN_URL="https://www.twelve12.com"
-
-fi
-
+# Reset existing DB first
+wp db reset --yes
 
 # WP Installation
 ADMIN_PASSWORD_INFO="$(wp core install --url="http://${DOMAIN}" --title="${NAME}" --admin_user=${ADMIN_USERNAME} --admin_email=${ADMIN_EMAIL} --skip-email)"
@@ -68,12 +52,6 @@ wp rewrite structure "${POST_PERMALINK}"
 
 # Activate our theme
 wp theme activate $SLUG
-
-# Delete the default themes
-wp theme delete twentyseventeen twentynineteen
-
-# Delete the default plugins
-wp plugin delete akismet hello
 
 # Install the necessary plugins
 wp plugin install prevent-browser-caching --activate

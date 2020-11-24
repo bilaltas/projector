@@ -17,11 +17,19 @@ services:
         environment:
             - MARIADB_HOST=db
             - MARIADB_PORT_NUMBER=3306
-            - ALLOW_EMPTY_PASSWORD=yes
-            - WORDPRESS_DATABASE_USER=wp_user
             - WORDPRESS_DATABASE_NAME=wordpress_data
             - WORDPRESS_TABLE_PREFIX=${DB_PREFIX}
+            - WORDPRESS_DATABASE_USER=wp_user
+            - ALLOW_EMPTY_PASSWORD=yes
             - WORDPRESS_SKIP_INSTALL=yes
+            - WORDPRESS_RESET_DATA_PERMISSIONS=yes
+            - WORDPRESS_SCHEME=http
+            - WORDPRESS_USERNAME=${DEVELOPER_USERNAME}
+            - WORDPRESS_PASSWORD=projector
+            - WORDPRESS_EMAIL=${DEVELOPER_EMAIL}
+            - WORDPRESS_FIRST_NAME=${DEVELOPER_NAME}
+            - WORDPRESS_LAST_NAME=${DEVELOPER_LAST_NAME}
+            - WORDPRESS_BLOG_NAME=${NAME}
 
     db:
         image: 'docker.io/bitnami/mariadb:10.3-debian-10'

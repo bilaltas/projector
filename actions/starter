@@ -81,7 +81,7 @@ read -ep "Developer Email (${DEVELOPER_EMAIL}): " developer_email
 [[ ! -z "$developer_email" ]] && DEVELOPER_EMAIL=$developer_email || echo "Using '${DEVELOPER_EMAIL}'"
 
 
-if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
+if [[ $DEVELOPER_EMAIL != bilaltas@me.com ]]; then
 
 
 	read -ep "Developer Username (${DEVELOPER_USERNAME}): " developer_username
@@ -99,6 +99,20 @@ if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
 	read -ep "Developer Website URL (${DEVELOPER_URL}): " developer_url
 	[[ ! -z "$developer_url" ]] && DEVELOPER_URL=$developer_url || echo "Using '${DEVELOPER_URL}'"
 
+else
+
+
+	DEVELOPER_USERNAME="BilalTas"
+	DEVELOPER_NAME="Bilal"
+	DEVELOPER_LAST_NAME="Tas"
+	DEVELOPER_URL="https://www.bilaltas.net"
+
+	ADMIN_EMAIL=${DEVELOPER_EMAIL}
+	ADMIN_USERNAME=${DEVELOPER_USERNAME}
+	ADMIN_NAME=${DEVELOPER_NAME}
+	ADMIN_LAST_NAME=${DEVELOPER_LAST_NAME}
+	ADMIN_URL=${DEVELOPER_URL}
+
 
 fi
 
@@ -110,12 +124,15 @@ echo ""
 echo ""
 echo "== Information Entered ============"
 echo ""
-echo "Local development domain: $DOMAIN"
-echo ""
-echo "Project Name: $SLUG"
-echo "Short Name: $PREFIX"
-echo "WP Version: $WP_VERSION"
 
+
+	echo "Local Development Domain: $DOMAIN"
+	echo "WP Version: $WP_VERSION"
+	echo ""
+
+	echo "Project Name: $SLUG"
+	echo "Short Name: $PREFIX"
+	echo ""
 
 	echo "Website Name: $NAME"
 	echo "Website Tagline: $DESC"
@@ -123,16 +140,10 @@ echo "WP Version: $WP_VERSION"
 	echo ""
 
 	echo "Developer Email: $DEVELOPER_EMAIL"
-	if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
-
-		echo "Developer Username: $DEVELOPER_USERNAME"
-		echo "Developer First Name: $DEVELOPER_NAME"
-		echo "Developer Last Name: $DEVELOPER_LAST_NAME"
-		echo "Developer URL: $DEVELOPER_URL"
-		echo ""
-
-	fi
-
+	echo "Developer Username: $DEVELOPER_USERNAME"
+	echo "Developer First Name: $DEVELOPER_NAME"
+	echo "Developer Last Name: $DEVELOPER_LAST_NAME"
+	echo "Developer URL: $DEVELOPER_URL"
 
 
 echo ""
@@ -156,10 +167,12 @@ fi
 # Create the project folder
 if [[ ! -d "$PROJECTDIR" ]]; then
 
-	mkdir "$PROJECTDIR"
+	sudo mkdir "$PROJECTDIR"
 	echo -e "Project folder has been created ... ${GREEN}done${RESET}"
 
 fi
+
+
 
 
 # Update environment files with the new info
@@ -174,7 +187,7 @@ source "$PROJECTDIR/.env"
 
 # Download the template
 sudo rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-sudo git clone https://github.com/Twelve12com/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+sudo git clone https://github.com/bilaltas/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
 sudo rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/.git"
 echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
 

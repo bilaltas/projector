@@ -6,7 +6,8 @@ if [[ $OPTION1 == --all ]] || [[ $OPTION1 == --node ]] || [[ $OPTION2 == --node 
 
 
 	# Default folder
-	FOLDERTOFIX="$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
+	# FOLDERTOFIX="$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
+	FOLDERTOFIX="$PROJECTDIR"
 
 	# Custom Directory Fix
 	if [[ $OPTION1 == --node ]] && [[ -d $OPTION2 ]]; then
@@ -61,7 +62,7 @@ fi
 # Site folder permission update
 if [[ -z $OPTION1 ]] && [[ -z $OPTION2 ]]; then
 
-	node_permission_update "$PROJECTDIR/wp/wp-content/themes/$ACTIVE_THEME/node_modules"
+	node_permission_update "$PROJECTDIR"
 	git_permission_update "$PROJECTDIR/.git"
 	file_permission_update "$PROJECTDIR"
 

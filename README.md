@@ -2,6 +2,12 @@
 Wordpress development environment with Docker. Starter template is being developed with Flexible Grid System. (Only tested on MacOS)
 <br><br>
 
+## Why Projector
+* Docker based environment
+* Faster development starter
+* No need to deal with etc/hosts file
+* Works with the IP over 127.0.0.2+
+
 
 ## Installation
 Install the builder in an appropriate folder that you don't usually see, with the code below:

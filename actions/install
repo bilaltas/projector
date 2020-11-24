@@ -34,34 +34,17 @@ echo ""
 echo ""
 echo "== Site Info ============"
 echo ""
-echo "Local Development Domain: $DOMAIN"
-echo "WP Version: $WP_VERSION"
-echo ""
-echo "Project Name: $SLUG"
-echo "Short Name: $PREFIX"
-echo ""
 
-if [[ $MODE == install-starter ]]; then
 
-	echo "Website Name: $NAME"
-	echo "Website Tagline: $DESC"
-	[[ ! -z "$plugins" ]] && echo "Plugins: $plugins" || echo "Plugins: $PLUGINS"
+	echo "Local Development Domain: $DOMAIN"
+	echo "WP Version: $WP_VERSION"
 	echo ""
 
-	if [[ $DEVELOPER_EMAIL != webdesign@twelve12.com ]]; then
-		echo "Developer Email: $DEVELOPER_EMAIL"
-		echo "Developer Username: $DEVELOPER_USERNAME"
-		echo "Developer First Name: $DEVELOPER_NAME"
-		echo "Developer Last Name: $DEVELOPER_LAST_NAME"
-		echo "Developer URL: $DEVELOPER_URL"
-		echo ""
-	else
-		echo "Developer Email: $DEVELOPER_EMAIL"
-		echo ""
-	fi
+	echo "Project Name: $SLUG"
+	echo "Short Name: $PREFIX"
 
-fi
 
+echo ""
 echo "==================================="
 echo ""
 echo ""
@@ -90,11 +73,7 @@ echo -e "${GREEN}Confirmed.${RESET}"
 
 
 # Move the 'wp-content' folder TEMPORARILY
-if [[ $MODE != install-starter ]]; then
-
-	make_temporary
-
-fi
+make_temporary
 
 
 
@@ -194,11 +173,7 @@ run_server "reinstall"
 
 
 # Check if services are running
-if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
-
-	revert_installation
-
-fi
+revert_if_not_working
 
 
 
@@ -215,11 +190,7 @@ fi
 
 
 # Check if services are still running
-if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
-
-	revert_installation
-
-fi
+revert_if_not_working
 
 
 
@@ -227,6 +198,12 @@ fi
 # Add the host to the /etc/hosts file
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
 #sudo killall -HUP mDNSResponder
+
+
+
+
+# Update the temporary files
+make_permanent
 
 
 
@@ -239,15 +216,9 @@ if [[ $MODE == install-starter ]]; then
 	source "$BUILDERDIR/config/wp.sh"
 
 
-	# Save the initial DB backup
-	db_backup
+	# Fix the URLs in DB and Backup
+	db_url_update
 
-
-# Normal installation
-else
-
-	# Update the temporary files
-	make_permanent
 
 fi
 
@@ -309,7 +280,7 @@ echo "Admin Page: http://${DOMAIN}/wp-admin"
 
 if [[ $MODE == install-starter ]]; then
 
-	echo "Username: ${ADMIN_USERNAME}"
+	echo "Admin Username: ${ADMIN_USERNAME}"
 	echo "${ADMIN_ONLY_PASSWORD}"
 
 fi

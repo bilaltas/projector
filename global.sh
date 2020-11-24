@@ -233,6 +233,18 @@ function revert_installation {
 
 }
 
+function revert_if_not_working {
+
+
+	if [[ -z `docker_compose ps -q wpcli` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q wpcli)` ]] || [[ -z `docker_compose ps -q db` ]] || [[ -z `docker ps -q --no-trunc | grep $(docker_compose ps -q db)` ]]; then
+
+		revert_installation
+
+	fi
+
+
+}
+
 function run_server {
 
 
@@ -333,6 +345,7 @@ function node_permission_update {
 
 		printf "Fixing node file permissions in '$1' ..."
 		sudo chown $(id -un):$(id -Gn | cut -d' ' -f1) $1
+		sudo find "$1" -name 'node_modules' -exec chown $(id -un):$(id -Gn | cut -d' ' -f1) {} \;
 		echo -e " ${GREEN}done${RESET}"
 
 	else
@@ -447,8 +460,17 @@ function db_backup {
 		DB_FILE_NAME=wordpress_data.sql
 		if wp_no_extra db export /bitnami/wordpress/$DB_FILE_NAME --quiet; then
 
+
+			# Create dump folder if not exists
+			if [[ ! -d "$PROJECTDIR/database/dump" ]]; then
+
+				sudo mkdir -p "$PROJECTDIR/database/dump"
+
+			fi
+
 			sudo mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
 			echo -e " ${GREEN}done${RESET}"
+
 
 		else
 
@@ -702,13 +724,13 @@ function move_import_files {
 	# Create target folders if not exist
 	if [[ ! -d "$PROJECTDIR/database/dump" ]]; then
 
-		mkdir -p "$PROJECTDIR/database/dump"
+		sudo mkdir -p "$PROJECTDIR/database/dump"
 
 	fi
 
 	if [[ ! -d "$PROJECTDIR/wp/wp-content" ]]; then
 
-		mkdir -p "$PROJECTDIR/wp/wp-content"
+		sudo mkdir -p "$PROJECTDIR/wp/wp-content"
 
 	fi
 
