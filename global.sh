@@ -408,13 +408,13 @@ function file_permission_update {
 
 function wp {
 
-	docker_compose exec -u bitnami wpcli wp "$@"
+	docker_compose exec -u root wpcli wp --allow-root "$@"
 
 }
 
 function wp_no_extra {
 
-	docker_compose exec -u bitnami wpcli wp --skip-plugins --skip-themes --skip-packages "$@"
+	docker_compose exec -u root wpcli wp --allow-root --skip-plugins --skip-themes --skip-packages "$@"
 
 }
 
