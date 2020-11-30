@@ -205,6 +205,18 @@ function wait_for_wp_initialization {
 
 }
 
+function wait_for_url {
+
+	# Check the development URL
+	printf "Checking 'http://${DOMAIN}' availability ..."
+	while ! url_check "http://$DOMAIN"; do
+		printf "."
+		sleep 6
+	done
+	echo -e " ${GREEN}ready${RESET}"
+
+}
+
 function revert_installation {
 
 
@@ -418,8 +430,12 @@ function wp_no_extra {
 
 }
 
+function url_check {
+	curl --max-time 30 --output /dev/null --silent --head --fail "$1"
+}
+
 function version_check {
-    curl --max-time 30 --output /dev/null --silent --head --fail https://hub.docker.com/v2/repositories/bitnami/wordpress/tags/$1/
+    url_check "https://hub.docker.com/v2/repositories/bitnami/wordpress/tags/$1/"
 }
 
 function db_backup {

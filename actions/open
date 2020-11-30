@@ -47,6 +47,12 @@ fi
 
 
 
+# Check the development URL
+wait_for_url
+
+
+
+
 # Open the development URL
 echo -e "${GREEN}Development site is opening... (http://$DOMAIN)${RESET}"
 sleep 2

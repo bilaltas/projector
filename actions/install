@@ -153,7 +153,7 @@ while [[ $COUNTER -lt 120 ]]; do
 		echo -e " ${BLUE}not available${RESET}"
 	else
 
-		if curl --max-time 3 --output /dev/null --silent --head --fail "${IP}"; then
+		if url_check "${IP}"; then
 			echo -e " ${RED}not available${RESET}"
 		else
 			echo -e " ${GREEN}available${RESET}"
