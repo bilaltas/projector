@@ -188,7 +188,7 @@ function wait_for_wp_initialization {
 
 	FILE="$PROJECTDIR/wp/.initialized"
 
-	if [[ -f $FILE ]]; then
+	if [[ -f $FILE ]] && [[ $MODE != install-starter ]]; then
 
 		FILE="$PROJECTDIR/wp/.restored"
 
