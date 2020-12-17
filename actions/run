@@ -42,6 +42,19 @@ fi
 
 
 
+# Wordpress Version Check on Docker Hub
+printf "Checking Wordpress ${WP_VERSION} availability ..."
+if ! version_check $WP_VERSION; then
+
+	echo -e " ${RED}not available${RESET}"
+	exit
+
+fi
+echo -e " ${GREEN}available${RESET}"
+
+
+
+
 # Restore file removal
 if [[ -f "$PROJECTDIR/wp/.restored" ]]; then
 
