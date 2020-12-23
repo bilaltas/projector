@@ -22,7 +22,7 @@ services:
             - WORDPRESS_DATABASE_USER=wp_user
             - ALLOW_EMPTY_PASSWORD=yes
             - WORDPRESS_SKIP_INSTALL=yes
-            - WORDPRESS_RESET_DATA_PERMISSIONS=yes
+            # - WORDPRESS_RESET_DATA_PERMISSIONS=yes
             - WORDPRESS_SCHEME=http
             - WORDPRESS_USERNAME=${DEVELOPER_USERNAME}
             - WORDPRESS_PASSWORD=projector
