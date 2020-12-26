@@ -73,20 +73,7 @@ echo -e "${GREEN}Confirmed.${RESET}"
 
 
 # Wordpress Version Check on Docker Hub
-printf "Checking Wordpress ${WP_VERSION} availability ..."
-if ! version_check $WP_VERSION; then
-	if ! version_check "$WP_VERSION.0"; then
-
-		echo -e " ${RED}not available${RESET}"
-		exit
-
-	else
-
-		WP_VERSION="$WP_VERSION.0"
-
-	fi
-fi
-echo -e " ${GREEN}available${RESET}"
+check_version_availability
 
 
 
@@ -197,8 +184,14 @@ revert_if_not_working
 
 
 
+# Update the temporary files
+make_permanent
+
+
+
+
 # Import the DB
-if [[ -f "$PROJECTDIR/database/dump/wordpress_data.sql" ]]; then
+if [[ -f "$PROJECTDIR/wp/wp-content/mysql.sql" ]]; then
 
 	OPTION1=--import
 	source "$BUILDERDIR/actions/db"
@@ -217,12 +210,6 @@ revert_if_not_working
 # Add the host to the /etc/hosts file
 sudo bash "$BUILDERDIR/config/etc-hosts.sh" -add $DOMAIN $IP
 #sudo killall -HUP mDNSResponder
-
-
-
-
-# Update the temporary files
-make_permanent
 
 
 

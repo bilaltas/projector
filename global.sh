@@ -438,6 +438,27 @@ function version_check {
     url_check "https://hub.docker.com/v2/repositories/bitnami/wordpress/tags/$1/"
 }
 
+function check_version_availability {
+
+
+	printf "Checking Wordpress ${WP_VERSION} availability ..."
+	if ! version_check $WP_VERSION; then
+		if ! version_check "$WP_VERSION.0"; then
+
+			echo -e " ${RED}not available${RESET}"
+			exit
+
+		else
+
+			WP_VERSION="$WP_VERSION.0"
+
+		fi
+	fi
+	echo -e " ${GREEN}available${RESET}"
+
+
+}
+
 function db_backup {
 
 
@@ -467,6 +488,16 @@ function db_backup {
 		echo -e " ${GREEN}${WP_VERSION}${RESET}"
 
 
+		# Check the version availability
+		if ! version_check $WP_VERSION; then
+			if version_check "$WP_VERSION.0"; then
+
+				WP_VERSION="$WP_VERSION.0"
+
+			fi
+		fi
+
+
 		# Update environment files
 		update_environment
 
@@ -477,20 +508,9 @@ function db_backup {
 
 		# Save the DB backup
 		printf "Backing up the DB ..."
-		DB_FILE_NAME=wordpress_data.sql
-		if wp_no_extra db export /bitnami/wordpress/$DB_FILE_NAME --quiet; then
+		if wp_no_extra db export /bitnami/wordpress/wp-content/mysql.sql --quiet; then
 
-
-			# Create dump folder if not exists
-			if [[ ! -d "$PROJECTDIR/database/dump" ]]; then
-
-				sudo mkdir -p "$PROJECTDIR/database/dump"
-
-			fi
-
-			sudo mv "$PROJECTDIR/wp/${DB_FILE_NAME}" "$PROJECTDIR/database/dump/${DB_FILE_NAME}"
 			echo -e " ${GREEN}done${RESET}"
-
 
 		else
 
@@ -517,14 +537,10 @@ function db_import {
 		run_server_if_not_running
 
 
-		# Move to the WP area
-		sudo cp -rf "$1" "$PROJECTDIR/wp/wordpress_data.sql"
-
-
 		# Import the DB
 		printf "Importing DB ..."
 		wp_no_extra db reset --yes --quiet
-		if wp_no_extra db import "/bitnami/wordpress/wordpress_data.sql" --quiet; then
+		if wp_no_extra db import "/bitnami/wordpress/wp-content/mysql.sql" --quiet; then
 
 			echo -e " ${GREEN}done${RESET}"
 
@@ -533,10 +549,6 @@ function db_import {
 			echo -e " ${RED}error${RESET}"
 
 		fi
-
-
-		# Delete the file from WP area
-		sudo rm -rf "$PROJECTDIR/wp/wordpress_data.sql"
 
 
 	else
@@ -741,13 +753,7 @@ function move_import_files {
 	fi
 
 
-	# Create target folders if not exist
-	if [[ ! -d "$PROJECTDIR/database/dump" ]]; then
-
-		sudo mkdir -p "$PROJECTDIR/database/dump"
-
-	fi
-
+	# Create target folder if not exist
 	if [[ ! -d "$PROJECTDIR/wp/wp-content" ]]; then
 
 		sudo mkdir -p "$PROJECTDIR/wp/wp-content"
@@ -759,25 +765,15 @@ function move_import_files {
 	if [[ -f "$PROJECTDIR/import/db.sql" ]]; then
 
 		printf "SQL file moving ..."
-		sudo rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
-		sudo mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
+		sudo rm -rf "$PROJECTDIR/wp/wp-content/mysql.sql"
+		sudo mv "$PROJECTDIR/import/db.sql" "$PROJECTDIR/wp/wp-content/mysql.sql"
 		echo -e " ${GREEN}done${RESET}"
 
 	elif [[ -f "$PROJECTDIR/import/mysql.sql" ]]; then
 
 		printf "SQL file moving ..."
-		sudo rm -rf "$PROJECTDIR/database/dump/wordpress_data.sql"
-		sudo mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/database/dump/wordpress_data.sql"
-		echo -e " ${GREEN}done${RESET}"
-
-	fi
-
-
-	# Remove existing MySQL files if exists
-	if [[ $INSTALLED != "yes" ]] && [[ -d "$PROJECTDIR/database/mysql" ]]; then
-
-		printf "Existing DB files removing ..."
-		sudo rm -rf "$PROJECTDIR/database/mysql"
+		sudo rm -rf "$PROJECTDIR/wp/wp-content/mysql.sql"
+		sudo mv "$PROJECTDIR/import/mysql.sql" "$PROJECTDIR/wp/wp-content/mysql.sql"
 		echo -e " ${GREEN}done${RESET}"
 
 	fi

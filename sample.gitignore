@@ -2,7 +2,6 @@
 /node_modules
 /package-lock.json
 /logs
-/database/mysql
 /wp/wp-content/themes/*/node_modules
 /wp/*
 !/wp/wp-content

@@ -136,11 +136,11 @@ fi
 ## DB WORKS:
 # Backup the current DB
 echo "Backing up the DB ..."
-wp_no_extra db export "tmp_wordpress_data.sql"
+wp_no_extra db export "wp-content/tmp_mysql.sql"
 
 
 # Check the initial backup file
-if [[ ! -f "$PROJECTDIR/wp/tmp_wordpress_data.sql" ]]; then
+if [[ ! -f "$PROJECTDIR/wp/wp-content/tmp_mysql.sql" ]]; then
 
 	echo -e "${RED}DB backup not found.${RESET}"
 	exit
@@ -153,7 +153,7 @@ fi
 if [[ $OPTION1 == --importable ]] || [[ $OPTION2 == --importable ]]; then
 
 	printf "Moving the DB file ..."
-	sudo mv "$PROJECTDIR/wp/tmp_wordpress_data.sql" "$PROJECTDIR/export/import/db.sql"
+	sudo mv "$PROJECTDIR/wp/wp-content/tmp_mysql.sql" "$PROJECTDIR/export/import/db.sql"
 	echo -e " ${GREEN}done${RESET}"
 
 else
@@ -170,16 +170,16 @@ else
 
 
 	# Backup after replacements
-	wp_no_extra db export "live.sql"
+	wp_no_extra db export "wp-content/live.sql"
 
 
 	# Revert the DB
-	wp_no_extra db import "tmp_wordpress_data.sql"
-	sudo rm -rf "$PROJECTDIR/wp/tmp_wordpress_data.sql"
+	wp_no_extra db import "wp-content/tmp_mysql.sql"
+	sudo rm -rf "$PROJECTDIR/wp/wp-content/tmp_mysql.sql"
 
 
 	# Check the replaced backup file
-	if [[ ! -f "$PROJECTDIR/wp/live.sql" ]]; then
+	if [[ ! -f "$PROJECTDIR/wp/wp-content/live.sql" ]]; then
 
 		echo -e "${RED}CHANGED SQL FILE NOT FOUND.${RESET}"
 		exit
@@ -189,7 +189,7 @@ else
 
 	# Move the SQL file
 	printf "Moving the DB file ..."
-	sudo mv "$PROJECTDIR/wp/live.sql" "$PROJECTDIR/export/live.sql"
+	sudo mv "$PROJECTDIR/wp/wp-content/live.sql" "$PROJECTDIR/export/live.sql"
 	echo -e " ${GREEN}done${RESET}"
 
 

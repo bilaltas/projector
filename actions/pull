@@ -116,7 +116,7 @@ if sudo git remote get-url --all origin &> /dev/null; then
 
 
 	# Detect DB changes
-	DB_FILE="$PROJECTDIR/database/dump/wordpress_data.sql"
+	DB_FILE="$PROJECTDIR/wp/wp-content/mysql.sql"
 	DB_SUM1=$(md5 -r "$DB_FILE")
 
 
@@ -195,14 +195,7 @@ if sudo git remote get-url --all origin &> /dev/null; then
 
 				else
 
-
-					printf "Old data removing ..."
-					sudo rm -rf "$PROJECTDIR/database/mysql"
-					echo -e " ${GREEN}done${RESET}"
-
-
 					echo -e "${GREEN}Server needs to be installed to apply DB changes.${RESET}"
-
 
 				fi
 

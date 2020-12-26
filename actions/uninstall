@@ -98,14 +98,6 @@ sudo bash "$BUILDERDIR/config/etc-hosts.sh" -remove $DOMAIN
 
 
 
-# Delete the DB files
-printf "Removing MySQL files ..."
-sudo rm -rf "$PROJECTDIR/database/mysql"
-echo -e " ${GREEN}done${RESET}"
-
-
-
-
 # Remove WP core files
 printf "Removing WP core files ..."
 (

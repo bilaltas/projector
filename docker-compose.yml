@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
     db:
-        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
+        image: 'docker.io/bitnami/mariadb'
         container_name: "${PREFIX:-projector}_mysql"
         restart: "always"
         volumes:
@@ -22,7 +22,7 @@ services:
             - $IP:80:8080
             - $IP:443:8443
         volumes:
-            - "$BUILDER_DIR/config/php.ini:/opt/bitnami/php/etc/php.ini:consistent"
+            - "$BUILDER_DIR/config/php.ini:/opt/bitnami/php/etc/php.ini"
             - "$PROJECT_DIR/wp:/bitnami/wordpress:consistent"
             - "$PROJECT_DIR/logs:/opt/bitnami/apache/logs"
         environment:

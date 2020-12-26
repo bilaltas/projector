@@ -54,7 +54,7 @@ if [[ $OPTION1 == --import ]] || [[ $OPTION2 == --import ]]; then
 
 
 	# Import the DB
-	db_import "$PROJECTDIR/database/dump/wordpress_data.sql"
+	db_import "$PROJECTDIR/wp/wp-content/mysql.sql"
 
 
 	# Ask the registered URL and do the replacements
