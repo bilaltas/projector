@@ -11,7 +11,7 @@ echo "PROJECTOR installing..."
 # Copy the binary file
 sudo cp ./projector-bin /usr/local/bin/projector
 sudo chmod +rwx /usr/local/bin/projector
-sedreplace "s#BUILDERDIR=builderdir#BUILDERDIR=\"$BASEDIR\"#g" "/usr/local/bin/projector";
+sedreplace "s#BUILDERDIR=builderdir#BUILDERDIR=\"$BASEDIR\"#g" "/usr/local/bin/projector"
 
 
 echo -e "${GREEN}PROJECTOR HAS BEEN INSTALLED${RESET}"

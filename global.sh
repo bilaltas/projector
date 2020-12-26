@@ -117,28 +117,28 @@ function update_environment {
 
 
 	# Update the .env file
-	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" "$LOCAL_ENV";
-	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" "$LOCAL_ENV";
+	sedreplace "s/DOMAIN=dev.sitename.com/DOMAIN=$DOMAIN/g" "$LOCAL_ENV"
+	sedreplace "s/WP_VERSION=latest/WP_VERSION=$WP_VERSION/g" "$LOCAL_ENV"
 
-	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" "$LOCAL_ENV";
-	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$ACTIVE_THEME/g" "$LOCAL_ENV";
-	sedreplace "s/DB_PREFIX=wp_/DB_PREFIX=$DB_PREFIX/g" "$LOCAL_ENV";
+	sedreplace "s/SLUG=site-name/SLUG=$SLUG/g" "$LOCAL_ENV"
+	sedreplace "s/ACTIVE_THEME=site-name/ACTIVE_THEME=$ACTIVE_THEME/g" "$LOCAL_ENV"
+	sedreplace "s/DB_PREFIX=wp_/DB_PREFIX=$DB_PREFIX/g" "$LOCAL_ENV"
 
-	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" "$LOCAL_ENV";
-	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" "$LOCAL_ENV";
-	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "$LOCAL_ENV";
+	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" "$LOCAL_ENV"
+	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" "$LOCAL_ENV"
+	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "$LOCAL_ENV"
 
-	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" "$LOCAL_ENV";
-	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" "$LOCAL_ENV";
-	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" "$LOCAL_ENV";
-	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "$LOCAL_ENV";
-	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "$LOCAL_ENV";
+	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" "$LOCAL_ENV"
+	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" "$LOCAL_ENV"
+	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" "$LOCAL_ENV"
+	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "$LOCAL_ENV"
+	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "$LOCAL_ENV"
 
-	sedreplace "s:TIMEZONE=\"America/Los_Angeles\":TIMEZONE=\"$TIMEZONE\":g" "$LOCAL_ENV";
-	sedreplace "s:POST_PERMALINK=\"/%category%/%postname%/\":POST_PERMALINK=\"$POST_PERMALINK\":g" "$LOCAL_ENV";
+	sedreplace "s:TIMEZONE=\"America/Los_Angeles\":TIMEZONE=\"$TIMEZONE\":g" "$LOCAL_ENV"
+	sedreplace "s:POST_PERMALINK=\"/%category%/%postname%/\":POST_PERMALINK=\"$POST_PERMALINK\":g" "$LOCAL_ENV"
 
-	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" "$LOCAL_ENV";
-	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" "$LOCAL_ENV";
+	sedreplace "s/$DEFAULT_PLUGINS/$PLUGINS/g" "$LOCAL_ENV"
+	sedreplace "s/DEFAULT_PLUGINS/PLUGINS/g" "$LOCAL_ENV"
 
 	#echo -e "local.env file updated with the new info ... ${GREEN}done${RESET}"
 
@@ -289,8 +289,8 @@ function run_server {
 
 
 		# Remove default URL config
-		sedreplace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php";
-		sedreplace "s/define('WP_HOME/\/\/define('WP_HOME/g" "$PROJECTDIR/wp/wp-config.php";
+		sedreplace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php"
+		sedreplace "s/define('WP_HOME/\/\/define('WP_HOME/g" "$PROJECTDIR/wp/wp-config.php"
 
 
 	else
@@ -503,7 +503,7 @@ function db_backup {
 
 
 		# Update the current local IP
-		sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "$PROJECTDIR/.env";
+		sedreplace "s/IP=127.0.0.1/IP=${REAL_IP}/g" "$PROJECTDIR/.env"
 
 
 		# Save the DB backup

@@ -161,7 +161,7 @@ while [[ $COUNTER -lt 120 ]]; do
 done
 
 # Update the environment file (.env) with the available IP
-sedreplace "s/IP=127.0.0.1/IP=${IP}/g" "$PROJECTDIR/.env";
+sedreplace "s/IP=127.0.0.1/IP=${IP}/g" "$PROJECTDIR/.env"
 echo -e "Local IP(${IP}) added into the .env file ... ${GREEN}done${RESET}"
 
 
