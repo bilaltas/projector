@@ -239,6 +239,12 @@ if [[ $ACTION != ssh-fix ]]; then
 	status=$?
 	if [[ "$status" != "0" ]]; then
 
+
+		printf 'Making local IPs available ...'
+		sudo bash "$BUILDERDIR/config/local-ip-persistence.sh"
+		echo -e " ${GREEN}done${RESET}"
+
+
 		printf 'Docker is opening ...'
 		open /Applications/Docker.app
 		echo -e " ${GREEN}done${RESET}"
@@ -253,6 +259,7 @@ if [[ $ACTION != ssh-fix ]]; then
 
 		done
 		echo -e " ${GREEN}done${RESET}"
+
 
 	fi
 
