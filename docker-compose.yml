@@ -1,9 +1,20 @@
-version: "2.1"
+version: "3.8"
 
 services:
+    db:
+        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
+        container_name: "${PREFIX:-projector}_mysql"
+        restart: "always"
+        volumes:
+            - "mysql:/bitnami/mariadb"
+        environment:
+            - MARIADB_USER=wp_user
+            - MARIADB_DATABASE=wordpress_data
+            - ALLOW_EMPTY_PASSWORD=yes
+
     wpcli:
-        image: 'docker.io/bitnami/wordpress:${WP_VERSION}'
-        container_name: "${PREFIX}_wpcli"
+        image: 'docker.io/bitnami/wordpress:${WP_VERSION:-latest}'
+        container_name: "${PREFIX:-projector}_wpcli"
         restart: "always"
         depends_on:
             - db
@@ -11,9 +22,9 @@ services:
             - $IP:80:8080
             - $IP:443:8443
         volumes:
-            - "$BUILDER_DIR/config/php.ini:/opt/bitnami/php/lib/php.ini"
+            - "$BUILDER_DIR/config/php.ini:/opt/bitnami/php/etc/php.ini:consistent"
             - "$PROJECT_DIR/wp:/bitnami/wordpress:consistent"
-            - "$PROJECT_DIR/logs:/opt/bitnami/apache/logs:cached"
+            - "$PROJECT_DIR/logs:/opt/bitnami/apache/logs"
         environment:
             - MARIADB_HOST=db
             - MARIADB_PORT_NUMBER=3306
@@ -22,7 +33,7 @@ services:
             - WORDPRESS_DATABASE_USER=wp_user
             - ALLOW_EMPTY_PASSWORD=yes
             - WORDPRESS_SKIP_INSTALL=yes
-            # - WORDPRESS_RESET_DATA_PERMISSIONS=yes
+            - WORDPRESS_RESET_DATA_PERMISSIONS=no
             - WORDPRESS_SCHEME=http
             - WORDPRESS_USERNAME=${DEVELOPER_USERNAME}
             - WORDPRESS_PASSWORD=projector
@@ -31,20 +42,9 @@ services:
             - WORDPRESS_LAST_NAME=${DEVELOPER_LAST_NAME}
             - WORDPRESS_BLOG_NAME=${NAME}
 
-    db:
-        image: 'docker.io/bitnami/mariadb:10.3-debian-10'
-        container_name: "${PREFIX}_mysql"
-        restart: "always"
-        volumes:
-            - "$PROJECT_DIR/database/mysql:/bitnami/mariadb:consistent"
-        environment:
-            - MARIADB_USER=wp_user
-            - MARIADB_DATABASE=wordpress_data
-            - ALLOW_EMPTY_PASSWORD=yes
-
     phpmyadmin:
         image: 'docker.io/bitnami/phpmyadmin:5-debian-10'
-        container_name: "${PREFIX}_phpmyadmin"
+        container_name: "${PREFIX:-projector}_phpmyadmin"
         restart: "no"
         depends_on:
             - db
@@ -55,3 +55,6 @@ services:
             - DATABASE_ALLOW_NO_PASSWORD=yes
             - DATABASE_HOST=db
             - DATABASE_PORT_NUMBER=3306
+
+volumes:
+    mysql: {}

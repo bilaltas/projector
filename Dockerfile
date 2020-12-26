@@ -1,9 +1,10 @@
-ARG WORDPRESS_VERSION
-FROM wordpress:$WORDPRESS_VERSION
+FROM wordpress
 
+RUN apt -qy install $PHPIZE_DEPS \
+	&& pecl install xdebug \
+	&& docker-php-ext-enable xdebug
 
-RUN apt-get update -qq &> /dev/null
-RUN apt-get install -qq -y sudo less mariadb-client &> /dev/null
-RUN rm -rf /var/lib/apt/lists/*
-RUN curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x /usr/local/bin/wp
+RUN touch /usr/local/etc/php/php.ini
+RUN echo 'xdebug.start_with_request=yes' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.mode=off' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.client_host="host.docker.internal"' >> /usr/local/etc/php/php.ini
