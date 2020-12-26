@@ -106,6 +106,7 @@ if [[ -z $ACTION ]]; then
 	echo -e "  "
 	echo -e "  ${BLUE}docker-compose${RESET}   Run docker-compose commands on the project"
 	echo -e "  ${BLUE}wp${RESET}               Run wpcli commands on the project"
+	echo -e "  ${BLUE}shell${RESET}            Open bash shell in the WordPress container"
 	echo -e "  "
 	echo -e "  ${BLUE}permission-fix${RESET}   Permission fix on .git, wp-content and node_modules folders. If you get permission errors, do this"
 	echo -e "     Options:"
