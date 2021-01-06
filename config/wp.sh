@@ -20,7 +20,7 @@ wp user meta update ${ADMIN_USERNAME} show_admin_bar_front 0
 wp user meta update ${ADMIN_USERNAME} show_welcome_panel 0
 
 
-# Create the developer user
+# Create the developer user !!! Not being used right now
 if [[ ${DEVELOPER_EMAIL} != ${ADMIN_EMAIL} ]] && [[ ${DEVELOPER_EMAIL} != "" ]]; then
 
 	DEVELOPER_PASSWORD_INFO="$(wp user create ${DEVELOPER_USERNAME} ${DEVELOPER_EMAIL} --user_url=${ADMIN_URL} --display_name="${DEVELOPER_NAME} ${DEVELOPER_LAST_NAME}" --first_name="${DEVELOPER_NAME}" --last_name="${DEVELOPER_LAST_NAME}" --role=administrator)"
