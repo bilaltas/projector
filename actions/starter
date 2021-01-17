@@ -102,9 +102,12 @@ fi
 
 
 
+if [[ $STARTER == "flexible-gs" ]]; then
 
-read -ep "Short Name (${PREFIX}): " prefix
-[[ ! -z "$prefix" ]] && PREFIX=$prefix || echo "Using '${PREFIX}'"
+	read -ep "Function Prefixes (${PREFIX}): " prefix
+	[[ ! -z "$prefix" ]] && PREFIX=$prefix || echo "Using '${PREFIX}'"
+
+fi
 
 
 read -ep "Local development domain Name (${DOMAIN}): " domain
@@ -183,7 +186,7 @@ echo ""
 	echo ""
 
 	echo "Project Name: $SLUG"
-	echo "Short Name: $PREFIX"
+	[[ $STARTER == "flexible-gs" ]] && echo "Function Prefixes: $PREFIX" || sleep 0
 	echo ""
 
 	echo "Website Name: $NAME"

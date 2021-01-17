@@ -35,15 +35,10 @@ echo ""
 echo "== Site Info ============"
 echo ""
 
-
 	echo "Local Development Domain: $DOMAIN"
 	echo "Active Theme: $ACTIVE_THEME"
 	echo "WordPress Version: $WP_VERSION"
-	echo ""
-
 	echo "Project Name: $SLUG"
-	echo "Short Name: $PREFIX"
-
 
 echo ""
 echo "==================================="

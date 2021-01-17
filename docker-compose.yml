@@ -3,7 +3,7 @@ version: "3.8"
 services:
     db:
         image: "docker.io/bitnami/mariadb"
-        container_name: "${PREFIX:-projector}_mysql"
+        container_name: "${SLUG:-projector}_mysql"
         restart: "always"
         volumes:
             - "mysql:/bitnami/mariadb"
@@ -14,7 +14,7 @@ services:
 
     wpcli:
         image: "docker.io/bitnami/wordpress:${WP_VERSION:-latest}"
-        container_name: "${PREFIX:-projector}_wpcli"
+        container_name: "${SLUG:-projector}_wpcli"
         restart: "always"
         depends_on:
             - db
@@ -45,7 +45,7 @@ services:
 
     phpmyadmin:
         image: "docker.io/bitnami/phpmyadmin:5-debian-10"
-        container_name: "${PREFIX:-projector}_phpmyadmin"
+        container_name: "${SLUG:-projector}_phpmyadmin"
         restart: "no"
         depends_on:
             - db

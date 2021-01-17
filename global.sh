@@ -126,7 +126,6 @@ function update_environment {
 
 	sedreplace "s/NAME=\"Site Name\"/NAME=\"$NAME\"/g" "$LOCAL_ENV"
 	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" "$LOCAL_ENV"
-	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "$LOCAL_ENV"
 
 	sedreplace "s/ADMIN_USERNAME=Username/ADMIN_USERNAME=$ADMIN_USERNAME/g" "$LOCAL_ENV"
 	sedreplace "s/ADMIN_NAME=Name/ADMIN_NAME=$ADMIN_NAME/g" "$LOCAL_ENV"
