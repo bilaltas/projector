@@ -99,7 +99,7 @@ sudo bash "$BUILDERDIR/config/etc-hosts.sh" -remove $DOMAIN
 
 
 # Remove WP core files
-printf "Removing WP core files ..."
+printf "Removing WordPress core files ..."
 (
 	cd "$PROJECTDIR/wp"
 	find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec sudo rm -rf '{}' \;

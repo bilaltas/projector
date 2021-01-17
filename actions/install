@@ -37,7 +37,8 @@ echo ""
 
 
 	echo "Local Development Domain: $DOMAIN"
-	echo "WP Version: $WP_VERSION"
+	echo "Active Theme: $ACTIVE_THEME"
+	echo "WordPress Version: $WP_VERSION"
 	echo ""
 
 	echo "Project Name: $SLUG"
@@ -63,8 +64,6 @@ if [[ $confirm != yes ]] && [[ $confirm != y ]]; then
 	exit
 
 fi
-
-
 
 
 echo -e "${GREEN}Confirmed.${RESET}"
@@ -286,6 +285,7 @@ echo "Admin Page: http://${DOMAIN}/wp-admin"
 
 if [[ $MODE == install-starter ]]; then
 
+	echo "Starter/Initial Theme: $STARTER"
 	echo "Admin Username: ${ADMIN_USERNAME}"
 	echo "${ADMIN_ONLY_PASSWORD}"
 

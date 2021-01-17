@@ -42,6 +42,30 @@ fi
 # Update the slug and theme folder name
 SLUG=$PROJECTNAME
 ACTIVE_THEME=$PROJECTNAME
+STARTER=twentytwentyone
+
+
+
+
+# ASK THE STARTER THEME
+read -ep "Starter Theme (twentytwentyone | flexible-gs | <any theme on WP.org>): " starter
+if [[ $starter != "flexible-gs" ]] && [[ ! -z "$starter" ]]; then
+
+
+	while ! url_check "https://wordpress.org/themes/$starter/"; do
+
+		echo "$starter Theme not found on Wordpress.org"
+		read -ep "Starter Theme (twentytwentyone | flexible-gs | <any theme on WP.org>): " starter
+
+	done
+
+
+	# Update the active theme name
+	ACTIVE_THEME=$starter
+
+
+fi
+[[ ! -z "$starter" ]] && STARTER=$starter || echo "Using '${STARTER}'"
 
 
 
@@ -71,18 +95,16 @@ done
 echo -e " ${GREEN}available${RESET}"
 
 
-
-
 read -ep "Short Name (${PREFIX}): " prefix
 [[ ! -z "$prefix" ]] && PREFIX=$prefix || echo "Using '${PREFIX}'"
 
 
-read -ep "Domain Name (${DOMAIN}): " domain
+read -ep "Local development domain Name (${DOMAIN}): " domain
 [[ ! -z "$domain" ]] && DOMAIN=$domain || echo "Using '${DOMAIN}'"
 
 
 # Check the local domain availability
-echo "Checking '${DOMAIN}' availability..."
+echo "Checking '${DOMAIN}' availability in your local machine..."
 if grep -q "${DOMAIN}" /etc/hosts; then
 	echo -e "${RED}'${DOMAIN}' Host has already been added. Please remove it before installing.${RESET}"
 	exit
@@ -98,53 +120,44 @@ read -ep "Website Tagline (${DESC}): " desc
 [[ ! -z "$desc" ]] && DESC=$desc || echo "Using '${DESC}'"
 
 
-read -ep "Plugins that need to be installed (Just press 'enter' to install these recommended plugins: ${PLUGINS}): " plugins
+read -ep "Plugins that need to be installed (Just press 'enter' to install all these recommended plugins: ${PLUGINS}): " plugins
 [[ ! -z "$plugins" ]] && PLUGINS=$plugins || echo "Using '${PLUGINS}'"
 
 
 # Ask for the admin info
-read -ep "Developer Email (${DEVELOPER_EMAIL}): " developer_email
-[[ ! -z "$developer_email" ]] && DEVELOPER_EMAIL=$developer_email || echo "Using '${DEVELOPER_EMAIL}'"
+read -ep "Admin Email (${ADMIN_EMAIL}): " admin_email
+[[ ! -z "$admin_email" ]] && ADMIN_EMAIL=$admin_email || echo "Using '${ADMIN_EMAIL}'"
 
 
-if [[ $DEVELOPER_EMAIL != bilaltas@me.com ]]; then
+if [[ $ADMIN_EMAIL == bilaltas@me.com ]]; then
 
 
-	read -ep "Developer Username (${DEVELOPER_USERNAME}): " developer_username
-	[[ ! -z "$developer_username" ]] && DEVELOPER_USERNAME=$developer_username || echo "Using '${DEVELOPER_USERNAME}'"
+	ADMIN_USERNAME="BilalTas"
+	ADMIN_NAME="Bilal"
+	ADMIN_LAST_NAME="Tas"
+	ADMIN_URL="https://www.bilaltas.net"
 
-
-	read -ep "Developer First Name (${DEVELOPER_NAME}): " developer_name
-	[[ ! -z "$developer_name" ]] && DEVELOPER_NAME=$developer_name || echo "Using '${DEVELOPER_NAME}'"
-
-
-	read -ep "Developer Last Name (${DEVELOPER_LAST_NAME}): " developer_last_name
-	[[ ! -z "$developer_last_name" ]] && DEVELOPER_LAST_NAME=$developer_last_name || echo "Using '${DEVELOPER_LAST_NAME}'"
-
-
-	read -ep "Developer Website URL (${DEVELOPER_URL}): " developer_url
-	[[ ! -z "$developer_url" ]] && DEVELOPER_URL=$developer_url || echo "Using '${DEVELOPER_URL}'"
 
 else
 
 
-	DEVELOPER_USERNAME="BilalTas"
-	DEVELOPER_NAME="Bilal"
-	DEVELOPER_LAST_NAME="Tas"
-	DEVELOPER_URL="https://www.bilaltas.net"
+	read -ep "Admin Username (${ADMIN_USERNAME}): " admin_username
+	[[ ! -z "$admin_username" ]] && ADMIN_USERNAME=$admin_username || echo "Using '${ADMIN_USERNAME}'"
+
+
+	read -ep "Admin First Name (${ADMIN_NAME}): " admin_name
+	[[ ! -z "$admin_name" ]] && ADMIN_NAME=$admin_name || echo "Using '${ADMIN_NAME}'"
+
+
+	read -ep "Admin Last Name (${ADMIN_LAST_NAME}): " admin_last_name
+	[[ ! -z "$admin_last_name" ]] && ADMIN_LAST_NAME=$admin_last_name || echo "Using '${ADMIN_LAST_NAME}'"
+
+
+	read -ep "Admin Website URL (${ADMIN_URL}): " admin_url
+	[[ ! -z "$admin_url" ]] && ADMIN_URL=$admin_url || echo "Using '${ADMIN_URL}'"
 
 
 fi
-
-
-
-
-# Admin User Info
-ADMIN_EMAIL=${DEVELOPER_EMAIL}
-ADMIN_USERNAME=${DEVELOPER_USERNAME}
-ADMIN_NAME=${DEVELOPER_NAME}
-ADMIN_LAST_NAME=${DEVELOPER_LAST_NAME}
-ADMIN_URL=${DEVELOPER_URL}
 
 
 
@@ -157,7 +170,8 @@ echo ""
 
 
 	echo "Local Development Domain: $DOMAIN"
-	echo "WP Version: $WP_VERSION"
+	echo "Starter/Initial Theme: $STARTER"
+	echo "WordPress Version: $WP_VERSION"
 	echo ""
 
 	echo "Project Name: $SLUG"
@@ -169,11 +183,11 @@ echo ""
 	[[ ! -z "$plugins" ]] && echo "Plugins: $plugins" || echo "Plugins: $PLUGINS"
 	echo ""
 
-	echo "Developer Email: $DEVELOPER_EMAIL"
-	echo "Developer Username: $DEVELOPER_USERNAME"
-	echo "Developer First Name: $DEVELOPER_NAME"
-	echo "Developer Last Name: $DEVELOPER_LAST_NAME"
-	echo "Developer URL: $DEVELOPER_URL"
+	echo "Admin Email: $ADMIN_EMAIL"
+	echo "Admin Username: $ADMIN_USERNAME"
+	echo "Admin First Name: $ADMIN_NAME"
+	echo "Admin Last Name: $ADMIN_LAST_NAME"
+	echo "Admin URL: $ADMIN_URL"
 
 
 echo ""
@@ -197,8 +211,17 @@ fi
 # Create the project folder
 if [[ ! -d "$PROJECTDIR" ]]; then
 
-	sudo mkdir "$PROJECTDIR"
-	echo -e "Project folder has been created ... ${GREEN}done${RESET}"
+
+	if mkdir "$PROJECTDIR"; then
+
+		echo -e "Project folder has been created ... ${GREEN}done${RESET}"
+
+	else
+
+		echo -e "${RED}Project folder could not be created.${RESET}"
+		exit
+
+	fi
 
 fi
 
@@ -214,57 +237,62 @@ source "$PROJECTDIR/.env"
 
 
 
-
-# Download the template
-sudo rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-sudo git clone https://github.com/bilaltas/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-sudo rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/.git"
-echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
+if [[ $STARTER == "flexible-gs" ]]; then
 
 
-# Check the theme files
-if [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/footer.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss" ]]; then
+	# Download the template
+	rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+	git clone https://github.com/bilaltas/wp-flexible-starter-template.git "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+	rm -rf "$PROJECTDIR/wp/wp-content/themes/$SLUG/.git"
+	echo -e "Starter theme clonned ... ${GREEN}done${RESET}"
 
-	echo -e "${RED}Missing theme files.${RESET}"
-	exit
+
+	# Check the theme files
+	if [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/footer.php" ]] || [[ ! -f "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss" ]]; then
+
+		echo -e "${RED}Missing theme files.${RESET}"
+		exit
+
+	fi
+
+
+
+
+	# Theme function prefix changes
+	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php"
+	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php"
+	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/footer.php"
+	echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
+
+
+
+
+	# Theme info changes
+	sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
+	echo -e "Theme name updated as '${NAME}' ... ${GREEN}done${RESET}"
+
+	sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
+	echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
+
+
+
+
+	# Permission fix
+	file_permission_update "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+
+
+
+
+	# Install NPM packages and build the style.css
+	echo "NPM packages are installing and 'style.css' is being built..."
+	(
+		cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
+		npm run build
+	)
+	echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
+
 
 fi
-
-
-
-
-# Theme function prefix changes
-sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php"
-sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php"
-sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/footer.php"
-echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
-
-
-
-
-# Theme info changes
-sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
-echo -e "Theme name updated as '${NAME}' ... ${GREEN}done${RESET}"
-
-sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
-echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
-
-
-
-
-# Permission fix
-file_permission_update "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-
-
-
-
-# Install NPM packages and build the style.css
-echo "NPM packages are installing and 'style.css' is being built..."
-(
-	cd "$PROJECTDIR/wp/wp-content/themes/$SLUG"
-	npm run build
-)
-echo -e "'style.css' has been built ... ${GREEN}done${RESET}"
 
 
 

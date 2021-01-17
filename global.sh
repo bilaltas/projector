@@ -128,11 +128,11 @@ function update_environment {
 	sedreplace "s/DESC=\"Site tagline\"/DESC=\"$DESC\"/g" "$LOCAL_ENV"
 	sedreplace "s/PREFIX=sitename/PREFIX=$PREFIX/g" "$LOCAL_ENV"
 
-	sedreplace "s/DEVELOPER_USERNAME=Username/DEVELOPER_USERNAME=$DEVELOPER_USERNAME/g" "$LOCAL_ENV"
-	sedreplace "s/DEVELOPER_NAME=Name/DEVELOPER_NAME=$DEVELOPER_NAME/g" "$LOCAL_ENV"
-	sedreplace "s/DEVELOPER_LAST_NAME=Lastname/DEVELOPER_LAST_NAME=$DEVELOPER_LAST_NAME/g" "$LOCAL_ENV"
-	sedreplace "s#DEVELOPER_EMAIL=name@company.com#DEVELOPER_EMAIL=$DEVELOPER_EMAIL#g" "$LOCAL_ENV"
-	sedreplace "s#DEVELOPER_URL=www.company.com#DEVELOPER_URL=$DEVELOPER_URL#g" "$LOCAL_ENV"
+	sedreplace "s/ADMIN_USERNAME=Username/ADMIN_USERNAME=$ADMIN_USERNAME/g" "$LOCAL_ENV"
+	sedreplace "s/ADMIN_NAME=Name/ADMIN_NAME=$ADMIN_NAME/g" "$LOCAL_ENV"
+	sedreplace "s/ADMIN_LAST_NAME=Lastname/ADMIN_LAST_NAME=$ADMIN_LAST_NAME/g" "$LOCAL_ENV"
+	sedreplace "s#ADMIN_EMAIL=name@company.com#ADMIN_EMAIL=$ADMIN_EMAIL#g" "$LOCAL_ENV"
+	sedreplace "s#ADMIN_URL=www.company.com#ADMIN_URL=$ADMIN_URL#g" "$LOCAL_ENV"
 
 	sedreplace "s:TIMEZONE=\"America/Los_Angeles\":TIMEZONE=\"$TIMEZONE\":g" "$LOCAL_ENV"
 	sedreplace "s:POST_PERMALINK=\"/%category%/%postname%/\":POST_PERMALINK=\"$POST_PERMALINK\":g" "$LOCAL_ENV"
@@ -484,7 +484,7 @@ function db_backup {
 
 
 		# Checking the WP version
-		printf "Checking the WP version ..."
+		printf "Checking the WordPress version ..."
 		WP_VERSION="$(wp_no_extra core version)"
 		WP_VERSION=${WP_VERSION%?}
 		echo -e " ${GREEN}${WP_VERSION}${RESET}"
@@ -684,7 +684,7 @@ function move_import_files {
 		echo -e "${BLUE}FULL SITE BACKUP DETECTED${RESET}"
 
 
-		printf "WP core files are being removed ..."
+		printf "WordPress core files are being removed ..."
 		(
 			cd "$PROJECTDIR/import"
 			find . -mindepth 1 -maxdepth 1 ! -name 'wp-content' -exec sudo rm -rf '{}' \;
