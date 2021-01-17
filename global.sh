@@ -195,24 +195,28 @@ function wait_for_wp_initialization {
 
 
 	printf "Initializing WordPress ..."
-	while [[ ! -f $FILE ]]; do
+	timeout=30
+	try=0
+	while [[ ! -f $FILE ]] && [[ $try -lt $timeout ]]; do
+
+		let try=try+1
 		printf "."
 		sleep 6
+
 	done
-	echo -e " ${GREEN}done${RESET}"
 
+	# Is it done after the timeout?
+	if [[ -f $FILE ]]; then
+		echo -e " ${GREEN}done${RESET}"
+	else
 
-}
+		echo -e " ${RED}error${RESET}"
 
-function wait_for_url {
+		# Revert installation
+		revert_installation
 
-	# Check the development URL
-	printf "Checking 'http://${DOMAIN}' availability ..."
-	while ! url_check "http://$DOMAIN"; do
-		printf "."
-		sleep 6
-	done
-	echo -e " ${GREEN}ready${RESET}"
+	fi
+
 
 }
 
@@ -253,6 +257,18 @@ function revert_if_not_working {
 
 	fi
 
+
+}
+
+function wait_for_url {
+
+	# Check the development URL
+	printf "Checking 'http://${DOMAIN}' availability ..."
+	while ! url_check "http://$DOMAIN"; do
+		printf "."
+		sleep 6
+	done
+	echo -e " ${GREEN}ready${RESET}"
 
 }
 
