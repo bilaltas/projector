@@ -222,14 +222,54 @@ fi
 # Create the project folder
 if [[ ! -d "$PROJECTDIR" ]]; then
 
+	printf "Creating the project folder ($SLUG) ..."
+	if mkdir -p "$PROJECTDIR"; then
 
-	if mkdir "$PROJECTDIR"; then
-
-		echo -e "Project folder has been created ... ${GREEN}done${RESET}"
+		echo -e " ${GREEN}done${RESET}"
 
 	else
 
-		echo -e "${RED}Project folder could not be created.${RESET}"
+		echo -e " ${RED}error${RESET}"
+		exit
+
+	fi
+
+fi
+
+
+
+
+# Create the themes folder
+if [[ ! -d "$PROJECTDIR/wp/wp-content/themes" ]]; then
+
+	printf "Creating the 'themes' folder ..."
+	if mkdir -p "$PROJECTDIR/wp/wp-content/themes"; then
+
+		echo -e " ${GREEN}done${RESET}"
+
+	else
+
+		echo -e " ${RED}error${RESET}"
+		exit
+
+	fi
+
+fi
+
+
+
+
+# Create the plugins folder
+if [[ ! -d "$PROJECTDIR/wp/wp-content/plugins" ]]; then
+
+	printf "Creating the 'plugins' folder ..."
+	if mkdir -p "$PROJECTDIR/wp/wp-content/plugins"; then
+
+		echo -e " ${GREEN}done${RESET}"
+
+	else
+
+		echo -e " ${RED}error${RESET}"
 		exit
 
 	fi
@@ -245,6 +285,7 @@ update_environment
 
 # Get data from the new .env file
 source "$PROJECTDIR/.env"
+
 
 
 

@@ -88,8 +88,6 @@ sudo cp "$BUILDERDIR/sample.gitignore" "$PROJECTDIR/.gitignore"
 update_environment
 
 
-
-
 # Get data from the new .env file
 source "$PROJECTDIR/.env"
 
