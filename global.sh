@@ -205,6 +205,7 @@ function wait_for_wp_initialization {
 
 	done
 
+
 	# Is it done after the timeout?
 	if [[ -f $FILE ]]; then
 		echo -e " ${GREEN}done${RESET}"
@@ -399,23 +400,24 @@ function file_permission_update {
 		fi
 
 
-		# # For the main folder
-		# chown $(logname):staff "$1"
-		# printf "."
-		# chmod g+rwX "$1"
-		# printf "."
-
-
 		#sudo chown -R $(logname):staff $1
 
+
 		## HARD PERMISSION FIX
-		# sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
-		# printf "."
+		# For the main folder
+		sudo chown $(logname):staff "$1"
+		printf "."
+		sudo chmod g+rwX "$1"
+		printf "."
+
+		sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chown $(logname):staff {} \;
+		printf "."
+
+		sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod g+rwX {} \;
+		printf "."
 
 
-		#sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod g+rwX {} \;
-
-
+		## SOFT PERMISSION FIX
 		# Current folder
 		sudo chmod 755 "$1"
 
@@ -425,6 +427,7 @@ function file_permission_update {
 
 		# Files
 		sudo find "$1" -type f ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 644 {} \;
+		printf "."
 
 
 		echo -e " ${GREEN}done${RESET}"
