@@ -4,7 +4,8 @@
 # Reset existing DB first
 wp db reset --yes
 
-# WP Installation
+
+# WP Installation with admin info
 ADMIN_PASSWORD_INFO="$(wp core install --url="http://${DOMAIN}" --title="${NAME}" --admin_user=${ADMIN_USERNAME} --admin_email=${ADMIN_EMAIL} --skip-email)"
 echo "${ADMIN_PASSWORD_INFO}"
 export ADMIN_ONLY_PASSWORD=`echo "${ADMIN_PASSWORD_INFO}" | head -1`
@@ -32,6 +33,7 @@ wp option update timezone_string "${TIMEZONE}"
 wp rewrite structure "${POST_PERMALINK}"
 
 
+# THEMES:
 if [[ $STARTER == "flexible-gs" ]]; then
 
 
@@ -65,6 +67,8 @@ else
 
 fi
 
+
+# PLUGINS:
 
 # Install the necessary plugins
 wp plugin install prevent-browser-caching --activate
