@@ -48,16 +48,20 @@ STARTER=twentytwentyone
 
 
 # ASK THE STARTER THEME
-read -ep "Starter Theme (twentytwentyone | flexible-gs | <any theme on WP.org>): " starter
-if [[ $starter != "flexible-gs" ]] && [[ ! -z "$starter" ]]; then
+read -ep "Starter Theme (twentytwentyone | <any theme on WP.org>): " starter
+if [[ $starter != $STARTER ]] && [[ ! -z "$starter" ]]; then
 
-
+	printf "Checking '${starter}' theme availability ..."
 	while ! url_check "https://wordpress.org/themes/$starter/"; do
 
-		echo "$starter Theme not found on WordPress.org"
+		echo -e " ${RED}not available${RESET}"
+		echo ""
+
 		read -ep "Starter Theme (twentytwentyone | flexible-gs | <any theme on WP.org>): " starter
+		printf "Checking '${starter}' theme availability ..."
 
 	done
+	echo -e " ${GREEN}available${RESET}"
 
 
 	# Update the active theme name
@@ -72,27 +76,31 @@ fi
 
 # ASK THE SITE INFO
 read -ep "WordPress Version (${WP_VERSION}): " wp_version
+if [[ $wp_version != "latest" ]] && [[ ! -z "$wp_version" ]]; then
+
+	printf "Checking '${wp_version}' availability ..."
+	while ! version_check $wp_version; do
+		if ! version_check "$wp_version.0"; then
+
+			echo -e " ${RED}not available${RESET}"
+			echo ""
+
+
+			read -ep "Write an available WordPress Version or just type 'latest': " wp_version
+			printf "Checking '${wp_version}' availability ..."
+
+		else
+
+			wp_version="$wp_version.0"
+
+		fi
+	done
+	echo -e " ${GREEN}available${RESET}"
+
+fi
 [[ ! -z "$wp_version" ]] && WP_VERSION=$wp_version || echo "Using '${WP_VERSION}'"
 
 
-printf "Checking '${WP_VERSION}' availability ..."
-while ! version_check $WP_VERSION; do
-	if ! version_check "$WP_VERSION.0"; then
-
-		echo -e " ${RED}not available${RESET}"
-		echo ""
-
-
-		read -ep "Write an available WordPress Version or just type 'latest': " WP_VERSION
-		printf "Checking '${WP_VERSION}' availability ..."
-
-	else
-
-		WP_VERSION="$WP_VERSION.0"
-
-	fi
-done
-echo -e " ${GREEN}available${RESET}"
 
 
 read -ep "Short Name (${PREFIX}): " prefix

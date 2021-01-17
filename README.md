@@ -1,5 +1,5 @@
 # Projector
-WordPress development environment with Docker. Starter template is being developed with Flexible Grid System. (Only tested on MacOS)
+WordPress development environment with Docker. (Only tested on MacOS)
 <br><br>
 
 ## Why Projector
