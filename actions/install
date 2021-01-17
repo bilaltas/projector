@@ -71,7 +71,7 @@ echo -e "${GREEN}Confirmed.${RESET}"
 
 
 
-# Wordpress Version Check on Docker Hub
+# WordPress Version Check on Docker Hub
 check_version_availability
 
 

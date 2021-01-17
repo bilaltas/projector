@@ -195,7 +195,7 @@ function wait_for_wp_initialization {
 	fi
 
 
-	printf "Initializing Wordpress ..."
+	printf "Initializing WordPress ..."
 	while [[ ! -f $FILE ]]; do
 		printf "."
 		sleep 6
@@ -443,7 +443,7 @@ function version_check {
 function check_version_availability {
 
 
-	printf "Checking Wordpress ${WP_VERSION} availability ..."
+	printf "Checking WordPress ${WP_VERSION} availability ..."
 	if ! version_check $WP_VERSION; then
 		if ! version_check "$WP_VERSION.0"; then
 

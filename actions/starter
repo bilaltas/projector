@@ -54,7 +54,7 @@ if [[ $starter != "flexible-gs" ]] && [[ ! -z "$starter" ]]; then
 
 	while ! url_check "https://wordpress.org/themes/$starter/"; do
 
-		echo "$starter Theme not found on Wordpress.org"
+		echo "$starter Theme not found on WordPress.org"
 		read -ep "Starter Theme (twentytwentyone | flexible-gs | <any theme on WP.org>): " starter
 
 	done
@@ -71,7 +71,7 @@ fi
 
 
 # ASK THE SITE INFO
-read -ep "Wordpress Version (${WP_VERSION}): " wp_version
+read -ep "WordPress Version (${WP_VERSION}): " wp_version
 [[ ! -z "$wp_version" ]] && WP_VERSION=$wp_version || echo "Using '${WP_VERSION}'"
 
 
@@ -83,7 +83,7 @@ while ! version_check $WP_VERSION; do
 		echo ""
 
 
-		read -ep "Write an available Wordpress Version or just type 'latest': " WP_VERSION
+		read -ep "Write an available WordPress Version or just type 'latest': " WP_VERSION
 		printf "Checking '${WP_VERSION}' availability ..."
 
 	else
