@@ -400,6 +400,9 @@ function file_permission_update {
 		#sudo find "$1" ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod g+rwX {} \;
 
 
+		# Current folder
+		sudo chmod 755 "$1"
+
 		# Folders
 		sudo find "$1" -type d ! \( -path '*/node_modules/*' -or -path '*/.git/*' -or -name 'node_modules' -or -name '.git' \) -exec chmod 755 {} \;
 		printf "."

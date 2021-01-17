@@ -72,6 +72,26 @@ check_version_availability
 
 
 
+# Create the logs folder
+if [[ ! -d "$PROJECTDIR/logs" ]]; then
+
+	printf "Creating the 'logs' folder ..."
+	if sudo mkdir -p "$PROJECTDIR/logs"; then
+
+		echo -e " ${GREEN}done${RESET}"
+
+	else
+
+		echo -e " ${RED}error${RESET}"
+		exit
+
+	fi
+
+fi
+
+
+
+
 # Move the 'wp-content' folder TEMPORARILY
 make_temporary
 

@@ -223,7 +223,7 @@ fi
 if [[ ! -d "$PROJECTDIR" ]]; then
 
 	printf "Creating the project folder ($SLUG) ..."
-	if mkdir -p "$PROJECTDIR"; then
+	if sudo mkdir -p "$PROJECTDIR"; then
 
 		echo -e " ${GREEN}done${RESET}"
 
@@ -243,7 +243,7 @@ fi
 if [[ ! -d "$PROJECTDIR/wp/wp-content/themes" ]]; then
 
 	printf "Creating the 'themes' folder ..."
-	if mkdir -p "$PROJECTDIR/wp/wp-content/themes"; then
+	if sudo mkdir -p "$PROJECTDIR/wp/wp-content/themes"; then
 
 		echo -e " ${GREEN}done${RESET}"
 
@@ -263,7 +263,7 @@ fi
 if [[ ! -d "$PROJECTDIR/wp/wp-content/plugins" ]]; then
 
 	printf "Creating the 'plugins' folder ..."
-	if mkdir -p "$PROJECTDIR/wp/wp-content/plugins"; then
+	if sudo mkdir -p "$PROJECTDIR/wp/wp-content/plugins"; then
 
 		echo -e " ${GREEN}done${RESET}"
 
