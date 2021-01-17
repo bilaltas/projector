@@ -815,14 +815,14 @@ function make_temporary {
 
 
 	# Make the wp-content folder temporary
-	if [[ -d "$PROJECTDIR/wp/wp-content" ]]; then
-
-		printf "'wp-content' folder is being temporary ..."
-		sudo rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
-		sudo mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
-		echo -e " ${GREEN}done${RESET}"
-
+	if [[ ! -d "$PROJECTDIR/wp/wp-content" ]]; then
+		sudo mkdir -p "$PROJECTDIR/wp/wp-content"
 	fi
+
+	printf "'wp-content' folder is being temporary ..."
+	sudo rm -rf "$BUILDERDIR/temp/${SLUG}_wp-content"
+	sudo mv "$PROJECTDIR/wp/wp-content" "$BUILDERDIR/temp/${SLUG}_wp-content"
+	echo -e " ${GREEN}done${RESET}"
 
 
 }
