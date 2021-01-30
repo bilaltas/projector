@@ -195,7 +195,7 @@ function wait_for_wp_initialization {
 
 
 	printf "Initializing WordPress ..."
-	timeout=30
+	timeout=60
 	try=0
 	while [[ ! -f $FILE ]] && [[ $try -lt $timeout ]]; do
 
