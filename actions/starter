@@ -311,19 +311,19 @@ if [[ $STARTER == "flexible-gs" ]]; then
 
 
 	# Theme function prefix changes
-	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php"
-	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php"
-	sedreplace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/footer.php"
+	file_search_replace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/functions.php"
+	file_search_replace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/header.php"
+	file_search_replace "s/sitename/${PREFIX}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/footer.php"
 	echo -e "Function prefixes changed as '${PREFIX}_' ... ${GREEN}done${RESET}"
 
 
 
 
 	# Theme info changes
-	sedreplace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
+	file_search_replace "s/Site Name/${NAME}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
 	echo -e "Theme name updated as '${NAME}' ... ${GREEN}done${RESET}"
 
-	sedreplace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
+	file_search_replace "s/Site tagline/${DESC}/g" "$PROJECTDIR/wp/wp-content/themes/$SLUG/style.scss"
 	echo -e "Theme description updated as '${NAME}' ... ${GREEN}done${RESET}"
 
 

@@ -48,4 +48,4 @@ fi
 
 
 # TESTING SCRIPTS HERE
-# sedreplace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php"
+# file_search_replace "s/define('WP_SITEURL/\/\/define('WP_SITEURL/g" "$PROJECTDIR/wp/wp-config.php"

@@ -11,7 +11,18 @@ if [[ -f "$BUILDERDIR/projector" ]]; then
 	# Check update
 	(
 		cd "$BUILDERDIR"
-		git pull
+		printf "Checking updates ..."
+		git reset --hard origin/master --quiet
+		git clean -df origin/master --quiet
+		if git pull origin master --no-commit --quiet; then
+
+			echo -e " ${GREEN}done${RESET}"
+
+		else
+
+			echo -e " ${RED}error${RESET}"
+
+		fi
 	)
 
 
