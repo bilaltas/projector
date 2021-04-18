@@ -14,7 +14,7 @@ if [[ -f "$BUILDERDIR/projector" ]]; then
 		printf "Checking updates ..."
 		git reset --hard origin/master --quiet
 		git clean -df origin/master --quiet
-		if git pull origin master --no-commit --quiet; then
+		if git pull origin master --no-commit --no-rebase --quiet; then
 
 			echo -e " ${GREEN}done${RESET}"
 

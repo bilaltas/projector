@@ -171,7 +171,7 @@ function docker_compose {
 
 		(
 			cd "$PROJECTDIR"
-			sudo docker-compose -f "$BUILDERDIR/docker-compose.yml" -p "$SLUG" "$@"
+			sudo docker-compose -f "$BUILDERDIR/docker-compose.yml" --env-file "$PROJECTDIR/.env" -p "$SLUG" "$@"
 		)
 
 	else
